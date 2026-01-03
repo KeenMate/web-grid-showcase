@@ -4,6 +4,9 @@
 
 	let singleSortGrid: any;
 	let multiSortGrid: any;
+	let serverSortGrid: any;
+	let presortedGrid: any;
+	let consoleOutput: string[] = $state([]);
 
 	const employees = [
 		{ id: 1, name: 'Alice Johnson', department: 'Engineering', salary: 95000, hireDate: '2020-03-15' },
@@ -15,41 +18,86 @@
 		{ id: 7, name: 'Grace Lee', department: 'Sales', salary: 82000, hireDate: '2019-04-07' }
 	];
 
-	onMount(() => {
+	function log(message: string) {
+		const timestamp = new Date().toLocaleTimeString();
+		consoleOutput = [`[${timestamp}] ${message}`, ...consoleOutput.slice(0, 9)];
+	}
+
+	function clearConsole() {
+		consoleOutput = [];
+	}
+
+	onMount(async () => {
+		await import('@keenmate/web-grid');
 		const columns = [
-			{ field: 'id', title: 'ID', width: '60px', sortable: true },
-			{ field: 'name', title: 'Name', width: '150px', sortable: true },
-			{ field: 'department', title: 'Department', width: '120px', sortable: true },
-			{ field: 'salary', title: 'Salary', width: '100px', sortable: true, align: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() },
-			{ field: 'hireDate', title: 'Hire Date', width: '110px', sortable: true }
+			{ field: 'id', title: 'ID', width: '60px' },
+			{ field: 'name', title: 'Name', width: '150px' },
+			{ field: 'department', title: 'Department', width: '120px' },
+			{ field: 'salary', title: 'Salary', width: '100px', align: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() },
+			{ field: 'hireDate', title: 'Hire Date', width: '110px' }
 		];
 
 		if (singleSortGrid) {
 			singleSortGrid.columns = columns;
 			singleSortGrid.items = employees;
-			singleSortGrid.sortable = true;
+			singleSortGrid.sortMode = 'single';
 		}
 
 		if (multiSortGrid) {
 			multiSortGrid.columns = columns;
 			multiSortGrid.items = employees;
-			multiSortGrid.sortable = true;
+			multiSortGrid.sortMode = 'multi';
+		}
+
+		if (serverSortGrid) {
+			serverSortGrid.columns = columns;
+			serverSortGrid.items = employees;
+			serverSortGrid.sortMode = 'multi';
+			serverSortGrid.ondatarequest = (e: any) => {
+				if (e.trigger === 'sort') {
+					if (e.sort.length === 0) {
+						log('ondatarequest: sort cleared');
+					} else {
+						const sortDesc = e.sort.map((s: any) => `${s.column}:${s.direction}`).join(', ');
+						log(`ondatarequest: sort=[${sortDesc}]`);
+					}
+				}
+			};
+		}
+
+		if (presortedGrid) {
+			// Simulate data coming pre-sorted from database (by department asc, then salary desc)
+			const presortedEmployees = [...employees].sort((a, b) => {
+				const deptCompare = a.department.localeCompare(b.department);
+				if (deptCompare !== 0) return deptCompare;
+				return b.salary - a.salary; // desc
+			});
+
+			presortedGrid.columns = columns;
+			presortedGrid.items = presortedEmployees;
+			presortedGrid.sortMode = 'multi';
+
+			// Set sort state to show indicators (data is already sorted, grid won't re-sort)
+			presortedGrid.sort = [
+				{ column: 'department', direction: 'asc' },
+				{ column: 'salary', direction: 'desc' }
+			];
 		}
 	});
 </script>
 
 <DocLayout
 	titleText="Sorting"
-	descriptionText="Single and multi-column sorting with visual indicators">
+	descriptionText="Single and multi-column sorting with sortMode property">
 
 	<div class="py-4">
 		<!-- Single Column Sort -->
 		<ShowcaseSection
-			titleText="Single Column Sort"
-			subtitleText="Click column headers to sort"
-			demoColumnTitle="Live Demo"
-			controlsColumnTitle="How It Works"
-			descriptionColumnTitle="Code">
+			titleText="SO01 Single Column Sort"
+			subtitleText="sortMode='single' - One column at a time"
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="How It Works">
 
 			{#snippet demoContent()}
 				<div class="grid-demo">
@@ -61,43 +109,48 @@
 			{/snippet}
 
 			{#snippet controlsContent()}
-				<div class="prose small">
-					<h5>Click Behavior</h5>
-					<p>Click any column header to sort:</p>
-					<ul class="small">
-						<li>First click: Ascending order</li>
-						<li>Second click: Descending order</li>
-						<li>Third click: Remove sort</li>
-					</ul>
-					<h5>Visual Indicators</h5>
-					<p>Sorted columns show arrow indicators in the header.</p>
-				</div>
-			{/snippet}
-
-			{#snippet descriptionContent()}
 				<CodeBlock
-					codeContent={`// Enable sorting globally
-grid.sortable = true;
+					codeContent={`// Single column sorting
+grid.sortMode = 'single';
 
-// Or per-column
+// sortMode options:
+// - 'none'   - Sorting disabled (default)
+// - 'single' - One column at a time
+// - 'multi'  - Multiple columns with Ctrl+Click
+
+// Disable sorting for specific column
 grid.columns = [
-  { field: 'name', title: 'Name', sortable: true },
-  { field: 'email', title: 'Email', sortable: false },
-  { field: 'salary', title: 'Salary', sortable: true }
+  { field: 'id', title: 'ID', sortable: false },
+  { field: 'name', title: 'Name' }
 ];`}
 					languageType="javascript"
 					titleText="Enable Sorting"
 				/>
 			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Click Behavior</h5>
+					<p>Click any column header to sort:</p>
+					<ul>
+						<li>First click: Ascending order</li>
+						<li>Second click: Descending order</li>
+						<li>Third click: Remove sort</li>
+					</ul>
+					<h5>Single Mode</h5>
+					<p>Only one column can be sorted at a time. Clicking a new column replaces the current sort.</p>
+					<p>Ctrl+Click behaves the same as regular click.</p>
+				</div>
+			{/snippet}
 		</ShowcaseSection>
 
 		<!-- Multi-Column Sort -->
 		<ShowcaseSection
-			titleText="Multi-Column Sort"
-			subtitleText="Ctrl+Click to add columns to sort order"
-			demoColumnTitle="Live Demo"
-			controlsColumnTitle="How It Works"
-			descriptionColumnTitle="Code">
+			titleText="SO02 Multi-Column Sort"
+			subtitleText="sortMode='multi' - Ctrl+Click to add columns"
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="How It Works">
 
 			{#snippet demoContent()}
 				<div class="grid-demo">
@@ -109,24 +162,11 @@ grid.columns = [
 			{/snippet}
 
 			{#snippet controlsContent()}
-				<div class="prose small">
-					<h5>Multi-Column Sorting</h5>
-					<p><strong>Ctrl+Click</strong> headers to add columns to sort:</p>
-					<ul class="small">
-						<li>First column is primary sort</li>
-						<li>Second column breaks ties</li>
-						<li>And so on...</li>
-					</ul>
-					<h5>Priority Indicators</h5>
-					<p>Numbers show sort priority (e.g., Name 1, Salary 2)</p>
-					<h5>Clear All</h5>
-					<p>Regular click clears multi-sort and starts fresh.</p>
-				</div>
-			{/snippet}
-
-			{#snippet descriptionContent()}
 				<CodeBlock
-					codeContent={`// Access current sort state
+					codeContent={`// Multi-column sorting
+grid.sortMode = 'multi';
+
+// Access current sort state
 grid.ondatarequest = (e) => {
   console.log('Sort:', e.sort);
   // e.sort = [
@@ -144,59 +184,150 @@ grid.sort = [
 					titleText="Sort State"
 				/>
 			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Multi-Column Sorting</h5>
+					<p><strong>Ctrl+Click</strong> headers to add columns to sort:</p>
+					<ul>
+						<li>First column is primary sort</li>
+						<li>Second column breaks ties</li>
+						<li>And so on...</li>
+					</ul>
+					<h5>Priority Indicators</h5>
+					<p>Numbers show sort priority (e.g., Name 1, Salary 2)</p>
+					<h5>Clear All</h5>
+					<p>Regular click clears multi-sort and starts fresh.</p>
+				</div>
+			{/snippet}
 		</ShowcaseSection>
 
 		<!-- Server-Side Sorting -->
 		<ShowcaseSection
-			titleText="Server-Side Sorting"
-			subtitleText="Handle sorting on the server"
-			demoColumnTitle="Explanation"
-			controlsColumnTitle="Event Details"
-			descriptionColumnTitle="Code">
+			titleText="SO03 Server-Side Sorting"
+			subtitleText="ondatarequest event for server-side sorting"
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="Console Output">
 
 			{#snippet demoContent()}
-				<div class="prose">
-					<p>For large datasets, you may want to sort data on the server rather than client-side.</p>
-					<p>The <code>ondatarequest</code> event fires whenever the user changes sort order, allowing you to:</p>
-					<ul>
-						<li>Fetch sorted data from an API</li>
-						<li>Apply sort parameters to database queries</li>
-						<li>Implement custom sort logic</li>
-					</ul>
+				<div class="grid-demo">
+					<web-grid
+						bind:this={serverSortGrid}
+						style="max-height: 300px;"
+					></web-grid>
+					<p class="small text-muted mt-2">Click column headers to see ondatarequest events. Try Ctrl+Click for multi-sort.</p>
 				</div>
 			{/snippet}
 
 			{#snippet controlsContent()}
-				<div class="prose small">
-					<h5>Event Properties</h5>
-					<p><code>e.sort</code> - Array of sort columns</p>
-					<p><code>e.trigger</code> - What caused the event ('sort', 'page', etc.)</p>
-					<p><code>e.page</code> - Current page number</p>
-					<p><code>e.pageSize</code> - Items per page</p>
-				</div>
-			{/snippet}
-
-			{#snippet descriptionContent()}
 				<CodeBlock
-					codeContent={`grid.ondatarequest = async (e) => {
+					codeContent={`grid.sortMode = 'multi';
+
+grid.ondatarequest = (e) => {
   if (e.trigger === 'sort') {
-    // Build query params from sort state
+    // e.sort contains current sort state
+    console.log('Sort changed:', e.sort);
+    // Output: [
+    //   { column: 'name', direction: 'asc' },
+    //   { column: 'salary', direction: 'desc' }
+    // ]
+
+    // For server-side sorting:
     const params = new URLSearchParams();
     e.sort.forEach((s, i) => {
-      params.set(\`sort[\${i}]\`, \`\${s.column}:\${s.direction}\`);
+      params.set(\`sort[\${i}]\`,
+        \`\${s.column}:\${s.direction}\`);
     });
 
-    // Fetch sorted data
-    const response = await fetch(\`/api/data?\${params}\`);
-    const data = await response.json();
-
-    // Update grid
-    grid.items = data.items;
+    // fetch(\`/api/data?\${params}\`)
+    //   .then(res => res.json())
+    //   .then(data => grid.items = data);
   }
 };`}
 					languageType="javascript"
-					titleText="Server-Side Handler"
+					titleText="ondatarequest Handler"
 				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="console-output">
+					<div class="d-flex justify-content-between align-items-center mb-2">
+						<h6 class="mb-0">Event Log</h6>
+						<button class="btn btn-sm btn-outline-secondary" onclick={clearConsole}>Clear</button>
+					</div>
+					<div class="console-log" style="font-family: monospace; font-size: 12px; background: #1e1e1e; color: #d4d4d4; padding: 8px; border-radius: 4px; height: 180px; overflow-y: auto;">
+						{#if consoleOutput.length === 0}
+							<div class="text-muted">Click column headers to see events...</div>
+						{:else}
+							{#each consoleOutput as line}
+								<div style="color: #9cdcfe;">{line}</div>
+							{/each}
+						{/if}
+					</div>
+				</div>
+			{/snippet}
+		</ShowcaseSection>
+
+		<!-- Programmatic Sort State -->
+		<ShowcaseSection
+			titleText="SO04 Programmatic Sort State"
+			subtitleText="Set sort indicators for pre-sorted data"
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="How It Works">
+
+			{#snippet demoContent()}
+				<div class="grid-demo">
+					<web-grid
+						bind:this={presortedGrid}
+						style="max-height: 350px;"
+					></web-grid>
+					<p class="small text-muted mt-2">Data pre-sorted by Department (asc), then Salary (desc). Sort indicators reflect this.</p>
+				</div>
+			{/snippet}
+
+			{#snippet controlsContent()}
+				<CodeBlock
+					codeContent={`// Option 1: Set on initialization
+grid.items = presortedData;
+grid.sortMode = 'multi';
+grid.sort = [
+  { column: 'department', direction: 'asc' },
+  { column: 'salary', direction: 'desc' }
+];
+
+// Option 2: Set in data request callback
+// (grid.sort is reactive - updates UI anytime)
+grid.ondatarequest = async (e) => {
+  const res = await fetch(\`/api?sort=\${e.sort}\`);
+  const { data, meta } = await res.json();
+
+  grid.items = data;
+  grid.sort = meta.sort; // Update indicators
+};`}
+					languageType="javascript"
+					titleText="Pre-sorted Data"
+				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>When to Use</h5>
+					<p>When data is sorted server-side:</p>
+					<ul>
+						<li>SQL ORDER BY clause</li>
+						<li>API with sort parameters</li>
+						<li>Cached sorted results</li>
+					</ul>
+					<h5>Reactive Property</h5>
+					<p><code>grid.sort</code> is reactive:</p>
+					<ul>
+						<li>Set anytime (init or callback)</li>
+						<li>UI updates immediately</li>
+						<li>Does NOT re-sort data</li>
+					</ul>
+				</div>
 			{/snippet}
 		</ShowcaseSection>
 	</div>

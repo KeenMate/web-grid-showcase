@@ -797,7 +797,7 @@ type OptionRenderContext = {
 		<div class="mt-5 p-4 bg-light border rounded">
 			<h3 class="h5 mb-3">Important Notes</h3>
 			<ul class="mb-0">
-				<li><strong>EditorOption type:</strong> <code>{{ '{' }} value: string | number | boolean, label: string, [key: string]: unknown {{ '}' }}</code></li>
+				<li><strong>EditorOption type:</strong> <code>{'{'} value: string | number | boolean, label: string, [key: string]: unknown {'}'}</code></li>
 				<li><strong>Callbacks override members:</strong> If both callback and member are set, callback takes priority</li>
 				<li><strong>AbortSignal:</strong> Autocomplete provides a signal for request cancellation</li>
 				<li><strong>Custom editors:</strong> Must call either <code>commit()</code> or <code>cancel()</code></li>

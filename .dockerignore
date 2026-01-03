@@ -1,0 +1,8 @@
+node_modules
+.svelte-kit
+build
+.env
+.env.*
+!.env.example
+# web-grid-package is copied explicitly in Dockerfile, exclude from COPY . .
+web-grid-package/node_modules

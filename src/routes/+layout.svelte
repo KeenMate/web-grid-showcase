@@ -3,8 +3,6 @@
 	import { ConfigProvider } from '@keenmate/svelte-docs';
 	import type { DocsConfig } from '@keenmate/svelte-docs';
 	import '../app.scss';
-	// Import web component globally to prevent FOUC
-	import '@keenmate/web-grid';
 
 	// Compile-time version injection from vite.config.ts
 	declare const __GRID_VERSION__: string;
@@ -21,7 +19,10 @@
 
 	let versionBadge: HTMLDivElement;
 
-	onMount(() => {
+	onMount(async () => {
+		// Import web component on client only (SSR doesn't have HTMLElement)
+		await import('@keenmate/web-grid');
+
 		// Find the navbar actions container and inject version badge
 		const navbarNav = document.querySelector('.navbar .navbar-nav.ms-auto');
 		if (navbarNav && versionBadge) {

@@ -1,11 +1,15 @@
-# Multi-stage build for SvelteKit treeview showcase
+# Multi-stage build for SvelteKit web-grid showcase
 FROM node:alpine AS builder
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy web-grid package first (needed for file: dependency)
+COPY web-grid-package/ ./web-grid-package/
+
+# Copy package files and update dependency path
 COPY package.json ./
+RUN sed -i 's|file:../web-grid/packages/web-grid|file:./web-grid-package|g' package.json
 
 # Install dependencies
 RUN npm i

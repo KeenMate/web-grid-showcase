@@ -12,7 +12,8 @@
 		{ id: 5, name: 'Eve Wilson', email: 'eve@example.com', department: 'Engineering', salary: 105000 }
 	];
 
-	onMount(() => {
+	onMount(async () => {
+		await import('@keenmate/web-grid');
 		if (navGrid) {
 			navGrid.columns = [
 				{ field: 'id', title: 'ID', width: '60px' },
@@ -35,11 +36,11 @@
 	<div class="py-4">
 		<!-- Navigate Mode -->
 		<ShowcaseSection
-			titleText="Navigate Mode"
+			titleText="KN01 Navigate Mode"
 			subtitleText="Excel-like cell navigation"
-			demoColumnTitle="Live Demo"
-			controlsColumnTitle="Keyboard Shortcuts"
-			descriptionColumnTitle="Configuration">
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="Keyboard Shortcuts">
 
 			{#snippet demoContent()}
 				<div class="grid-demo">
@@ -52,24 +53,6 @@
 			{/snippet}
 
 			{#snippet controlsContent()}
-				<div class="prose small">
-					<h5>Navigation</h5>
-					<table class="table table-sm small">
-						<tbody>
-							<tr><td><kbd>Arrow Keys</kbd></td><td>Move focus</td></tr>
-							<tr><td><kbd>Tab</kbd></td><td>Next cell</td></tr>
-							<tr><td><kbd>Shift+Tab</kbd></td><td>Previous cell</td></tr>
-							<tr><td><kbd>Home</kbd></td><td>First column</td></tr>
-							<tr><td><kbd>End</kbd></td><td>Last column</td></tr>
-							<tr><td><kbd>Ctrl+Home</kbd></td><td>First cell</td></tr>
-							<tr><td><kbd>Ctrl+End</kbd></td><td>Last cell</td></tr>
-							<tr><td><kbd>Page Up/Down</kbd></td><td>Page navigation</td></tr>
-						</tbody>
-					</table>
-				</div>
-			{/snippet}
-
-			{#snippet descriptionContent()}
 				<CodeBlock
 					codeContent={`// Enable navigate mode
 grid.editable = true;
@@ -86,15 +69,33 @@ grid.editTrigger = 'navigate';
 					titleText="Navigate Mode"
 				/>
 			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Navigation</h5>
+					<table class="table table-sm small">
+						<tbody>
+							<tr><td><kbd>Arrow Keys</kbd></td><td>Move focus</td></tr>
+							<tr><td><kbd>Tab</kbd></td><td>Next cell</td></tr>
+							<tr><td><kbd>Shift+Tab</kbd></td><td>Previous cell</td></tr>
+							<tr><td><kbd>Home</kbd></td><td>First column</td></tr>
+							<tr><td><kbd>End</kbd></td><td>Last column</td></tr>
+							<tr><td><kbd>Ctrl+Home</kbd></td><td>First cell</td></tr>
+							<tr><td><kbd>Ctrl+End</kbd></td><td>Last cell</td></tr>
+							<tr><td><kbd>Page Up/Down</kbd></td><td>Page navigation</td></tr>
+						</tbody>
+					</table>
+				</div>
+			{/snippet}
 		</ShowcaseSection>
 
 		<!-- Edit Shortcuts -->
 		<ShowcaseSection
-			titleText="Editing Shortcuts"
+			titleText="KN02 Editing Shortcuts"
 			subtitleText="Quick keyboard actions"
-			demoColumnTitle="Edit Actions"
-			controlsColumnTitle="Clipboard"
-			descriptionColumnTitle="Code">
+			col1Title="Edit Actions"
+			col2Title="Code"
+			col3Title="Clipboard">
 
 			{#snippet demoContent()}
 				<div class="prose small">
@@ -113,22 +114,6 @@ grid.editTrigger = 'navigate';
 			{/snippet}
 
 			{#snippet controlsContent()}
-				<div class="prose small">
-					<h5>Clipboard Support</h5>
-					<table class="table table-sm">
-						<tbody>
-							<tr><td><kbd>Ctrl+C</kbd></td><td>Copy cell value</td></tr>
-							<tr><td><kbd>Ctrl+V</kbd></td><td>Paste into cell</td></tr>
-							<tr><td><kbd>Ctrl+Delete</kbd></td><td>Delete row</td></tr>
-						</tbody>
-					</table>
-					<h5>Callbacks</h5>
-					<p><code>beforeCopyCallback</code> - Transform on copy</p>
-					<p><code>beforePasteCallback</code> - Validate/transform on paste</p>
-				</div>
-			{/snippet}
-
-			{#snippet descriptionContent()}
 				<CodeBlock
 					codeContent={`// Customize copy behavior
 {
@@ -159,6 +144,22 @@ grid.onrowdelete = (e) => {
 					languageType="javascript"
 					titleText="Clipboard"
 				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Clipboard Support</h5>
+					<table class="table table-sm">
+						<tbody>
+							<tr><td><kbd>Ctrl+C</kbd></td><td>Copy cell value</td></tr>
+							<tr><td><kbd>Ctrl+V</kbd></td><td>Paste into cell</td></tr>
+							<tr><td><kbd>Ctrl+Delete</kbd></td><td>Delete row</td></tr>
+						</tbody>
+					</table>
+					<h5>Callbacks</h5>
+					<p><code>beforeCopyCallback</code> - Transform on copy</p>
+					<p><code>beforePasteCallback</code> - Validate/transform on paste</p>
+				</div>
 			{/snippet}
 		</ShowcaseSection>
 

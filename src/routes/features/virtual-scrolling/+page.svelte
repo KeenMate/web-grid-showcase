@@ -17,7 +17,8 @@
 		}));
 	};
 
-	onMount(() => {
+	onMount(async () => {
+		await import('@keenmate/web-grid');
 		const columns = [
 			{ field: 'id', title: 'ID', width: '80px' },
 			{ field: 'name', title: 'Name', width: '150px' },
@@ -51,11 +52,11 @@
 	<div class="py-4">
 		<!-- Virtual Scrolling -->
 		<ShowcaseSection
-			titleText="Virtual Scrolling"
+			titleText="VS01 Virtual Scrolling"
 			subtitleText="Render only visible rows"
-			demoColumnTitle="Live Demo (10,000 rows)"
-			controlsColumnTitle="Configuration"
-			descriptionColumnTitle="Code">
+			col1Title="Live Demo (10,000 rows)"
+			col2Title="Code"
+			col3Title="Configuration">
 
 			{#snippet demoContent()}
 				<div class="grid-demo">
@@ -68,18 +69,6 @@
 			{/snippet}
 
 			{#snippet controlsContent()}
-				<div class="prose small">
-					<h5>How It Works</h5>
-					<p>Only visible rows (plus buffer) are rendered to the DOM. As you scroll, rows are recycled.</p>
-					<h5>Key Properties</h5>
-					<p><code>virtualScroll</code> - Enable manually</p>
-					<p><code>virtualScrollThreshold</code> - Auto-enable threshold (default: 100)</p>
-					<p><code>virtualScrollRowHeight</code> - Row height in px (default: 38)</p>
-					<p><code>virtualScrollBuffer</code> - Extra rows to render (default: 10)</p>
-				</div>
-			{/snippet}
-
-			{#snippet descriptionContent()}
 				<CodeBlock
 					codeContent={`// Manual enable
 grid.virtualScroll = true;
@@ -94,15 +83,27 @@ grid.items = generateData(10000);`}
 					titleText="Virtual Scrolling"
 				/>
 			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>How It Works</h5>
+					<p>Only visible rows (plus buffer) are rendered to the DOM. As you scroll, rows are recycled.</p>
+					<h5>Key Properties</h5>
+					<p><code>virtualScroll</code> - Enable manually</p>
+					<p><code>virtualScrollThreshold</code> - Auto-enable threshold (default: 100)</p>
+					<p><code>virtualScrollRowHeight</code> - Row height in px (default: 38)</p>
+					<p><code>virtualScrollBuffer</code> - Extra rows to render (default: 10)</p>
+				</div>
+			{/snippet}
 		</ShowcaseSection>
 
 		<!-- Infinite Scroll -->
 		<ShowcaseSection
-			titleText="Infinite Scroll"
+			titleText="VS02 Infinite Scroll"
 			subtitleText="Load more data as you scroll"
-			demoColumnTitle="Live Demo"
-			controlsColumnTitle="Configuration"
-			descriptionColumnTitle="Code">
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="Configuration">
 
 			{#snippet demoContent()}
 				<div class="grid-demo">
@@ -115,19 +116,6 @@ grid.items = generateData(10000);`}
 			{/snippet}
 
 			{#snippet controlsContent()}
-				<div class="prose small">
-					<h5>Infinite Scroll</h5>
-					<p>Load data progressively as user scrolls to bottom.</p>
-					<h5>Properties</h5>
-					<p><code>infiniteScroll</code> - Enable infinite scroll</p>
-					<p><code>hasMoreItems</code> - More data available</p>
-					<p><code>infiniteScrollThreshold</code> - Pixels from bottom to trigger (default: 100)</p>
-					<h5>Event</h5>
-					<p><code>ondatarequest</code> with <code>trigger: 'loadMore'</code></p>
-				</div>
-			{/snippet}
-
-			{#snippet descriptionContent()}
 				<CodeBlock
 					codeContent={`grid.infiniteScroll = true;
 grid.hasMoreItems = true;
@@ -152,6 +140,19 @@ grid.ondatarequest = async (e) => {
 					languageType="javascript"
 					titleText="Infinite Scroll"
 				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Infinite Scroll</h5>
+					<p>Load data progressively as user scrolls to bottom.</p>
+					<h5>Properties</h5>
+					<p><code>infiniteScroll</code> - Enable infinite scroll</p>
+					<p><code>hasMoreItems</code> - More data available</p>
+					<p><code>infiniteScrollThreshold</code> - Pixels from bottom to trigger (default: 100)</p>
+					<h5>Event</h5>
+					<p><code>ondatarequest</code> with <code>trigger: 'loadMore'</code></p>
+				</div>
 			{/snippet}
 		</ShowcaseSection>
 

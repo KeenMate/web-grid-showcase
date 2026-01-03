@@ -11,7 +11,8 @@
 		{ id: 4, name: 'Diana Ross', department: 'Sales', salary: 67000 }
 	];
 
-	onMount(() => {
+	onMount(async () => {
+		await import('@keenmate/web-grid');
 		if (themedGrid) {
 			themedGrid.columns = [
 				{ field: 'id', title: 'ID', width: '60px' },
@@ -32,67 +33,67 @@
 	<div class="py-4">
 		<!-- Themed Grid -->
 		<ShowcaseSection
-			titleText="CSS Variables"
+			titleText="CS01 CSS Variables"
 			subtitleText="Override default styles"
-			demoColumnTitle="Live Demo"
-			controlsColumnTitle="Key Variables"
-			descriptionColumnTitle="Code">
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="Key Variables">
 
 			{#snippet demoContent()}
 				<div class="grid-demo">
 					<web-grid
 						bind:this={themedGrid}
-						style="max-height: 300px; --wg-accent-color: #7c3aed; --wg-header-background: #1e1b4b; --wg-header-color: #e0e7ff;"
+						style="max-height: 300px; --wg-accent-color: #7c3aed; --wg-header-bg: #1e1b4b; --wg-header-color: #e0e7ff;"
 					></web-grid>
 					<p class="small text-muted mt-2">Custom purple theme applied via CSS variables.</p>
 				</div>
 			{/snippet}
 
 			{#snippet controlsContent()}
-				<div class="prose small">
-					<h5>Color Variables</h5>
-					<p><code>--wg-accent-color</code> - Primary accent</p>
-					<p><code>--wg-text-color-1</code> - Primary text</p>
-					<p><code>--wg-layer-1</code> - Background</p>
-					<h5>Header Variables</h5>
-					<p><code>--wg-header-background</code></p>
-					<p><code>--wg-header-color</code></p>
-					<p><code>--wg-header-border</code></p>
-					<h5>Cell Variables</h5>
-					<p><code>--wg-cell-padding</code></p>
-					<p><code>--wg-cell-border</code></p>
-					<p><code>--wg-row-background-hover</code></p>
-				</div>
-			{/snippet}
-
-			{#snippet descriptionContent()}
 				<CodeBlock
 					codeContent={`<!-- Inline style -->
 <web-grid style="
   --wg-accent-color: #7c3aed;
-  --wg-header-background: #1e1b4b;
+  --wg-header-bg: #1e1b4b;
   --wg-header-color: #e0e7ff;
 "></web-grid>
 
 <!-- Or in CSS -->
 web-grid {
   --wg-accent-color: #7c3aed;
-  --wg-header-background: #1e1b4b;
+  --wg-header-bg: #1e1b4b;
   --wg-header-color: #e0e7ff;
 }`}
 					languageType="html"
 					titleText="CSS Variables"
 				/>
 			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Color Variables</h5>
+					<p><code>--wg-accent-color</code> - Primary accent</p>
+					<p><code>--wg-text-color-1</code> - Primary text</p>
+					<p><code>--wg-surface-1</code> - Background</p>
+					<h5>Header Variables</h5>
+					<p><code>--wg-header-bg</code></p>
+					<p><code>--wg-header-color</code></p>
+					<p><code>--wg-header-border</code></p>
+					<h5>Cell Variables</h5>
+					<p><code>--wg-cell-padding</code></p>
+					<p><code>--wg-cell-border</code></p>
+					<p><code>--wg-row-bg-hover</code></p>
+				</div>
+			{/snippet}
 		</ShowcaseSection>
 
 		<!-- Theme Integration -->
 		<ShowcaseSection
-			titleText="Theme Integration"
+			titleText="CS02 Theme Integration"
 			subtitleText="Use with @keenmate/theme-designer"
-			demoColumnTitle="Explanation"
-			controlsColumnTitle="Base Variables"
-			descriptionColumnTitle="Code">
+			col1Title="Explanation"
+			col2Title="Code"
+			col3Title="Base Variables">
 
 			{#snippet demoContent()}
 				<div class="prose">
@@ -103,26 +104,12 @@ web-grid {
 			{/snippet}
 
 			{#snippet controlsContent()}
-				<div class="prose small">
-					<h5>Supported Base Variables</h5>
-					<p><strong>Colors:</strong></p>
-					<p><code>--base-accent-color</code></p>
-					<p><code>--base-text-color-1</code></p>
-					<p><code>--base-layer-1</code></p>
-					<p><code>--base-stroke-color</code></p>
-					<p><strong>Typography:</strong></p>
-					<p><code>--base-font-family</code></p>
-					<p><code>--base-font-size-base</code></p>
-				</div>
-			{/snippet}
-
-			{#snippet descriptionContent()}
 				<CodeBlock
 					codeContent={`/* Set base theme for all components */
 :root {
   --base-accent-color: #e91e63;
   --base-font-family: 'Inter', sans-serif;
-  --base-layer-1: #ffffff;
+  --base-surface-1: #ffffff;
   --base-text-color-1: #1f2937;
 }
 
@@ -134,15 +121,85 @@ web-grid {
 					titleText="Theme Integration"
 				/>
 			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Supported Base Variables</h5>
+					<p><strong>Colors:</strong></p>
+					<p><code>--base-accent-color</code></p>
+					<p><code>--base-text-color-1</code></p>
+					<p><code>--base-surface-1</code></p>
+					<p><code>--base-border-color</code></p>
+					<p><strong>Typography:</strong></p>
+					<p><code>--base-font-family</code></p>
+					<p><code>--base-font-size-base</code></p>
+				</div>
+			{/snippet}
+		</ShowcaseSection>
+
+		<!-- CSS Variables Manifest -->
+		<ShowcaseSection
+			titleText="CS03 CSS Variables Manifest"
+			subtitleText="Machine-readable variable documentation"
+			col1Title="What's Included"
+			col2Title="Code"
+			col3Title="Use Cases">
+
+			{#snippet demoContent()}
+				<div class="prose">
+					<p>The package includes a machine-readable manifest documenting all 155 CSS variables:</p>
+					<ul>
+						<li><strong>34 base variables</strong> - <code>--base-*</code> consumed from theme layer</li>
+						<li><strong>121 component variables</strong> - <code>--wg-*</code> with category and usage</li>
+					</ul>
+					<p>Each variable includes its category and a description of what it controls in the UI.</p>
+				</div>
+			{/snippet}
+
+			{#snippet controlsContent()}
+				<CodeBlock
+					codeContent={`import manifest from '@keenmate/web-grid/manifest'
+
+// manifest.prefix = "wg"
+// manifest.baseVariables = [
+//   { name: "base-accent-color", required: true, usage: "..." }
+// ]
+// manifest.componentVariables = [
+//   { name: "wg-header-bg", category: "header", usage: "..." }
+// ]
+
+// Example: List all header variables
+const headerVars = manifest.componentVariables
+  .filter(v => v.category === 'header')
+  .map(v => '--' + v.name);
+
+// Schema: keenmate/schemas/component-variables.schema.json`}
+					languageType="javascript"
+					titleText="Manifest Import"
+				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Theme Designer</h5>
+					<p>Build UI for customizing all variables</p>
+					<h5>Documentation</h5>
+					<p>Generate variable reference docs</p>
+					<h5>Validation</h5>
+					<p>Verify theme completeness</p>
+					<h5>Tooling</h5>
+					<p>IDE autocomplete, linting</p>
+				</div>
+			{/snippet}
 		</ShowcaseSection>
 
 		<!-- Dynamic Styling -->
 		<ShowcaseSection
-			titleText="Dynamic Cell Styling"
+			titleText="CS04 Dynamic Cell Styling"
 			subtitleText="Style cells based on data"
-			demoColumnTitle="Methods"
-			controlsColumnTitle="Callbacks"
-			descriptionColumnTitle="Code">
+			col1Title="Methods"
+			col2Title="Code"
+			col3Title="Callbacks">
 
 			{#snippet demoContent()}
 				<div class="prose">
@@ -157,17 +214,6 @@ web-grid {
 			{/snippet}
 
 			{#snippet controlsContent()}
-				<div class="prose small">
-					<h5>cellClassCallback</h5>
-					<p>Return CSS class name based on cell value and row.</p>
-					<h5>rowClassCallback</h5>
-					<p>Return CSS class for entire row.</p>
-					<h5>customStylesCallback</h5>
-					<p>Return CSS string to inject. Useful for defining the classes used by callbacks.</p>
-				</div>
-			{/snippet}
-
-			{#snippet descriptionContent()}
 				<CodeBlock
 					codeContent={`// Define custom styles
 grid.customStylesCallback = () => \`
@@ -196,6 +242,66 @@ grid.rowClassCallback = (row) => {
 					titleText="Dynamic Styling"
 				/>
 			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>cellClassCallback</h5>
+					<p>Return CSS class name based on cell value and row.</p>
+					<h5>rowClassCallback</h5>
+					<p>Return CSS class for entire row.</p>
+					<h5>customStylesCallback</h5>
+					<p>Return CSS string to inject. Useful for defining the classes used by callbacks.</p>
+				</div>
+			{/snippet}
+		</ShowcaseSection>
+
+		<!-- Global Scaling -->
+		<ShowcaseSection
+			titleText="CS05 Global Scaling"
+			subtitleText="Scale entire grid with --wg-rem"
+			col1Title="How It Works"
+			col2Title="Code"
+			col3Title="Benefits">
+
+			{#snippet demoContent()}
+				<div class="prose">
+					<p>All sizes in web-grid are based on <code>--wg-rem</code> (default: 10px). This enables proportional scaling of the entire grid.</p>
+					<p>Font sizes, spacing, button sizes, and icons all scale together when you change this single variable.</p>
+					<p>The 10px base was chosen for clean math: <code>10 × 1.4 = 14px</code> (no rounding errors).</p>
+				</div>
+			{/snippet}
+
+			{#snippet controlsContent()}
+				<CodeBlock
+					codeContent={`/* Scale grid up 20% */
+web-grid {
+  --wg-rem: 12px;
+}
+
+/* Scale grid down 20% */
+web-grid {
+  --wg-rem: 8px;
+}
+
+/* Use with Pure Admin's rem system */
+web-grid {
+  --wg-rem: 1rem; /* inherits from html */
+}`}
+					languageType="css"
+					titleText="Global Scaling"
+				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Proportional Scaling</h5>
+					<p>All sizes use <code>calc(N × var(--wg-rem))</code></p>
+					<h5>Clean Pixel Values</h5>
+					<p>10px base avoids fractional pixels</p>
+					<h5>Theme Designer</h5>
+					<p>Pure Admin sets <code>html {'{'} font-size: 10px {'}'}</code> so <code>1rem = 10px</code></p>
+				</div>
+			{/snippet}
 		</ShowcaseSection>
 
 		<!-- CSS Variables Reference -->
@@ -209,14 +315,23 @@ grid.rowClassCallback = (row) => {
 							<tr><td><code>--wg-accent-color</code></td><td>Primary accent</td></tr>
 							<tr><td><code>--wg-text-color-1</code></td><td>Primary text</td></tr>
 							<tr><td><code>--wg-text-color-2</code></td><td>Secondary text</td></tr>
-							<tr><td><code>--wg-layer-1</code></td><td>Background</td></tr>
-							<tr><td><code>--wg-layer-2</code></td><td>Alternate background</td></tr>
-							<tr><td><code>--wg-stroke-color</code></td><td>Borders</td></tr>
-							<tr><td><code>--wg-error-color</code></td><td>Error/danger</td></tr>
+							<tr><td><code>--wg-surface-1</code></td><td>Background</td></tr>
+							<tr><td><code>--wg-surface-2</code></td><td>Alternate background</td></tr>
+							<tr><td><code>--wg-border-color</code></td><td>Borders</td></tr>
+							<tr><td><code>--wg-danger-color</code></td><td>Error/danger</td></tr>
 						</tbody>
 					</table>
 				</div>
 				<div class="col-md-6">
+					<h5>Sizing</h5>
+					<table class="table table-sm small">
+						<tbody>
+							<tr><td><code>--wg-rem</code></td><td>Base unit (default: 10px)</td></tr>
+							<tr><td><code>--wg-spacing-*</code></td><td>Spacing (xs, sm, md, lg, xl)</td></tr>
+							<tr><td><code>--wg-font-size-*</code></td><td>Font sizes</td></tr>
+							<tr><td><code>--wg-border-radius-*</code></td><td>Border radii</td></tr>
+						</tbody>
+					</table>
 					<h5>Components</h5>
 					<table class="table table-sm small">
 						<tbody>

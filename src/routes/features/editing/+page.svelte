@@ -5,6 +5,7 @@
 	let textEditorGrid: any;
 	let selectEditorGrid: any;
 	let validationGrid: any;
+	let richValidationGrid: any;
 
 	const employees = [
 		{ id: 1, name: 'Alice Johnson', email: 'alice@example.com', status: 'active', salary: 95000 },
@@ -12,13 +13,14 @@
 		{ id: 3, name: 'Charlie Brown', email: 'charlie@example.com', status: 'active', salary: 88000 }
 	];
 
-	onMount(() => {
+	onMount(async () => {
+		await import('@keenmate/web-grid');
 		// Text Editor Grid
 		if (textEditorGrid) {
 			textEditorGrid.columns = [
 				{ field: 'id', title: 'ID', width: '60px', editable: false },
 				{ field: 'name', title: 'Name', width: '150px', editor: 'text', editorOptions: { placeholder: 'Enter name...' } },
-				{ field: 'email', title: 'Email', editor: 'text', editorOptions: { placeholder: 'Enter email...' } },
+				{ field: 'email', title: 'Email', editor: 'text', editorOptions: { placeholder: 'Enter email...', editStartSelection: 'selectAll' } },
 				{ field: 'salary', title: 'Salary', width: '120px', align: 'right', editor: 'number', editorOptions: { min: 0, step: 1000 }, formatCallback: (v: number) => '$' + v.toLocaleString() }
 			];
 			textEditorGrid.items = [...employees];
@@ -34,6 +36,7 @@
 					field: 'status',
 					title: 'Status',
 					width: '120px',
+					editable: true,
 					editor: 'select',
 					editorOptions: {
 						options: [
@@ -54,10 +57,11 @@
 		// Validation Grid
 		if (validationGrid) {
 			validationGrid.columns = [
-				{ field: 'name', title: 'Name', width: '150px', editor: 'text' },
+				{ field: 'name', title: 'Name', width: '150px', editable: true, editor: 'text' },
 				{
 					field: 'email',
 					title: 'Email',
+					editable: true,
 					editor: 'text',
 					beforeCommitCallback: ({ value }: { value: string }) => {
 						if (!value || !value.includes('@')) {
@@ -70,6 +74,7 @@
 					field: 'salary',
 					title: 'Salary',
 					width: '120px',
+					editable: true,
 					editor: 'number',
 					align: 'right',
 					formatCallback: (v: number) => '$' + v.toLocaleString(),
@@ -88,6 +93,61 @@
 			validationGrid.editable = true;
 			validationGrid.editTrigger = 'navigate';
 		}
+
+		// Rich Validation Tooltip Grid
+		if (richValidationGrid) {
+			const escapeHtml = (str: string) => str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] || c));
+
+			richValidationGrid.columns = [
+				{ field: 'name', title: 'Name', width: '150px', editable: true, editor: 'text' },
+				{
+					field: 'email',
+					title: 'Email',
+					editable: true,
+					editor: 'text',
+					beforeCommitCallback: ({ value }: { value: string }) => {
+						if (!value || !value.includes('@')) {
+							return { valid: false, message: 'Email must contain @' };
+						}
+						return { valid: true, transformedValue: value.toLowerCase() };
+					},
+					// Column-level rich tooltip
+					validationTooltipCallback: ({ error, value }: any) => {
+						const safeValue = escapeHtml(String(value || ''));
+						return `<strong style="color: #dc2626;">Invalid Email</strong>
+							<p style="margin: 4px 0;">${escapeHtml(error)}</p>
+							<p style="margin: 4px 0; color: #6b7280;">You entered: <code style="background: #f3f4f6; padding: 2px 4px; border-radius: 3px;">${safeValue}</code></p>
+							<p style="margin: 4px 0; font-size: 11px; color: #9ca3af;">Example: user@example.com</p>`;
+					}
+				},
+				{
+					field: 'salary',
+					title: 'Salary',
+					width: '120px',
+					editable: true,
+					editor: 'number',
+					align: 'right',
+					formatCallback: (v: number) => '$' + v.toLocaleString(),
+					beforeCommitCallback: ({ value }: { value: number }) => {
+						if (value < 30000) return { valid: false, message: 'Below minimum' };
+						if (value > 200000) return { valid: false, message: 'Above maximum' };
+						return { valid: true };
+					}
+				}
+			];
+			richValidationGrid.items = [...employees];
+			richValidationGrid.editable = true;
+			richValidationGrid.editTrigger = 'navigate';
+			// Grid-level rich tooltip (applies to salary column which has no column-level callback)
+			richValidationGrid.validationTooltipCallback = ({ field, error, value }: any) => {
+				return `<div style="text-align: center;">
+					<strong style="color: #dc2626;">Validation Failed</strong>
+					<p style="margin: 4px 0;">${escapeHtml(error)}</p>
+					<p style="margin: 4px 0; font-size: 11px; color: #6b7280;">Field: ${escapeHtml(field)} | Value: ${escapeHtml(String(value))}</p>
+					<p style="margin: 4px 0; font-size: 11px;">Range: $30,000 - $200,000</p>
+				</div>`;
+			};
+		}
 	});
 </script>
 
@@ -98,11 +158,11 @@
 	<div class="py-4">
 		<!-- Text & Number Editors -->
 		<ShowcaseSection
-			titleText="Text & Number Editors"
+			titleText="ED01 Text & Number Editors"
 			subtitleText="Basic input editing"
-			demoColumnTitle="Live Demo"
-			controlsColumnTitle="Configuration"
-			descriptionColumnTitle="Code">
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="Description">
 
 			{#snippet demoContent()}
 				<div class="grid-demo">
@@ -115,25 +175,10 @@
 			{/snippet}
 
 			{#snippet controlsContent()}
-				<div class="prose small">
-					<h5>Edit Triggers</h5>
-					<ul class="small">
-						<li><code>click</code> - Single click</li>
-						<li><code>dblclick</code> - Double click</li>
-						<li><code>navigate</code> - Excel-like (type to edit)</li>
-						<li><code>always</code> - Always in edit mode</li>
-					</ul>
-					<h5>Text Options</h5>
-					<p><code>maxLength</code>, <code>placeholder</code>, <code>pattern</code></p>
-					<h5>Number Options</h5>
-					<p><code>min</code>, <code>max</code>, <code>step</code>, <code>decimalPlaces</code></p>
-				</div>
-			{/snippet}
-
-			{#snippet descriptionContent()}
 				<CodeBlock
 					codeContent={`grid.editable = true;
 grid.editTrigger = 'click';
+grid.editStartSelection = 'mousePosition'; // default
 
 grid.columns = [
   {
@@ -142,7 +187,9 @@ grid.columns = [
     editor: 'text',
     editorOptions: {
       placeholder: 'Enter name...',
-      maxLength: 100
+      maxLength: 100,
+      // Per-column override:
+      // editStartSelection: 'selectAll'
     }
   },
   {
@@ -160,15 +207,38 @@ grid.columns = [
 					titleText="Text & Number"
 				/>
 			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Edit Triggers</h5>
+					<ul>
+						<li><code>click</code> - Single click</li>
+						<li><code>dblclick</code> - Double click</li>
+						<li><code>navigate</code> - Excel-like (type to edit)</li>
+						<li><code>always</code> - Always in edit mode</li>
+					</ul>
+					<h5>Edit Start Selection</h5>
+					<ul>
+						<li><code>mousePosition</code> - Cursor at click (default)</li>
+						<li><code>selectAll</code> - Select all text</li>
+						<li><code>cursorAtStart</code> - Cursor at start</li>
+						<li><code>cursorAtEnd</code> - Cursor at end</li>
+					</ul>
+					<h5>Text Options</h5>
+					<p><code>maxLength</code>, <code>placeholder</code>, <code>pattern</code></p>
+					<h5>Number Options</h5>
+					<p><code>min</code>, <code>max</code>, <code>step</code>, <code>decimalPlaces</code></p>
+				</div>
+			{/snippet}
 		</ShowcaseSection>
 
 		<!-- Select & Combobox -->
 		<ShowcaseSection
-			titleText="Select Editor"
+			titleText="ED02 Select Editor"
 			subtitleText="Dropdown selection"
-			demoColumnTitle="Live Demo"
-			controlsColumnTitle="Configuration"
-			descriptionColumnTitle="Code">
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="Description">
 
 			{#snippet demoContent()}
 				<div class="grid-demo">
@@ -181,22 +251,6 @@ grid.columns = [
 			{/snippet}
 
 			{#snippet controlsContent()}
-				<div class="prose small">
-					<h5>Editor Types</h5>
-					<ul class="small">
-						<li><code>select</code> - Static dropdown</li>
-						<li><code>combobox</code> - Filterable dropdown</li>
-						<li><code>autocomplete</code> - Async search</li>
-					</ul>
-					<h5>Option Properties</h5>
-					<p><code>valueMember</code> - Value property</p>
-					<p><code>displayMember</code> - Display text</p>
-					<p><code>iconMember</code> - Optional icon</p>
-					<p><code>groupMember</code> - Group heading</p>
-				</div>
-			{/snippet}
-
-			{#snippet descriptionContent()}
 				<CodeBlock
 					codeContent={`{
   field: 'status',
@@ -218,15 +272,31 @@ grid.columns = [
 					titleText="Select Editor"
 				/>
 			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Editor Types</h5>
+					<ul>
+						<li><code>select</code> - Static dropdown</li>
+						<li><code>combobox</code> - Filterable dropdown</li>
+						<li><code>autocomplete</code> - Async search</li>
+					</ul>
+					<h5>Option Properties</h5>
+					<p><code>valueMember</code> - Value property</p>
+					<p><code>displayMember</code> - Display text</p>
+					<p><code>iconMember</code> - Optional icon</p>
+					<p><code>groupMember</code> - Group heading</p>
+				</div>
+			{/snippet}
 		</ShowcaseSection>
 
 		<!-- Validation -->
 		<ShowcaseSection
-			titleText="Validation"
+			titleText="ED03 Validation"
 			subtitleText="Validate and transform values before commit"
-			demoColumnTitle="Live Demo"
-			controlsColumnTitle="Configuration"
-			descriptionColumnTitle="Code">
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="Description">
 
 			{#snippet demoContent()}
 				<div class="grid-demo">
@@ -239,21 +309,6 @@ grid.columns = [
 			{/snippet}
 
 			{#snippet controlsContent()}
-				<div class="prose small">
-					<h5>beforeCommitCallback</h5>
-					<p>Called before value is saved. Return:</p>
-					<ul class="small">
-						<li><code>valid: false</code> - Block commit, show error</li>
-						<li><code>valid: true</code> - Allow commit</li>
-						<li><code>transformedValue</code> - Modify the value</li>
-					</ul>
-					<h5>Events</h5>
-					<p><code>onrowchange</code> - After successful commit</p>
-					<p><code>onvalidationerror</code> - When validation fails</p>
-				</div>
-			{/snippet}
-
-			{#snippet descriptionContent()}
 				<CodeBlock
 					codeContent={`{
   field: 'email',
@@ -282,6 +337,87 @@ grid.onrowchange = (e) => {
 					languageType="javascript"
 					titleText="Validation"
 				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>beforeCommitCallback</h5>
+					<p>Called before value is saved. Return:</p>
+					<ul>
+						<li><code>valid: false</code> - Block commit, show error</li>
+						<li><code>valid: true</code> - Allow commit</li>
+						<li><code>transformedValue</code> - Modify the value</li>
+					</ul>
+					<h5>Events</h5>
+					<p><code>onrowchange</code> - After successful commit</p>
+					<p><code>onvalidationerror</code> - When validation fails</p>
+				</div>
+			{/snippet}
+		</ShowcaseSection>
+
+		<!-- Rich Validation Tooltips -->
+		<ShowcaseSection
+			titleText="ED04 Rich Validation Tooltips"
+			subtitleText="HTML tooltips for validation errors"
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="Description">
+
+			{#snippet demoContent()}
+				<div class="grid-demo">
+					<web-grid
+						bind:this={richValidationGrid}
+						style="max-height: 250px;"
+					></web-grid>
+					<p class="small text-muted mt-2">Enter invalid email or salary, then hover over the red cell to see rich tooltip.</p>
+				</div>
+			{/snippet}
+
+			{#snippet controlsContent()}
+				<CodeBlock
+					codeContent={`// Helper to escape user input
+const escapeHtml = (s) => s.replace(/[&<>"']/g,
+  c => ({'&':'&amp;','<':'&lt;','>':'&gt;',
+         '"':'&quot;',"'":'&#39;'}[c]));
+
+// Column-level callback (overrides grid)
+{
+  field: 'email',
+  validationTooltipCallback: ({ error, value }) => {
+    return \`
+      <strong style="color: #dc2626;">Invalid</strong>
+      <p>\${escapeHtml(error)}</p>
+      <p>You entered: <code>\${escapeHtml(value)}</code></p>
+    \`;
+  }
+}
+
+// Grid-level callback (fallback)
+grid.validationTooltipCallback = ({ field, error, value }) => {
+  return \`<b>\${field}</b>: \${escapeHtml(error)}\`;
+};`}
+					languageType="javascript"
+					titleText="Rich Tooltips"
+				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>validationTooltipCallback</h5>
+					<p>Return HTML string for rich error display.</p>
+					<h5>Context Object</h5>
+					<ul>
+						<li><code>field</code> - Column field name</li>
+						<li><code>error</code> - Validation message</li>
+						<li><code>value</code> - The invalid value</li>
+						<li><code>row</code> - Row data</li>
+						<li><code>rowIndex</code> - Row index</li>
+					</ul>
+					<h5>Priority</h5>
+					<p>Column-level overrides grid-level callback.</p>
+					<h5>Security</h5>
+					<p>Always escape user values to prevent XSS.</p>
+				</div>
 			{/snippet}
 		</ShowcaseSection>
 

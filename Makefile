@@ -1,11 +1,11 @@
-# Web Multiselect Showcase - Makefile
+# Web grid Showcase - Makefile
 # Development and build commands for the showcase project
 
 # === Configuration ===
 # Docker image settings
-DOCKER_IMAGE_NAME = registry.km8.es/web-multiselect-showcase
-DOCKER_TAG = production
-DOCKER_CONTAINER_NAME = web-multiselect-showcase
+DOCKER_IMAGE_NAME = registry.km8.es/web-grid-showcase
+DOCKER_TAG = prod
+DOCKER_CONTAINER_NAME = web-grid-showcase
 DOCKER_PORT = 8080
 
 # Development settings
@@ -22,7 +22,7 @@ PACKAGE_LOCK = package-lock.json
 
 # Default target
 help: ## Show this help message
-	@echo "Web Multiselect Showcase - Available Commands:"
+	@echo "Web grid Showcase - Available Commands:"
 	@echo ""
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
@@ -30,15 +30,15 @@ help: ## Show this help message
 install: ## Install dependencies
 	npm install
 
-link-lib: ## Link the @keenmate/web-multiselect library from ../web-multiselect
-	cd ../web-multiselect && npm link
-	npm link @keenmate/web-multiselect
+link-lib: ## Link the @keenmate/web-grid library from ../web-grid
+	cd ../web-grid && npm link
+	npm link @keenmate/web-grid
 
-unlink-lib: ## Unlink the @keenmate/web-multiselect library
-	npm unlink @keenmate/web-multiselect
+unlink-lib: ## Unlink the @keenmate/web-grid library
+	npm unlink @keenmate/web-grid
 
-install-published: ## Install published version of @keenmate/web-multiselect
-	npm install @keenmate/web-multiselect@latest
+install-published: ## Install published version of @keenmate/web-grid
+	npm install @keenmate/web-grid@latest
 
 dev: ## Start development server
 	npm run dev
@@ -63,11 +63,11 @@ lint: ## Run linting (if configured)
 	@echo "Linting not configured yet"
 
 # Library development helpers
-build-lib: ## Build the linked web-multiselect library
-	cd ../web-multiselect && npm run package
+build-lib: ## Build the linked web-grid library
+	cd ../web-grid && npm run package
 
 rebuild-lib: ## Rebuild and relink the library
-	cd ../web-multiselect && npm run package
+	cd ../web-grid && npm run package
 	$(MAKE) link-lib
 
 # Cleanup
@@ -125,8 +125,13 @@ test-build: build ## Test that build completes successfully
 
 # Docker commands
 docker-build: ## Build Docker image
+	@echo "Copying web-grid package for Docker build..."
+	rm -rf web-grid-package
+	cp -r ../web-grid/packages/web-grid web-grid-package
+	rm -rf web-grid-package/node_modules
 	@echo "Building Docker image: $(DOCKER_IMAGE_NAME):$(DOCKER_TAG)"
 	docker build -t $(DOCKER_IMAGE_NAME):$(DOCKER_TAG) .
+	rm -rf web-grid-package
 	@echo "Docker image built successfully!"
 
 docker-run: ## Run Docker container
@@ -176,11 +181,11 @@ docker-deploy: docker-build docker-run ## Build and run Docker container
 
 # Information
 status: ## Show project status
-	@echo "Web Multiselect Showcase Status:"
+	@echo "Web grid Showcase Status:"
 	@echo "Node version: $(shell node --version)"
 	@echo "NPM version: $(shell npm --version)"
 	@echo "Project directory: $(shell pwd)"
-	@echo "Library linked: $(shell npm list @keenmate/web-multiselect 2>/dev/null | grep @keenmate/web-multiselect || echo 'Not linked')"
+	@echo "Library linked: $(shell npm list @keenmate/web-grid 2>/dev/null | grep @keenmate/web-grid || echo 'Not linked')"
 	@echo "Dependencies installed: $(shell test -d $(NODE_MODULES) && echo "✓" || echo "✗")"
 	@echo "Build exists: $(shell test -d $(BUILD_DIR) && echo "✓" || echo "✗")"
 

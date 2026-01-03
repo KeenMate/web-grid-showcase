@@ -44,8 +44,8 @@
 			<div class="col-md-6 col-lg-4">
 				<FeatureCard
 					iconEmoji="&#x270F;&#xFE0F;"
-					titleText="7 Editor Types"
-					descriptionText="Text, number, checkbox, select, combobox, date picker, and autocomplete with async search"
+					titleText="7+ Editor Types"
+					descriptionText="Text, number, checkbox, select, combobox, date picker, autocomplete, plus custom editor support"
 					variantType="success"
 				/>
 			</div>
@@ -225,7 +225,7 @@ import type { Column } from '@keenmate/web-grid';`}
 		<!-- Stats/Features Icons -->
 		<div class="row text-center mt-5 pt-5 border-top">
 			<div class="col-md-3">
-				<h3 class="display-6 fw-bold text-primary">7</h3>
+				<h3 class="display-6 fw-bold text-primary">7+</h3>
 				<p class="text-muted">Editor Types</p>
 			</div>
 			<div class="col-md-3">
