@@ -125,13 +125,8 @@ test-build: build ## Test that build completes successfully
 
 # Docker commands
 docker-build: ## Build Docker image
-	@echo "Copying web-grid package for Docker build..."
-	rm -rf web-grid-package
-	cp -r ../web-grid/packages/web-grid web-grid-package
-	rm -rf web-grid-package/node_modules
 	@echo "Building Docker image: $(DOCKER_IMAGE_NAME):$(DOCKER_TAG)"
 	docker build -t $(DOCKER_IMAGE_NAME):$(DOCKER_TAG) .
-	rm -rf web-grid-package
 	@echo "Docker image built successfully!"
 
 docker-run: ## Run Docker container
