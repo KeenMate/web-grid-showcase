@@ -39,7 +39,8 @@ const config: PartialDocsConfig = {
 					{ label: 'Virtual Scrolling', href: '/features/virtual-scrolling' },
 					{ label: 'Scroll Modes', href: '/features/scroll-modes' },
 					{ label: 'Keyboard Navigation', href: '/features/keyboard-navigation' },
-					{ label: 'Custom Styling', href: '/features/custom-styling' }
+					{ label: 'Custom Styling', href: '/features/custom-styling' },
+					{ label: 'Row Locking', href: '/features/row-locking' }
 				]
 			},
 			{
