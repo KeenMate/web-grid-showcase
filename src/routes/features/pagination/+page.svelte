@@ -266,7 +266,7 @@
 		<!-- Basic Pagination -->
 		<ShowcaseSection
 			titleText="PG01 Basic Pagination"
-			subtitleText="Enable page navigation"
+			subtitleText="Enable client-side pagination with page size and navigation controls"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="Configuration">
@@ -313,7 +313,7 @@ grid.currentPage = 3;`}
 		<!-- Custom Pagination -->
 		<ShowcaseSection
 			titleText="PG02 Customization Options"
-			subtitleText="Position, layout, page sizes, and summary"
+			subtitleText="Configure position, layout elements, page sizes, and summary row"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="Configuration">
@@ -410,7 +410,7 @@ grid.summaryContentCallback = ({ allItems }) => {
 		<!-- Server-Side Pagination -->
 		<ShowcaseSection
 			titleText="PG03 Server-Side Pagination"
-			subtitleText="ondatarequest event with custom labels"
+			subtitleText="Server-side pagination with ondatarequest and custom translated labels"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="Console Output">

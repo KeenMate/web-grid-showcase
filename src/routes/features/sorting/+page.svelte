@@ -94,7 +94,7 @@
 		<!-- Single Column Sort -->
 		<ShowcaseSection
 			titleText="SO01 Single Column Sort"
-			subtitleText="sortMode='single' - One column at a time"
+			subtitleText="Sort by one column with ascending/descending toggle"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="How It Works">
@@ -147,7 +147,7 @@ grid.columns = [
 		<!-- Multi-Column Sort -->
 		<ShowcaseSection
 			titleText="SO02 Multi-Column Sort"
-			subtitleText="sortMode='multi' - Ctrl+Click to add columns"
+			subtitleText="Sort by multiple columns with Ctrl+Click and priority indicators"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="How It Works">
@@ -205,7 +205,7 @@ grid.sort = [
 		<!-- Server-Side Sorting -->
 		<ShowcaseSection
 			titleText="SO03 Server-Side Sorting"
-			subtitleText="ondatarequest event for server-side sorting"
+			subtitleText="Handle sort changes via ondatarequest event for API integration"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="Console Output">
@@ -272,7 +272,7 @@ grid.ondatarequest = (e) => {
 		<!-- Programmatic Sort State -->
 		<ShowcaseSection
 			titleText="SO04 Programmatic Sort State"
-			subtitleText="Set sort indicators for pre-sorted data"
+			subtitleText="Display sort indicators for pre-sorted server data"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="How It Works">

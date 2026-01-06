@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 
 	let themedGrid: any;
+	let labelsGrid: any;
 
 	const employees = [
 		{ id: 1, name: 'Alice Johnson', department: 'Engineering', salary: 95000 },
@@ -23,6 +24,30 @@
 			themedGrid.items = employees;
 			themedGrid.sortable = true;
 		}
+
+		// Labels/i18n grid with Czech translations
+		if (labelsGrid) {
+			labelsGrid.columns = [
+				{ field: 'id', title: 'ID', width: '60px' },
+				{ field: 'name', title: 'Jméno', width: '150px' },
+				{ field: 'department', title: 'Oddělení', width: '120px' },
+				{ field: 'salary', title: 'Plat', width: '100px', align: 'right', formatCallback: (v: number) => v.toLocaleString('cs-CZ') + ' Kč' }
+			];
+			labelsGrid.items = employees;
+			labelsGrid.pagination = { pageSize: 2 };
+			labelsGrid.labels = {
+				rowActions: 'Akce řádku',
+				inlineActionsHeader: 'Akce',
+				keyboardShortcuts: 'Klávesové zkratky',
+				paginationFirst: '⏮',
+				paginationPrevious: '◀',
+				paginationNext: '▶',
+				paginationLast: '⏭',
+				paginationPageInfo: 'Stránka {current} z {total}',
+				paginationItemCount: '{count} položek',
+				paginationPerPage: 'na stránku'
+			};
+		}
 	});
 </script>
 
@@ -34,7 +59,7 @@
 		<!-- Themed Grid -->
 		<ShowcaseSection
 			titleText="CS01 CSS Variables"
-			subtitleText="Override default styles"
+			subtitleText="Override colors, headers, and cells with 100+ CSS custom properties"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="Key Variables">
@@ -90,7 +115,7 @@ web-grid {
 		<!-- Theme Integration -->
 		<ShowcaseSection
 			titleText="CS02 Theme Integration"
-			subtitleText="Use with @keenmate/theme-designer"
+			subtitleText="Integrate with @keenmate/theme-designer via --base-* variable fallbacks"
 			col1Title="Explanation"
 			col2Title="Code"
 			col3Title="Base Variables">
@@ -140,7 +165,7 @@ web-grid {
 		<!-- CSS Variables Manifest -->
 		<ShowcaseSection
 			titleText="CS03 CSS Variables Manifest"
-			subtitleText="Machine-readable variable documentation"
+			subtitleText="Machine-readable JSON manifest of all 155 CSS variables with categories"
 			col1Title="What's Included"
 			col2Title="Code"
 			col3Title="Use Cases">
@@ -196,7 +221,7 @@ const headerVars = manifest.componentVariables
 		<!-- Dynamic Styling -->
 		<ShowcaseSection
 			titleText="CS04 Dynamic Cell Styling"
-			subtitleText="Style cells based on data"
+			subtitleText="Style cells and rows dynamically with cellClassCallback and rowClassCallback"
 			col1Title="Methods"
 			col2Title="Code"
 			col3Title="Callbacks">
@@ -258,7 +283,7 @@ grid.rowClassCallback = (row) => {
 		<!-- Global Scaling -->
 		<ShowcaseSection
 			titleText="CS05 Global Scaling"
-			subtitleText="Scale entire grid with --wg-rem"
+			subtitleText="Scale entire grid proportionally with --wg-rem base unit"
 			col1Title="How It Works"
 			col2Title="Code"
 			col3Title="Benefits">
@@ -300,6 +325,63 @@ web-grid {
 					<p>10px base avoids fractional pixels</p>
 					<h5>Theme Designer</h5>
 					<p>Pure Admin sets <code>html {'{'} font-size: 10px {'}'}</code> so <code>1rem = 10px</code></p>
+				</div>
+			{/snippet}
+		</ShowcaseSection>
+
+		<!-- Labels/i18n -->
+		<ShowcaseSection
+			titleText="CS06 Labels / i18n"
+			subtitleText="Translate pagination and UI labels with i18n placeholder syntax"
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="Available Labels">
+
+			{#snippet demoContent()}
+				<div class="grid-demo">
+					<web-grid
+						bind:this={labelsGrid}
+						style="max-height: 200px;"
+					></web-grid>
+					<p class="small text-muted mt-2">Grid with Czech translations. Navigate pagination to see translated labels.</p>
+				</div>
+			{/snippet}
+
+			{#snippet controlsContent()}
+				<CodeBlock
+					codeContent={`// Set labels (partial object merged with defaults)
+grid.labels = {
+  rowActions: 'Akce řádku',
+  inlineActionsHeader: 'Akce',
+  keyboardShortcuts: 'Klávesové zkratky',
+  paginationPageInfo: 'Stránka {current} z {total}',
+  paginationItemCount: '{count} položek',
+  paginationPerPage: 'na stránku'
+};
+
+// Placeholder syntax:
+// {current} - current page number
+// {total} - total page count
+// {count} - total item count`}
+					languageType="javascript"
+					titleText="Labels Configuration"
+				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>UI Labels</h5>
+					<p><code>rowActions</code> - Toolbar trigger tooltip</p>
+					<p><code>inlineActionsHeader</code> - Inline actions column header</p>
+					<p><code>keyboardShortcuts</code> - Shortcuts help title</p>
+					<h5>Pagination Labels</h5>
+					<p><code>paginationFirst</code></p>
+					<p><code>paginationPrevious</code></p>
+					<p><code>paginationNext</code></p>
+					<p><code>paginationLast</code></p>
+					<p><code>paginationPageInfo</code></p>
+					<p><code>paginationItemCount</code></p>
+					<p><code>paginationPerPage</code></p>
 				</div>
 			{/snippet}
 		</ShowcaseSection>

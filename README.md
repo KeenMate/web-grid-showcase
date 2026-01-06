@@ -1,38 +1,86 @@
-# sv
+# Web Grid Showcase
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Interactive documentation and demo site for [@keenmate/web-grid](https://github.com/keenmate/web-grid) - a framework-agnostic data grid web component.
 
-## Creating a project
+## Live Demo
 
-If you're seeing this, you've probably already done this step. Congrats!
+Visit the live showcase at: https://web-grid.keenmate.com
 
-```sh
-# create a new project in the current directory
-npx sv create
+## Features Demonstrated
 
-# create a new project in my-app
-npx sv create my-app
+- Basic grid usage with sorting, filtering, and pagination
+- Inline editing with various editor types (text, number, date, select, combobox, autocomplete)
+- Keyboard navigation and shortcuts
+- Row toolbar with custom actions
+- Context menus
+- Virtual scrolling for large datasets
+- Custom cell and row styling
+- And more...
+
+## Development
+
+### Prerequisites
+
+- Node.js 18+
+- npm
+
+### Setup
+
+```bash
+# Install dependencies
+make install
+
+# Start development server
+make dev
 ```
 
-## Developing
+### Local Development with web-grid
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+When developing web-grid alongside this showcase:
 
-```sh
-npm run dev
+```bash
+# Link local web-grid package
+make link-lib
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+# Or update package.json to use file reference:
+# "@keenmate/web-grid": "file:../web-grid/packages/web-grid"
 ```
 
-## Building
+### Available Commands
 
-To create a production version of your app:
-
-```sh
-npm run build
+```bash
+make help          # Show all available commands
+make dev           # Start development server
+make build         # Build for production
+make preview       # Preview production build
+make docker-build  # Build Docker image
+make docker-run    # Run Docker container
 ```
 
-You can preview the production build with `npm run preview`.
+## Deployment
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+The showcase is deployed via GitHub Actions on push to the `prod` branch.
+
+### Docker
+
+```bash
+# Build image
+make docker-build
+
+# Run container
+make docker-run
+
+# Stop container
+make docker-stop
+```
+
+## Tech Stack
+
+- [SvelteKit](https://kit.svelte.dev/) - Web framework
+- [Bootstrap 5](https://getbootstrap.com/) - CSS framework
+- [@keenmate/svelte-docs](https://github.com/keenmate/svelte-docs) - Documentation components
+- [@keenmate/web-grid](https://github.com/keenmate/web-grid) - The grid component being showcased
+
+## License
+
+MIT

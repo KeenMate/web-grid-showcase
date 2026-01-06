@@ -138,10 +138,10 @@ grid.columns = [
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>sortable</code></td>
-							<td><code>boolean</code></td>
-							<td><code>false</code></td>
-							<td>Enable sorting on all columns</td>
+							<td><code>sortMode</code></td>
+							<td><code>'none' | 'single' | 'multi'</code></td>
+							<td><code>'none'</code></td>
+							<td>Sorting mode: disabled, single column, or multi-column with Ctrl+Click</td>
 						</tr>
 						<tr>
 							<td><code>sort</code></td>
@@ -154,7 +154,10 @@ grid.columns = [
 			</div>
 
 			<CodeBlock
-				codeContent={`// SortState type
+				codeContent={`// Enable multi-column sorting
+grid.sortMode = 'multi';
+
+// SortState type
 type SortState = {
   column: string;      // Field name
   direction: 'asc' | 'desc';
@@ -339,20 +342,150 @@ grid.sort = [
 							<td>How to show toolbar</td>
 						</tr>
 						<tr>
-							<td><code>toolbarAlign</code></td>
-							<td><code>'center' | 'top'</code></td>
-							<td><code>'center'</code></td>
-							<td>Vertical alignment</td>
+							<td><code>toolbarPosition</code></td>
+							<td><code>'auto' | 'left' | 'right' | 'top' | 'inline'</code></td>
+							<td><code>'auto'</code></td>
+							<td>Toolbar position. 'inline' renders as fixed column</td>
 						</tr>
 						<tr>
-							<td><code>toolbarTopPosition</code></td>
+							<td><code>toolbarVerticalAlign</code></td>
+							<td><code>'top' | 'center' | 'bottom'</code></td>
+							<td><code>'bottom'</code></td>
+							<td>Vertical alignment of toolbar rows</td>
+						</tr>
+						<tr>
+							<td><code>toolbarHorizontalAlign</code></td>
 							<td><code>'start' | 'center' | 'end' | 'cursor'</code></td>
 							<td><code>'center'</code></td>
-							<td>Horizontal position when above row</td>
+							<td>Horizontal alignment (for top position)</td>
+						</tr>
+						<tr>
+							<td><code>inlineActionsTitle</code></td>
+							<td><code>string</code></td>
+							<td><code>''</code></td>
+							<td>Column header for inline toolbar mode</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
+		</section>
+
+		<!-- Keyboard Shortcuts Properties -->
+		<section class="mb-5">
+			<h2 class="mb-4">Keyboard Shortcuts Properties</h2>
+
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>rowShortcuts</code></td>
+							<td><code>RowShortcut[]</code></td>
+							<td><code>[]</code></td>
+							<td>Keyboard shortcuts for row operations (work on focused or hovered row)</td>
+						</tr>
+						<tr>
+							<td><code>showShortcutsHelp</code></td>
+							<td><code>boolean</code></td>
+							<td><code>false</code></td>
+							<td>Show info icon with available shortcuts overlay</td>
+						</tr>
+						<tr>
+							<td><code>shortcutsHelpPosition</code></td>
+							<td><code>'top-right' | 'top-left'</code></td>
+							<td><code>'top-right'</code></td>
+							<td>Position of shortcuts help icon</td>
+						</tr>
+						<tr>
+							<td><code>shortcutsHelpContentCallback</code></td>
+							<td><code>() => string</code></td>
+							<td>-</td>
+							<td>Custom HTML content for shortcuts overlay</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<CodeBlock
+				codeContent={`// Define keyboard shortcuts
+grid.rowShortcuts = [
+  {
+    key: 'Delete',
+    id: 'delete',
+    label: 'Delete row',
+    action: (ctx) => deleteRow(ctx.rowIndex)
+  },
+  {
+    key: 'e',
+    id: 'edit',
+    label: 'Edit row',
+    action: (ctx) => openEditDialog(ctx.row)
+  }
+];
+
+// Show help overlay
+grid.showShortcutsHelp = true;`}
+				languageType="javascript"
+				titleText="Row Shortcuts"
+			/>
+		</section>
+
+		<!-- Labels/i18n Properties -->
+		<section class="mb-5">
+			<h2 class="mb-4">Labels/i18n Properties</h2>
+
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>labels</code></td>
+							<td><code>Partial&lt;GridLabels&gt;</code></td>
+							<td>Translatable UI strings (merged with defaults)</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<CodeBlock
+				codeContent={`// Customize labels for translations
+grid.labels = {
+  // Toolbar
+  rowActions: 'Row actions',
+  inlineActionsHeader: 'Actions',
+
+  // Shortcuts help
+  keyboardShortcuts: 'Keyboard shortcuts',
+
+  // Pagination (use {placeholders})
+  paginationFirst: '⏮',
+  paginationPrevious: '◀',
+  paginationNext: '▶',
+  paginationLast: '⏭',
+  paginationPageInfo: 'Page {current} of {total}',
+  paginationItemCount: '{count} items',
+  paginationPerPage: 'per page',
+
+  // Dropdown editors
+  dropdownNoOptions: 'No options',
+  dropdownSearching: 'Searching...'
+};`}
+				languageType="javascript"
+				titleText="Labels Configuration"
+			/>
 		</section>
 
 		<!-- Virtual Scroll Properties -->
@@ -427,6 +560,7 @@ grid.sort = [
 						<tr>
 							<th>Property</th>
 							<th>Type</th>
+							<th>Default</th>
 							<th>Description</th>
 						</tr>
 					</thead>
@@ -434,26 +568,108 @@ grid.sort = [
 						<tr>
 							<td><code>contextMenu</code></td>
 							<td><code>ContextMenuItem[]</code></td>
-							<td>Right-click menu items</td>
+							<td>-</td>
+							<td>Right-click menu items (supports <code>shortcut</code> property)</td>
+						</tr>
+						<tr>
+							<td><code>contextMenuXOffset</code></td>
+							<td><code>number</code></td>
+							<td><code>8</code></td>
+							<td>Horizontal offset from click position (pixels)</td>
+						</tr>
+						<tr>
+							<td><code>contextMenuYOffset</code></td>
+							<td><code>number</code></td>
+							<td><code>0</code></td>
+							<td>Vertical offset from click position (pixels)</td>
 						</tr>
 						<tr>
 							<td><code>summaryPosition</code></td>
 							<td><code>string</code></td>
+							<td>-</td>
 							<td>Position(s): "bottom-left", "top-right|bottom-right"</td>
 						</tr>
 						<tr>
 							<td><code>summaryContentCallback</code></td>
 							<td><code>function</code></td>
+							<td>-</td>
 							<td>Callback returning HTML content for summary</td>
 						</tr>
 						<tr>
 							<td><code>summaryInline</code></td>
 							<td><code>boolean</code></td>
-							<td>Share row with pagination (default: true)</td>
+							<td><code>true</code></td>
+							<td>Share row with pagination</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
+		</section>
+
+		<!-- Row Locking Properties -->
+		<section class="mb-5">
+			<h2 class="mb-4">Row Locking Properties</h2>
+			<p>Lock rows to prevent editing (useful for collaborative scenarios).</p>
+
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>idValueMember</code></td>
+							<td><code>string</code></td>
+							<td>Property name for row ID (e.g., 'id')</td>
+						</tr>
+						<tr>
+							<td><code>idValueCallback</code></td>
+							<td><code>(row) => unknown</code></td>
+							<td>Callback to compute row ID</td>
+						</tr>
+						<tr>
+							<td><code>rowLocking</code></td>
+							<td><code>RowLockingOptions</code></td>
+							<td>Row locking configuration (see below)</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<CodeBlock
+				codeContent={`// Row identification
+grid.idValueMember = 'id';
+
+// Row locking configuration
+grid.rowLocking = {
+  // Option 1: Property-based
+  lockedMember: 'isLocked',           // boolean property
+  lockInfoMember: 'lockInfo',         // or full info object
+
+  // Option 2: Callback-based
+  getLockInfoCallback: (row) => ({
+    isLocked: row.status === 'editing',
+    lockedBy: row.editingUser
+  }),
+
+  // Edit behavior when locked
+  lockedEditBehavior: 'block'  // 'block' | 'allow' | 'callback'
+};
+
+// External API (for WebSocket scenarios)
+grid.lockRowById('row-123', { lockedBy: 'John' });
+grid.unlockRowById('row-123');
+
+// Update row data
+grid.updateRowById('row-123', { name: 'Updated' });
+grid.replaceRowById('row-123', newRowData);`}
+				languageType="javascript"
+				titleText="Row Locking"
+			/>
 		</section>
 
 		<!-- Styling Callbacks -->

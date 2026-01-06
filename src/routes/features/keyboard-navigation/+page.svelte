@@ -3,6 +3,8 @@
 	import { onMount } from 'svelte';
 
 	let navGrid: any;
+	let virtualNavGrid: any;
+	let loadedCount = $state(100);
 
 	const employees = [
 		{ id: 1, name: 'Alice Johnson', email: 'alice@example.com', department: 'Engineering', salary: 95000 },
@@ -11,6 +13,18 @@
 		{ id: 4, name: 'Diana Ross', email: 'diana@example.com', department: 'Sales', salary: 67000 },
 		{ id: 5, name: 'Eve Wilson', email: 'eve@example.com', department: 'Engineering', salary: 105000 }
 	];
+
+	// Generate large dataset for virtual scroll demo
+	const departments = ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance'];
+	const generateData = (count: number) => {
+		return Array.from({ length: count }, (_, i) => ({
+			id: i + 1,
+			name: `Employee ${i + 1}`,
+			email: `employee${i + 1}@example.com`,
+			department: departments[i % departments.length],
+			salary: 40000 + Math.floor(Math.random() * 80000)
+		}));
+	};
 
 	onMount(async () => {
 		await import('@keenmate/web-grid');
@@ -26,6 +40,38 @@
 			navGrid.editable = true;
 			navGrid.editTrigger = 'navigate';
 		}
+
+		// Virtual + Infinite Scroll with Navigation
+		if (virtualNavGrid) {
+			virtualNavGrid.columns = [
+				{ field: 'id', title: 'ID', width: '80px' },
+				{ field: 'name', title: 'Name', width: '150px', editor: 'text' },
+				{ field: 'email', title: 'Email', editor: 'text' },
+				{ field: 'department', title: 'Department', width: '120px', editor: 'select', editorOptions: {
+					options: departments.map(d => ({ value: d, label: d }))
+				}},
+				{ field: 'salary', title: 'Salary', width: '100px', align: 'right', editor: 'number', formatCallback: (v: number) => '$' + v.toLocaleString() }
+			];
+			virtualNavGrid.items = generateData(100);
+			virtualNavGrid.virtualScroll = true;
+			virtualNavGrid.virtualScrollRowHeight = 38;
+			virtualNavGrid.infiniteScroll = true;
+			virtualNavGrid.hasMoreItems = true;
+			virtualNavGrid.editable = true;
+			virtualNavGrid.editTrigger = 'navigate';
+
+			virtualNavGrid.ondatarequest = (e: any) => {
+				if (e.trigger === 'loadMore') {
+					// Simulate loading more data
+					const currentCount = virtualNavGrid.items.length;
+					const newItems = generateData(currentCount + 50).slice(currentCount);
+					virtualNavGrid.items = [...virtualNavGrid.items, ...newItems];
+					loadedCount = virtualNavGrid.items.length;
+					// Stop at 500 items for demo
+					virtualNavGrid.hasMoreItems = virtualNavGrid.items.length < 500;
+				}
+			};
+		}
 	});
 </script>
 
@@ -37,7 +83,7 @@
 		<!-- Navigate Mode -->
 		<ShowcaseSection
 			titleText="KN01 Navigate Mode"
-			subtitleText="Excel-like cell navigation"
+			subtitleText="Excel-like cell navigation with arrow keys, Tab, Home, End, and Page keys"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="Keyboard Shortcuts">
@@ -92,7 +138,7 @@ grid.editTrigger = 'navigate';
 		<!-- Edit Shortcuts -->
 		<ShowcaseSection
 			titleText="KN02 Editing Shortcuts"
-			subtitleText="Quick keyboard actions"
+			subtitleText="F2, Enter, Escape, Delete, and clipboard shortcuts with copy/paste callbacks"
 			col1Title="Edit Actions"
 			col2Title="Code"
 			col3Title="Clipboard">
@@ -159,6 +205,72 @@ grid.onrowdelete = (e) => {
 					<h5>Callbacks</h5>
 					<p><code>beforeCopyCallback</code> - Transform on copy</p>
 					<p><code>beforePasteCallback</code> - Validate/transform on paste</p>
+				</div>
+			{/snippet}
+		</ShowcaseSection>
+
+		<!-- Virtual + Infinite Scroll with Navigation -->
+		<ShowcaseSection
+			titleText="KN03 Virtual Infinite Scroll"
+			subtitleText="Navigate and edit through virtualized rows with infinite loading"
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="Features">
+
+			{#snippet demoContent()}
+				<div class="grid-demo">
+					<web-grid
+						bind:this={virtualNavGrid}
+						style="max-height: 400px;"
+					></web-grid>
+					<p class="small text-muted mt-2">
+						<strong>{loadedCount} rows loaded</strong> - Use Ctrl+End to jump to bottom, scroll loads more. All rows are editable.
+					</p>
+				</div>
+			{/snippet}
+
+			{#snippet controlsContent()}
+				<CodeBlock
+					codeContent={`// Combine virtual + infinite + navigate
+grid.virtualScroll = true;
+grid.virtualScrollRowHeight = 38;
+grid.infiniteScroll = true;
+grid.hasMoreItems = true;
+grid.editable = true;
+grid.editTrigger = 'navigate';
+
+// Load more on scroll
+grid.ondatarequest = (e) => {
+  if (e.trigger === 'loadMore') {
+    const newItems = await fetchMore();
+    grid.items = [...grid.items, ...newItems];
+    grid.hasMoreItems = newItems.length > 0;
+  }
+};
+
+// Navigate with Ctrl+End to last row
+// This triggers loadMore if needed`}
+					languageType="javascript"
+					titleText="Virtual + Infinite + Navigate"
+				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Combined Features</h5>
+					<ul>
+						<li><strong>Virtual scroll</strong> - Only renders visible rows</li>
+						<li><strong>Infinite scroll</strong> - Loads more on scroll</li>
+						<li><strong>Navigate mode</strong> - Arrow keys move focus</li>
+						<li><strong>Edit mode</strong> - Type to edit cells</li>
+					</ul>
+					<h5>Try It</h5>
+					<ul>
+						<li><kbd>Ctrl+End</kbd> - Jump to last row (loads more)</li>
+						<li><kbd>Page Down</kbd> - Navigate through pages</li>
+						<li>Type to edit any cell</li>
+						<li>Scroll to bottom to load more</li>
+					</ul>
 				</div>
 			{/snippet}
 		</ShowcaseSection>

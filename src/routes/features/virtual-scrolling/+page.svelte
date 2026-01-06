@@ -53,7 +53,7 @@
 		<!-- Virtual Scrolling -->
 		<ShowcaseSection
 			titleText="VS01 Virtual Scrolling"
-			subtitleText="Render only visible rows"
+			subtitleText="Render only visible rows for 10,000+ item performance"
 			col1Title="Live Demo (10,000 rows)"
 			col2Title="Code"
 			col3Title="Configuration">
@@ -100,7 +100,7 @@ grid.items = generateData(10000);`}
 		<!-- Infinite Scroll -->
 		<ShowcaseSection
 			titleText="VS02 Infinite Scroll"
-			subtitleText="Load more data as you scroll"
+			subtitleText="Load more data on scroll with ondatarequest and hasMoreItems"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="Configuration">

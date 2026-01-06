@@ -159,7 +159,7 @@
 		<!-- Text & Number Editors -->
 		<ShowcaseSection
 			titleText="ED01 Text & Number Editors"
-			subtitleText="Basic input editing"
+			subtitleText="Basic input editing with edit triggers and cursor start positions"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="Description">
@@ -235,7 +235,7 @@ grid.columns = [
 		<!-- Select & Combobox -->
 		<ShowcaseSection
 			titleText="ED02 Select Editor"
-			subtitleText="Dropdown selection"
+			subtitleText="Dropdown selection with value/display members and option grouping"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="Description">
@@ -293,7 +293,7 @@ grid.columns = [
 		<!-- Validation -->
 		<ShowcaseSection
 			titleText="ED03 Validation"
-			subtitleText="Validate and transform values before commit"
+			subtitleText="Validate input and transform values with beforeCommitCallback"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="Description">
@@ -358,7 +358,7 @@ grid.onrowchange = (e) => {
 		<!-- Rich Validation Tooltips -->
 		<ShowcaseSection
 			titleText="ED04 Rich Validation Tooltips"
-			subtitleText="HTML tooltips for validation errors"
+			subtitleText="Custom HTML tooltips with escaped user input for validation errors"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="Description">

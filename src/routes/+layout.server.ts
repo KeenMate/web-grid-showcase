@@ -37,6 +37,7 @@ const config: PartialDocsConfig = {
 					{ label: 'Row Toolbar', href: '/features/toolbar' },
 					{ label: 'Context Menu', href: '/features/context-menu' },
 					{ label: 'Virtual Scrolling', href: '/features/virtual-scrolling' },
+					{ label: 'Scroll Modes', href: '/features/scroll-modes' },
 					{ label: 'Keyboard Navigation', href: '/features/keyboard-navigation' },
 					{ label: 'Custom Styling', href: '/features/custom-styling' }
 				]

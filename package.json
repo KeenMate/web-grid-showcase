@@ -24,7 +24,7 @@
 	},
 	"dependencies": {
 		"@keenmate/svelte-docs": "^1.0.0-rc09",
-		"@keenmate/web-grid": "^1.0.0-rc06",
+		"@keenmate/web-grid": "^1.0.0-rc07",
 		"bootstrap": "^5.3.8"
 	}
 }

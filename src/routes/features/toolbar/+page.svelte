@@ -5,6 +5,7 @@
 	let basicToolbarGrid: any;
 	let customToolbarGrid: any;
 	let positioningGrid: any;
+	let inlineToolbarGrid: any;
 
 	let toolbarPosition = $state('auto');
 	let toolbarVerticalAlign = $state('bottom');
@@ -36,16 +37,50 @@
 			};
 		}
 
-		// Custom Toolbar
+		// Custom Toolbar with Keyboard Shortcuts
 		if (customToolbarGrid) {
 			customToolbarGrid.columns = columns;
 			customToolbarGrid.items = [...employees];
 			customToolbarGrid.showRowToolbar = true;
 			customToolbarGrid.toolbarTrigger = 'hover';
 			customToolbarGrid.rowToolbar = [
-				{ id: 'edit', icon: 'E', title: 'Edit', label: 'Edit' },
-				{ id: 'archive', icon: 'A', title: 'Archive', group: 2 },
-				{ id: 'delete', icon: 'X', title: 'Delete', danger: true, group: 2 }
+				{ id: 'edit', icon: 'E', title: 'Edit (E)', label: 'Edit' },
+				{ id: 'archive', icon: 'A', title: 'Archive (A)', group: 2 },
+				{ id: 'delete', icon: 'X', title: 'Delete (Delete)', danger: true, group: 2 }
+			];
+			// Keyboard shortcuts work while hovering (toolbar visible)
+			customToolbarGrid.rowShortcuts = [
+				{
+					key: 'e',
+					id: 'edit',
+					label: 'Edit row',
+					action: (ctx: any) => {
+						console.log('Edit shortcut:', ctx.row.name);
+						alert(`Edit: ${ctx.row.name}`);
+					}
+				},
+				{
+					key: 'a',
+					id: 'archive',
+					label: 'Archive row',
+					action: (ctx: any) => {
+						console.log('Archive shortcut:', ctx.row.name);
+						alert(`Archive: ${ctx.row.name}`);
+					}
+				},
+				{
+					key: 'Delete',
+					id: 'delete',
+					label: 'Delete row',
+					action: (ctx: any) => {
+						console.log('Delete shortcut:', ctx.row.name);
+						if (confirm(`Delete ${ctx.row.name}?`)) {
+							customToolbarGrid.items = customToolbarGrid.items.filter(
+								(_: any, i: number) => i !== ctx.rowIndex
+							);
+						}
+					}
+				}
 			];
 		}
 
@@ -79,6 +114,82 @@
 				{ id: 'archive', icon: '📦', title: 'Archive', row: 2, group: 2 }
 			];
 		}
+
+		// Inline Actions Column
+		if (inlineToolbarGrid) {
+			const inlineEmployees = [
+				{ id: 1, name: 'Alice Johnson', department: 'Engineering', status: 'Active' },
+				{ id: 2, name: 'Bob Smith', department: 'Marketing', status: 'Done' },
+				{ id: 3, name: 'Charlie Brown', department: 'Engineering', status: 'Active' },
+				{ id: 4, name: 'Diana Ross', department: 'Sales', status: 'Protected' }
+			];
+			inlineToolbarGrid.columns = [
+				{ field: 'id', title: 'ID', width: '50px' },
+				{ field: 'name', title: 'Name', width: '140px' },
+				{ field: 'department', title: 'Department', width: '110px' },
+				{ field: 'status', title: 'Status', width: '80px' }
+			];
+			inlineToolbarGrid.items = inlineEmployees;
+			inlineToolbarGrid.showRowToolbar = true;
+			inlineToolbarGrid.toolbarPosition = 'inline';
+			inlineToolbarGrid.inlineActionsTitle = 'Actions';
+			inlineToolbarGrid.rowToolbar = [
+				{
+					id: 'edit',
+					icon: '✏️',
+					title: 'Edit',
+					disabled: (row: any) => row.status === 'Done'
+				},
+				{
+					id: 'delete',
+					icon: '🗑️',
+					title: 'Delete',
+					danger: true,
+					hidden: (row: any) => row.status === 'Protected'
+				},
+				{
+					id: 'archive',
+					icon: '📦',
+					title: 'Archive'
+				}
+			];
+			// Keyboard shortcuts work on hovered row
+			inlineToolbarGrid.rowShortcuts = [
+				{
+					key: 'Delete',
+					id: 'delete',
+					label: 'Delete row',
+					action: (ctx: any) => {
+						if (ctx.row.status === 'Protected') {
+							alert('Cannot delete protected rows');
+							return;
+						}
+						if (confirm(`Delete ${ctx.row.name}?`)) {
+							inlineToolbarGrid.items = inlineToolbarGrid.items.filter(
+								(_: any, i: number) => i !== ctx.rowIndex
+							);
+						}
+					}
+				},
+				{
+					key: 'a',
+					id: 'archive',
+					label: 'Archive row',
+					action: (ctx: any) => alert(`Archive: ${ctx.row.name}`)
+				}
+			];
+			inlineToolbarGrid.ontoolbarclick = (e: any) => {
+				if (e.item.id === 'edit') alert(`Edit: ${e.row.name}`);
+				if (e.item.id === 'archive') alert(`Archive: ${e.row.name}`);
+				if (e.item.id === 'delete') {
+					if (confirm(`Delete ${e.row.name}?`)) {
+						inlineToolbarGrid.items = inlineToolbarGrid.items.filter(
+							(_: any, i: number) => i !== e.rowIndex
+						);
+					}
+				}
+			};
+		}
 	});
 
 	function updateToolbarPosition(value: string) {
@@ -111,7 +222,7 @@
 		<!-- Basic Toolbar -->
 		<ShowcaseSection
 			titleText="TB01 Predefined Actions"
-			subtitleText="Built-in toolbar actions"
+			subtitleText="Built-in add, delete, duplicate, and move actions with trigger modes"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="Configuration">
@@ -172,7 +283,7 @@ grid.ontoolbarclick = (e) => {
 		<!-- Custom Toolbar -->
 		<ShowcaseSection
 			titleText="TB02 Custom Actions"
-			subtitleText="Define your own toolbar items"
+			subtitleText="Custom toolbar items with icons, groups, danger styling, and keyboard shortcuts"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="Configuration">
@@ -183,7 +294,7 @@ grid.ontoolbarclick = (e) => {
 						bind:this={customToolbarGrid}
 						style="max-height: 300px;"
 					></web-grid>
-					<p class="small text-muted mt-2">Custom Edit, Archive, and Delete actions.</p>
+					<p class="small text-muted mt-2">Hover over a row and press E, A, or Delete key.</p>
 				</div>
 			{/snippet}
 
@@ -232,6 +343,8 @@ grid.rowToolbar = [
 					<p><code>danger</code> - Red styling</p>
 					<p><code>group</code> - Group number for dividers</p>
 					<p><code>disabled</code> - Boolean or callback</p>
+					<h5>Keyboard Shortcuts</h5>
+					<p>When toolbar is visible, <code>rowShortcuts</code> work on the hovered row - no cell focus required!</p>
 				</div>
 			{/snippet}
 		</ShowcaseSection>
@@ -239,7 +352,7 @@ grid.rowToolbar = [
 		<!-- Positioning & Multi-Row -->
 		<ShowcaseSection
 			titleText="TB03 Multi-Row & Positioning"
-			subtitleText="Multiple rows, groups, and position control"
+			subtitleText="Multi-row toolbars with groups, position, and alignment options"
 			col1Title="Live Demo"
 			col2Title="Configuration"
 			col3Title="Options">
@@ -364,6 +477,96 @@ grid.toolbarVerticalAlign = '${toolbarVerticalAlign}';`}
 					<ul>
 						<li><code>start</code> / <code>center</code> / <code>end</code> / <code>cursor</code></li>
 					</ul>
+				</div>
+			{/snippet}
+		</ShowcaseSection>
+
+		<!-- Inline Actions Column -->
+		<ShowcaseSection
+			titleText="TB04 Inline Actions Column"
+			subtitleText="Always-visible actions column with per-row disabled/hidden callbacks"
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="Features">
+
+			{#snippet demoContent()}
+				<div class="grid-demo">
+					<web-grid
+						bind:this={inlineToolbarGrid}
+						style="max-height: 300px;"
+					></web-grid>
+					<p class="small text-muted mt-2">Actions always visible. Hover row and press Delete or A key.</p>
+				</div>
+			{/snippet}
+
+			{#snippet controlsContent()}
+				<CodeBlock
+					codeContent={`grid.showRowToolbar = true;
+grid.toolbarPosition = 'inline';
+grid.inlineActionsTitle = 'Actions';
+
+grid.rowToolbar = [
+  {
+    id: 'edit',
+    icon: '✏️',
+    title: 'Edit',
+    // Disable for completed rows
+    disabled: (row) => row.status === 'Done'
+  },
+  {
+    id: 'delete',
+    icon: '🗑️',
+    title: 'Delete',
+    danger: true,
+    // Hide for protected rows
+    hidden: (row) => row.status === 'Protected'
+  },
+  {
+    id: 'archive',
+    icon: '📦',
+    title: 'Archive'
+  }
+];
+
+// Shortcuts work on hovered row
+grid.rowShortcuts = [
+  {
+    key: 'Delete',
+    id: 'delete',
+    label: 'Delete row',
+    action: (ctx) => deleteRow(ctx.rowIndex)
+  }
+];`}
+					languageType="javascript"
+					titleText="Inline Configuration"
+				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>When to Use</h5>
+					<p>Use <code>inline</code> when actions should always be visible, not hidden behind hover.</p>
+					<h5>Key Properties</h5>
+					<ul>
+						<li><code>toolbarPosition: 'inline'</code></li>
+						<li><code>inlineActionsTitle</code> - Column header</li>
+					</ul>
+					<h5>Per-Row Callbacks</h5>
+					<ul>
+						<li><code>disabled: (row) => boolean</code> - Grayed out</li>
+						<li><code>hidden: (row) => boolean</code> - Not rendered</li>
+					</ul>
+					<h5>Keyboard Shortcuts</h5>
+					<p><code>rowShortcuts</code> work when hovering over a row - no floating toolbar needed!</p>
+					<h5>Comparison</h5>
+					<table class="table table-sm small">
+						<thead><tr><th>Floating</th><th>Inline</th></tr></thead>
+						<tbody>
+							<tr><td>Appears on hover</td><td>Always visible</td></tr>
+							<tr><td>Saves space</td><td>Uses column width</td></tr>
+							<tr><td>Good for many actions</td><td>Good for few actions</td></tr>
+						</tbody>
+					</table>
 				</div>
 			{/snippet}
 		</ShowcaseSection>

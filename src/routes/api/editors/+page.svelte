@@ -680,6 +680,16 @@ type CustomEditorContext<T> = {
 							<td><code>(option, context) => string</code></td>
 							<td>Custom HTML rendering for options</td>
 						</tr>
+						<tr>
+							<td><code>noOptionsText</code></td>
+							<td><code>string</code></td>
+							<td>Text when no options found (default: from grid.labels)</td>
+						</tr>
+						<tr>
+							<td><code>searchingText</code></td>
+							<td><code>string</code></td>
+							<td>Text while searching (autocomplete only, default: from grid.labels)</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
