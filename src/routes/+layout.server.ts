@@ -34,13 +34,18 @@ const config: PartialDocsConfig = {
 					{ label: 'Sorting', href: '/features/sorting' },
 					{ label: 'Pagination', href: '/features/pagination' },
 					{ label: 'Editing', href: '/features/editing' },
+					{ label: 'Fill Handle', href: '/features/fill-handle' },
+					{ label: 'Column Resizing', href: '/features/column-resize' },
+					{ label: 'Column Reordering', href: '/features/column-reorder' },
+					{ label: 'Freeze Panes', href: '/features/freeze-panes' },
 					{ label: 'Row Toolbar', href: '/features/toolbar' },
 					{ label: 'Context Menu', href: '/features/context-menu' },
 					{ label: 'Virtual Scrolling', href: '/features/virtual-scrolling' },
 					{ label: 'Scroll Modes', href: '/features/scroll-modes' },
 					{ label: 'Keyboard Navigation', href: '/features/keyboard-navigation' },
 					{ label: 'Custom Styling', href: '/features/custom-styling' },
-					{ label: 'Row Locking', href: '/features/row-locking' }
+					{ label: 'Row Locking', href: '/features/row-locking' },
+					{ label: 'Row Selection', href: '/features/row-selection' }
 				]
 			},
 			{

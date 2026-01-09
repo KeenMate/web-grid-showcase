@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Row Selection feature page** (`/features/row-selection`) - Multi-row selection via row numbers
+  - Basic selection demo with live selection log
+  - Range shortcuts demo with Delete and Ctrl+Alt+E actions
+  - Full API reference with methods and TypeScript types
+  - CSS variables documentation
+- **Fill Handle feature page** (`/features/fill-handle`) - Excel-like drag-to-fill
+  - Interactive demo with direction toggle
+  - Type-based validation explanation
+  - Full API reference
+- **Column Resizing feature page** (`/features/column-resize`) - Drag to resize columns
+  - Interactive demo with min/max constraints
+  - LocalStorage persistence guide
+  - Programmatic API examples
+- **Column Reordering feature page** (`/features/column-reorder`) - Drag to reorder columns
+  - Interactive demo with move buttons
+  - LocalStorage persistence guide
+  - Programmatic API examples
+- **Freeze Panes feature page** (`/features/freeze-panes`) - Frozen columns
+  - Interactive demo with controls
+  - Column-level frozen property demo
+  - API reference
+
+### Changed
+- **Updated @keenmate/web-grid** to 1.0.0-rc08
+- **API Component page** - Added new sections:
+  - Row Selection Properties (selectedRows, rangeShortcuts, selection methods)
+  - Resizable Columns Properties (gridName, persistColumnWidths, resize methods)
+  - Reorderable Columns Properties (allowColumnReorder, persistColumnOrder, reorder methods)
+  - Fill Handle Properties (fillDirection, onfilldrag, type-based validation)
+  - Freeze Panes Properties (stickyRowNumbers, freezeColumns, column frozen)
+- **Navigation** - Added new feature pages:
+  - Fill Handle
+  - Column Resizing
+  - Column Reordering
+  - Freeze Panes
+  - Row Selection
+
+---
+
+## [Previous]
+
 ### Changed
 - **Complete repository conversion** from web-multiselect-showcase to web-grid-showcase
   - Renamed package from `web-multiselect-showcase` to `web-grid-showcase`

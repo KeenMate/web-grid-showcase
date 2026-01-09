@@ -122,6 +122,369 @@ grid.columns = [
 			</div>
 		</section>
 
+		<!-- Resizable Columns Properties -->
+		<section class="mb-5">
+			<h2 class="mb-4">Resizable Columns Properties</h2>
+			<p>Excel-like column resizing by dragging header edges.</p>
+
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>gridName</code></td>
+							<td><code>string</code></td>
+							<td>-</td>
+							<td>Unique name for localStorage persistence</td>
+						</tr>
+						<tr>
+							<td><code>persistColumnWidths</code></td>
+							<td><code>boolean</code></td>
+							<td><code>false</code></td>
+							<td>Save column widths to localStorage</td>
+						</tr>
+						<tr>
+							<td><code>oncolumnresize</code></td>
+							<td><code>function</code></td>
+							<td>-</td>
+							<td>Callback after column resize: <code>(detail) => void</code></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4 class="mt-4">Column Properties</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>resizable</code></td>
+							<td><code>boolean</code></td>
+							<td>Per-column opt-out (default: true)</td>
+						</tr>
+						<tr>
+							<td><code>minWidth</code></td>
+							<td><code>string</code></td>
+							<td>Minimum width constraint (e.g., '50px')</td>
+						</tr>
+						<tr>
+							<td><code>maxWidth</code></td>
+							<td><code>string</code></td>
+							<td>Maximum width constraint (e.g., '300px')</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4 class="mt-4">Methods</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Method</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>setColumnWidth(field, width)</code></td>
+							<td>Set width of a specific column</td>
+						</tr>
+						<tr>
+							<td><code>setColumnWidths(widths)</code></td>
+							<td>Set widths of multiple columns</td>
+						</tr>
+						<tr>
+							<td><code>getColumnWidthsState()</code></td>
+							<td>Get current widths of all columns</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<CodeBlock
+				codeContent={`// Enable persistence
+grid.gridName = 'my-grid';
+grid.persistColumnWidths = true;
+
+// Column with constraints
+columns = [
+  { field: 'name', title: 'Name', minWidth: '100px', maxWidth: '300px' },
+  { field: 'id', title: 'ID', resizable: false }  // Opt-out
+];
+
+// Listen for resize events
+grid.oncolumnresize = ({ field, oldWidth, newWidth, allWidths }) => {
+  console.log(\`\${field} resized: \${oldWidth} → \${newWidth}\`);
+};
+
+// Programmatic API
+grid.setColumnWidth('name', '200px');
+const widths = grid.getColumnWidthsState();`}
+				languageType="javascript"
+				titleText="Column Resizing"
+			/>
+		</section>
+
+		<!-- Reorderable Columns Properties -->
+		<section class="mb-5">
+			<h2 class="mb-4">Reorderable Columns Properties</h2>
+			<p>Drag column headers to rearrange columns.</p>
+
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>allowColumnReorder</code></td>
+							<td><code>boolean</code></td>
+							<td><code>false</code></td>
+							<td>Enable column drag-to-reorder</td>
+						</tr>
+						<tr>
+							<td><code>persistColumnOrder</code></td>
+							<td><code>boolean</code></td>
+							<td><code>false</code></td>
+							<td>Save column order to localStorage (requires gridName)</td>
+						</tr>
+						<tr>
+							<td><code>oncolumnreorder</code></td>
+							<td><code>function</code></td>
+							<td>-</td>
+							<td>Callback after reorder: <code>(detail) => void</code></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4 class="mt-4">Methods</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Method</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>setColumnOrder(order)</code></td>
+							<td>Set column order by field names array</td>
+						</tr>
+						<tr>
+							<td><code>getColumnOrderState()</code></td>
+							<td>Get current column order</td>
+						</tr>
+						<tr>
+							<td><code>moveColumn(field, toIndex)</code></td>
+							<td>Move a column to a specific index</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<CodeBlock
+				codeContent={`// Enable column reordering
+grid.allowColumnReorder = true;
+
+// With persistence
+grid.gridName = 'my-grid';
+grid.persistColumnOrder = true;
+
+// Listen for reorder events
+grid.oncolumnreorder = ({ field, fromIndex, toIndex, allOrder }) => {
+  console.log(\`\${field} moved: \${fromIndex} → \${toIndex}\`);
+};
+
+// Programmatic API
+grid.setColumnOrder(['id', 'name', 'email', 'department']);
+grid.moveColumn('email', 1);  // Move email to second position
+const order = grid.getColumnOrderState();`}
+				languageType="javascript"
+				titleText="Column Reordering"
+			/>
+
+			<div class="alert alert-info mt-3">
+				<strong>Note:</strong> Frozen columns cannot be reordered. Drag threshold (5px) prevents accidental reorder when clicking to sort.
+			</div>
+		</section>
+
+		<!-- Fill Handle Properties -->
+		<section class="mb-5">
+			<h2 class="mb-4">Fill Handle Properties</h2>
+			<p>Excel-like drag-to-fill for copying values to adjacent cells.</p>
+
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>fillDirection</code></td>
+							<td><code>'vertical' | 'all'</code></td>
+							<td><code>'vertical'</code></td>
+							<td>Allowed fill directions (grid-level default)</td>
+						</tr>
+						<tr>
+							<td><code>onfilldrag</code></td>
+							<td><code>function</code></td>
+							<td>-</td>
+							<td>Callback before fill: return false to cancel</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4 class="mt-4">Column Properties</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>fillDirection</code></td>
+							<td><code>'vertical' | 'all'</code></td>
+							<td>Per-column override for fill direction</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<CodeBlock
+				codeContent={`// Grid-level: allow filling in all directions
+grid.fillDirection = 'all';
+
+// Column-level: restrict specific column to vertical only
+columns = [
+  { field: 'name', title: 'Name', fillDirection: 'all' },
+  { field: 'salary', title: 'Salary', fillDirection: 'vertical' }
+];
+
+// Callback to validate or cancel fill
+grid.onfilldrag = ({ sourceCell, targetCells, direction }) => {
+  console.log(\`Filling \${targetCells.length} cells \${direction}\`);
+  // Return false to cancel the fill operation
+  return true;
+};`}
+				languageType="javascript"
+				titleText="Fill Handle"
+			/>
+
+			<div class="alert alert-info mt-3">
+				<strong>Type-based validation:</strong> Fill handle automatically validates values by column type:
+				<ul class="mb-0 mt-2">
+					<li><strong>Number columns:</strong> Only numeric values accepted</li>
+					<li><strong>Select/Combobox:</strong> Only values from options accepted</li>
+					<li><strong>Date columns:</strong> Only valid dates accepted</li>
+					<li><strong>Text/Autocomplete:</strong> Any value (use onfilldrag for custom validation)</li>
+				</ul>
+			</div>
+		</section>
+
+		<!-- Freeze Panes Properties -->
+		<section class="mb-5">
+			<h2 class="mb-4">Freeze Panes Properties</h2>
+			<p>Excel-like frozen columns that stay visible while scrolling horizontally.</p>
+
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>stickyRowNumbers</code></td>
+							<td><code>boolean</code></td>
+							<td><code>false</code></td>
+							<td>Make row number column sticky (frozen)</td>
+						</tr>
+						<tr>
+							<td><code>freezeColumns</code></td>
+							<td><code>number</code></td>
+							<td><code>0</code></td>
+							<td>Number of columns to freeze from the left</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4 class="mt-4">Column Properties</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>frozen</code></td>
+							<td><code>boolean</code></td>
+							<td>Mark column as frozen (moves to left automatically)</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<CodeBlock
+				codeContent={`// Enable sticky row numbers
+grid.showRowNumbers = true;
+grid.stickyRowNumbers = true;
+
+// Freeze first 2 columns
+grid.freezeColumns = 2;
+
+// Or mark individual columns as frozen
+columns = [
+  { field: 'id', title: 'ID', width: '80px' },
+  { field: 'name', title: 'Name', width: '150px' },
+  { field: 'status', title: 'Status', width: '100px', frozen: true }
+];
+// Status will appear first (after row numbers) due to frozen: true`}
+				languageType="javascript"
+				titleText="Freeze Panes"
+			/>
+		</section>
+
 		<!-- Sorting Properties -->
 		<section class="mb-5">
 			<h2 class="mb-4">Sorting Properties</h2>
@@ -434,6 +797,118 @@ grid.rowShortcuts = [
 grid.showShortcutsHelp = true;`}
 				languageType="javascript"
 				titleText="Row Shortcuts"
+			/>
+		</section>
+
+		<!-- Row Selection Properties -->
+		<section class="mb-5">
+			<h2 class="mb-4">Row Selection Properties</h2>
+			<p>Multi-row selection via row number cells with keyboard shortcuts for batch operations.</p>
+
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>selectedRows</code></td>
+							<td><code>number[]</code></td>
+							<td><code>[]</code></td>
+							<td>Array of selected row indices (read-only, sorted ascending)</td>
+						</tr>
+						<tr>
+							<td><code>rangeShortcuts</code></td>
+							<td><code>RangeShortcut[]</code></td>
+							<td><code>[]</code></td>
+							<td>Keyboard shortcuts that operate on all selected rows</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4 class="mt-4">Selection Methods</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Method</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>selectRow(index, mode)</code></td>
+							<td>Select a row. Mode: 'replace' (default), 'toggle', or 'range'</td>
+						</tr>
+						<tr>
+							<td><code>selectRowRange(from, to)</code></td>
+							<td>Select all rows in a range (inclusive)</td>
+						</tr>
+						<tr>
+							<td><code>clearSelection()</code></td>
+							<td>Clear all selected rows</td>
+						</tr>
+						<tr>
+							<td><code>isRowSelected(index)</code></td>
+							<td>Check if a specific row is selected</td>
+						</tr>
+						<tr>
+							<td><code>getSelectedRowsData()</code></td>
+							<td>Get the data objects for all selected rows</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<CodeBlock
+				codeContent={`// Enable row numbers (required for row selection)
+grid.showRowNumbers = true;
+
+// Selection interactions:
+// - Click row number → select (clears others)
+// - Ctrl+Click → toggle row in selection
+// - Shift+Click → select range from last selected
+// - Click+Drag → select range while dragging
+// - Escape → clear selection
+
+// Define range shortcuts (operate on selected rows)
+grid.rangeShortcuts = [
+  {
+    key: 'Delete',
+    id: 'delete-selected',
+    label: 'Delete selected rows',
+    action: ({ rows, rowIndices }) => {
+      // Delete from end to preserve indices
+      for (const idx of [...rowIndices].reverse()) {
+        grid.items.splice(idx, 1);
+      }
+      grid.items = [...grid.items];
+      grid.clearSelection();
+    }
+  },
+  {
+    key: 'Ctrl+Alt+E',
+    id: 'export-selected',
+    label: 'Export selected',
+    action: ({ rows }) => exportToCSV(rows)
+  }
+];
+
+// Programmatic selection
+grid.selectRow(5, 'replace');       // Select row 5
+grid.selectRow(7, 'toggle');        // Toggle row 7
+grid.selectRowRange(0, 4);          // Select rows 0-4
+console.log(grid.selectedRows);     // [0, 1, 2, 3, 4, 5, 7]
+console.log(grid.getSelectedRowsData());  // Array of row objects
+grid.clearSelection();`}
+				languageType="javascript"
+				titleText="Row Selection"
 			/>
 		</section>
 
