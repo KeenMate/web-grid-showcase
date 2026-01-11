@@ -21,6 +21,12 @@ Quick reference for all showcase examples with their codes.
 | TB03 | Toolbar Positioning | [toolbar](/features/toolbar) |
 | CM01 | Right-Click Menu | [context-menu](/features/context-menu) |
 | CM02 | Dynamic Menu Items | [context-menu](/features/context-menu) |
+| CM03 | Cell-Aware Actions | [context-menu](/features/context-menu) |
+| CM04 | Menu Positioning | [context-menu](/features/context-menu) |
+| CM05 | Header Context Menu | [context-menu](/features/context-menu) |
+| CM06 | Column Visibility | [context-menu](/features/context-menu) |
+| CM07 | Custom Header Actions | [context-menu](/features/context-menu) |
+| CM08 | Multi-Sort via Menu | [context-menu](/features/context-menu) |
 | KN01 | Navigate Mode | [keyboard-navigation](/features/keyboard-navigation) |
 | KN02 | Editing Shortcuts | [keyboard-navigation](/features/keyboard-navigation) |
 | VS01 | Virtual Scrolling | [virtual-scrolling](/features/virtual-scrolling) |

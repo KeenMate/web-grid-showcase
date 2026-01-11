@@ -5,8 +5,14 @@
 	let contextMenuGrid: any;
 	let cellAwareGrid: any;
 	let positionGrid: any;
+	let headerMenuGrid: any;
+	let columnVisibilityGrid: any;
+	let customHeaderGrid: any;
+	let multiSortGrid: any;
 	let lastAction = $state<{ command: string; row: number; cell: string; value: unknown } | null>(null);
 	let cellAwareAction = $state<{ command: string; column: string; value: unknown } | null>(null);
+	let headerAction = $state<{ action: string; column: string } | null>(null);
+	let sortState = $state<{ column: string; direction: string }[]>([]);
 
 	// CM04 Position configuration
 	let xOffset = $state(8);
@@ -157,6 +163,117 @@
 				{ id: 'action2', label: 'Action 2', icon: '✏️' },
 				{ id: 'action3', label: 'Action 3', icon: '🗑️', danger: true, dividerBefore: true }
 			];
+		}
+
+		// CM05 Header Context Menu Grid
+		if (headerMenuGrid) {
+			headerMenuGrid.columns = [
+				{ field: 'id', title: 'ID', width: '60px' },
+				{ field: 'name', title: 'Name', width: '150px' },
+				{ field: 'email', title: 'Email' },
+				{ field: 'status', title: 'Status', width: '100px' },
+				{ field: 'salary', title: 'Salary', width: '100px', align: 'right' }
+			];
+			headerMenuGrid.items = [...employees];
+			headerMenuGrid.sortMode = 'single';
+			headerMenuGrid.headerContextMenu = [
+				'sortAsc',
+				'sortDesc',
+				'clearSort',
+				{ dividerBefore: true },
+				'freezeColumn',
+				'unfreezeColumn',
+				{ dividerBefore: true },
+				'hideColumn'
+			];
+			headerMenuGrid.onheadercontextmenuopen = (ctx: any) => {
+				headerAction = { action: 'menu opened', column: ctx.column.field };
+			};
+		}
+
+		// CM06 Column Visibility Grid
+		if (columnVisibilityGrid) {
+			columnVisibilityGrid.columns = [
+				{ field: 'id', title: 'ID', width: '60px' },
+				{ field: 'name', title: 'Name', width: '150px' },
+				{ field: 'email', title: 'Email' },
+				{ field: 'status', title: 'Status', width: '100px' },
+				{ field: 'salary', title: 'Salary', width: '100px', align: 'right' }
+			];
+			columnVisibilityGrid.items = [...employees];
+			columnVisibilityGrid.headerContextMenu = [
+				'sortAsc',
+				'sortDesc',
+				{ dividerBefore: true },
+				'columnVisibility',
+				'hideColumn'
+			];
+		}
+
+		// CM07 Custom Header Actions Grid
+		if (customHeaderGrid) {
+			customHeaderGrid.columns = [
+				{ field: 'id', title: 'ID', width: '60px', sortable: false },
+				{ field: 'name', title: 'Name', width: '150px' },
+				{ field: 'email', title: 'Email' },
+				{ field: 'status', title: 'Status', width: '100px' }
+			];
+			customHeaderGrid.items = [...employees];
+			customHeaderGrid.sortMode = 'single';
+			customHeaderGrid.headerContextMenu = [
+				'sortAsc',
+				'sortDesc',
+				{ dividerBefore: true },
+				{
+					id: 'copyColumnName',
+					label: 'Copy Column Name',
+					icon: '📋',
+					onclick: (ctx: any) => {
+						navigator.clipboard.writeText(ctx.column.title);
+						headerAction = { action: 'copied', column: ctx.column.title };
+					}
+				},
+				{
+					id: 'columnInfo',
+					label: (ctx: any) => `Info: ${ctx.column.field}`,
+					icon: 'ℹ️',
+					onclick: (ctx: any) => {
+						headerAction = { action: 'info', column: ctx.column.field };
+					}
+				},
+				{
+					id: 'resetWidth',
+					label: 'Reset Column Width',
+					icon: '↔️',
+					visible: (ctx: any) => ctx.column.width !== undefined,
+					onclick: (ctx: any) => {
+						headerAction = { action: 'reset width', column: ctx.column.field };
+					}
+				}
+			];
+		}
+
+		// CM08 Multi-Sort Grid
+		if (multiSortGrid) {
+			multiSortGrid.columns = [
+				{ field: 'id', title: 'ID', width: '60px' },
+				{ field: 'name', title: 'Name', width: '150px' },
+				{ field: 'email', title: 'Email' },
+				{ field: 'status', title: 'Status', width: '100px' },
+				{ field: 'salary', title: 'Salary', width: '100px', align: 'right' }
+			];
+			multiSortGrid.items = [...employees];
+			multiSortGrid.sortMode = 'multi';
+			multiSortGrid.headerContextMenu = [
+				'sortAsc',
+				'sortDesc',
+				'clearSort'
+			];
+			// Track sort state changes
+			const updateSortState = () => {
+				sortState = [...multiSortGrid.sort];
+			};
+			multiSortGrid.ondatarequest = updateSortState;
 		}
 	});
 </script>
@@ -470,6 +587,280 @@ grid.contextMenuYOffset = ${yOffset};
 					</ul>
 					<h5>Edge Handling</h5>
 					<p>The menu automatically flips or shifts to stay within viewport bounds.</p>
+				</div>
+			{/snippet}
+		</ShowcaseSection>
+
+		<!-- Header Context Menu Section Divider -->
+		<div class="my-5 pt-4 border-top">
+			<h2 class="h4 mb-3">Header Context Menu</h2>
+			<p class="text-muted">Right-click menus for column headers with predefined and custom actions.</p>
+		</div>
+
+		<!-- CM05 Header Context Menu -->
+		<ShowcaseSection
+			titleText="CM05 Header Context Menu"
+			subtitleText="Right-click on column headers for sorting, freezing, and hiding columns"
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="Predefined Actions">
+
+			{#snippet demoContent()}
+				<div class="grid-demo">
+					<web-grid
+						bind:this={headerMenuGrid}
+						style="max-height: 300px; max-width: 700px;"
+					></web-grid>
+					<p class="small text-muted mt-2">Right-click any column header to see the context menu.</p>
+					{#if headerAction}
+						<div class="console-log mt-2">
+							<code>action: "{headerAction.action}", column: "{headerAction.column}"</code>
+						</div>
+					{/if}
+				</div>
+			{/snippet}
+
+			{#snippet controlsContent()}
+				<CodeBlock
+					codeContent={`grid.headerContextMenu = [
+  'sortAsc',
+  'sortDesc',
+  'clearSort',
+  { dividerBefore: true },
+  'freezeColumn',
+  'unfreezeColumn',
+  { dividerBefore: true },
+  'hideColumn'
+];
+
+// Callback before menu opens
+grid.onheadercontextmenuopen = (ctx) => {
+  console.log('Column:', ctx.column.field);
+  // Return false to prevent opening
+};`}
+					languageType="javascript"
+					titleText="Header Menu Config"
+				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Predefined Actions</h5>
+					<ul>
+						<li><code>'sortAsc'</code> - Sort ascending</li>
+						<li><code>'sortDesc'</code> - Sort descending</li>
+						<li><code>'clearSort'</code> - Clear sort (auto-hidden if not sorted)</li>
+						<li><code>'freezeColumn'</code> - Freeze up to this column</li>
+						<li><code>'unfreezeColumn'</code> - Unfreeze (auto-hidden if not frozen)</li>
+						<li><code>'hideColumn'</code> - Hide this column</li>
+						<li><code>'columnVisibility'</code> - Submenu to show/hide columns</li>
+					</ul>
+					<h5>Auto-Visibility</h5>
+					<p>Some actions auto-hide based on state (clearSort, freeze/unfreeze).</p>
+				</div>
+			{/snippet}
+		</ShowcaseSection>
+
+		<!-- CM06 Column Visibility -->
+		<ShowcaseSection
+			titleText="CM06 Column Visibility"
+			subtitleText="Show/hide columns via submenu with 'Show all' option"
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="Features">
+
+			{#snippet demoContent()}
+				<div class="grid-demo">
+					<web-grid
+						bind:this={columnVisibilityGrid}
+						style="max-height: 300px; max-width: 700px;"
+					></web-grid>
+					<p class="small text-muted mt-2">Right-click a header → Column Visibility to toggle columns.</p>
+				</div>
+			{/snippet}
+
+			{#snippet controlsContent()}
+				<CodeBlock
+					codeContent={`grid.headerContextMenu = [
+  'sortAsc',
+  'sortDesc',
+  { dividerBefore: true },
+  'columnVisibility',  // Submenu
+  'hideColumn'
+];
+
+// The submenu shows:
+// - "Show all" option at the top
+// - All columns with checkboxes
+// - Hidden columns show unchecked
+// - Menu stays open for toggling
+
+// Columns use 'hidden' property:
+grid.columns = [
+  { field: 'id', title: 'ID' },
+  { field: 'name', title: 'Name', hidden: true }
+];`}
+					languageType="javascript"
+					titleText="Column Visibility"
+				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Submenu Features</h5>
+					<ul>
+						<li><strong>Show all</strong> - Unhide all columns at once</li>
+						<li><strong>Checkboxes</strong> - ☑ visible, ☐ hidden</li>
+						<li><strong>Stays open</strong> - Toggle multiple columns</li>
+						<li><strong>Reactive</strong> - Updates after each toggle</li>
+					</ul>
+					<h5>column.hidden Property</h5>
+					<p>Hidden columns stay in the array but are excluded from rendering. They can be shown again via the submenu.</p>
+				</div>
+			{/snippet}
+		</ShowcaseSection>
+
+		<!-- CM07 Custom Header Actions -->
+		<ShowcaseSection
+			titleText="CM07 Custom Header Actions"
+			subtitleText="Mix predefined actions with custom menu items"
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="HeaderMenuContext">
+
+			{#snippet demoContent()}
+				<div class="grid-demo">
+					<web-grid
+						bind:this={customHeaderGrid}
+						style="max-height: 300px; max-width: 600px;"
+					></web-grid>
+					<p class="small text-muted mt-2">Right-click headers. Note: ID column has sortable: false.</p>
+					{#if headerAction}
+						<div class="console-log mt-2">
+							<code>action: "{headerAction.action}", column: "{headerAction.column}"</code>
+						</div>
+					{/if}
+				</div>
+			{/snippet}
+
+			{#snippet controlsContent()}
+				<CodeBlock
+					codeContent={`// Column with sortable: false
+columns = [
+  { field: 'id', title: 'ID', sortable: false },
+  { field: 'name', title: 'Name' }
+];
+
+grid.headerContextMenu = [
+  'sortAsc',  // Hidden if sortable: false
+  'sortDesc',
+  { dividerBefore: true },
+  {
+    id: 'copyColumnName',
+    label: 'Copy Column Name',
+    icon: '📋',
+    onclick: (ctx) => {
+      navigator.clipboard.writeText(ctx.column.title);
+    }
+  },
+  {
+    id: 'columnInfo',
+    // Dynamic label using context
+    label: (ctx) => \`Info: \${ctx.column.field}\`,
+    icon: 'ℹ️'
+  },
+  {
+    id: 'resetWidth',
+    label: 'Reset Column Width',
+    // Only show if column has width set
+    visible: (ctx) => ctx.column.width !== undefined
+  }
+];`}
+					languageType="javascript"
+					titleText="Custom Actions"
+				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>HeaderMenuContext</h5>
+					<p>The context object passed to callbacks:</p>
+					<ul>
+						<li><code>column</code> - Column definition</li>
+						<li><code>field</code> - Column field name</li>
+						<li><code>columnIndex</code> - Visual index</li>
+						<li><code>sortDirection</code> - 'asc' | 'desc' | null</li>
+						<li><code>isFrozen</code> - Is column frozen</li>
+						<li><code>allColumns</code> - All columns array</li>
+						<li><code>labels</code> - For translations</li>
+					</ul>
+					<h5>sortable: false</h5>
+					<p>Hides sort options in header context menu.</p>
+				</div>
+			{/snippet}
+		</ShowcaseSection>
+
+		<!-- CM08 Multi-Sort via Menu -->
+		<ShowcaseSection
+			titleText="CM08 Multi-Sort via Menu"
+			subtitleText="Ctrl+click Sort Ascending/Descending to add to existing sort"
+			col1Title="Live Demo"
+			col2Title="Code"
+			col3Title="How It Works">
+
+			{#snippet demoContent()}
+				<div class="grid-demo">
+					<web-grid
+						bind:this={multiSortGrid}
+						style="max-height: 300px; max-width: 700px;"
+					></web-grid>
+					<p class="small text-muted mt-2">Try: Right-click → Sort Asc on Name, then Ctrl+Right-click → Sort Asc on Status.</p>
+					{#if sortState.length > 0}
+						<div class="console-log mt-2">
+							<code>sort: [{sortState.map(s => `{column: "${s.column}", direction: "${s.direction}"}`).join(', ')}]</code>
+						</div>
+					{:else}
+						<div class="console-log mt-2">
+							<code>sort: []</code>
+						</div>
+					{/if}
+				</div>
+			{/snippet}
+
+			{#snippet controlsContent()}
+				<CodeBlock
+					codeContent={`// Enable multi-sort mode
+grid.sortMode = 'multi';
+
+grid.headerContextMenu = [
+  'sortAsc',   // Click = replace sort
+  'sortDesc',  // Ctrl+click = add to sort
+  'clearSort'
+];
+
+// Behavior:
+// - Normal click: Replaces existing sort
+// - Ctrl+click: Adds column to sort
+//   (or updates if already sorted)
+
+// Same behavior as Ctrl+clicking
+// directly on column headers.`}
+					languageType="javascript"
+					titleText="Multi-Sort"
+				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Requirements</h5>
+					<p><code>sortMode = 'multi'</code> must be set.</p>
+					<h5>Behavior</h5>
+					<ul>
+						<li><strong>Normal click</strong> - Replaces all existing sorts with single column</li>
+						<li><strong>Ctrl+click</strong> - Adds column to existing sort order</li>
+					</ul>
+					<h5>Consistency</h5>
+					<p>This matches the Ctrl+click behavior when clicking directly on column headers.</p>
 				</div>
 			{/snippet}
 		</ShowcaseSection>

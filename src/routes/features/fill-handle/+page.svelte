@@ -267,6 +267,5 @@ grid.onfilldrag = ({ sourceCell, targetCells, direction }) => {
 	.demo-container {
 		border: 1px solid var(--bs-border-color);
 		border-radius: 0.375rem;
-		overflow: hidden;
 	}
 </style>

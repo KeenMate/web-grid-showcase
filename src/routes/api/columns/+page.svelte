@@ -157,7 +157,7 @@
 							<td><code>sortable</code></td>
 							<td><code>boolean</code></td>
 							<td>inherits</td>
-							<td>Per-column sortable override</td>
+							<td>Per-column sortable override. When <code>false</code>, hides sort options in header context menu.</td>
 						</tr>
 						<tr>
 							<td><code>filterable</code></td>
@@ -165,17 +165,27 @@
 							<td>inherits</td>
 							<td>Per-column filterable override</td>
 						</tr>
+						<tr>
+							<td><code>hidden</code></td>
+							<td><code>boolean</code></td>
+							<td><code>false</code></td>
+							<td>Hide column from display. Column stays in array and can be shown again via Column Visibility submenu.</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
 
 			<CodeBlock
 				codeContent={`grid.columns = [
-  { field: 'id', title: 'ID', align: 'center' },
+  { field: 'id', title: 'ID', align: 'center', sortable: false },
   { field: 'name', title: 'Name', textOverflow: 'ellipsis' },
   { field: 'salary', title: 'Salary', align: 'right' },
-  { field: 'notes', title: 'Notes', textOverflow: 'wrap', sortable: false }
-];`}
+  { field: 'notes', title: 'Notes', textOverflow: 'wrap' },
+  { field: 'internal', title: 'Internal', hidden: true }  // Hidden by default
+];
+
+// Hidden columns can be shown via headerContextMenu:
+grid.headerContextMenu = ['columnVisibility'];`}
 				languageType="javascript"
 				titleText="Display Options"
 			/>

@@ -956,7 +956,19 @@ grid.labels = {
 
   // Dropdown editors
   dropdownNoOptions: 'No options',
-  dropdownSearching: 'Searching...'
+  dropdownSearching: 'Searching...',
+
+  // Header context menu (nested object)
+  contextMenu: {
+    sortAsc: 'Sort Ascending',
+    sortDesc: 'Sort Descending',
+    clearSort: 'Clear Sort',
+    hideColumn: 'Hide Column',
+    freezeColumn: 'Freeze Column',
+    unfreezeColumn: 'Unfreeze Column',
+    columnVisibility: 'Column Visibility',
+    showAll: 'Show all'
+  }
 };`}
 				languageType="javascript"
 				titleText="Labels Configuration"
@@ -1029,6 +1041,7 @@ grid.labels = {
 		<section class="mb-5">
 			<h2 class="mb-4">Context Menu & Summary</h2>
 
+			<h4 class="mt-4">Row Context Menu</h4>
 			<div class="table-responsive">
 				<table class="table table-bordered">
 					<thead class="table-light">
@@ -1044,7 +1057,7 @@ grid.labels = {
 							<td><code>contextMenu</code></td>
 							<td><code>ContextMenuItem[]</code></td>
 							<td>-</td>
-							<td>Right-click menu items (supports <code>shortcut</code> property)</td>
+							<td>Right-click menu items for cells/rows (supports <code>shortcut</code> property)</td>
 						</tr>
 						<tr>
 							<td><code>contextMenuXOffset</code></td>
@@ -1058,6 +1071,81 @@ grid.labels = {
 							<td><code>0</code></td>
 							<td>Vertical offset from click position (pixels)</td>
 						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4 class="mt-4">Header Context Menu</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>headerContextMenu</code></td>
+							<td><code>HeaderMenuConfig[]</code></td>
+							<td>-</td>
+							<td>Right-click menu items for column headers. Accepts predefined strings or custom items.</td>
+						</tr>
+						<tr>
+							<td><code>onheadercontextmenuopen</code></td>
+							<td><code>function</code></td>
+							<td>-</td>
+							<td>Callback before header menu opens: <code>(ctx: HeaderMenuContext) => void | false</code>. Return false to prevent opening.</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<CodeBlock
+				codeContent={`// Header context menu with predefined actions
+grid.headerContextMenu = [
+  'sortAsc',           // Sort ascending
+  'sortDesc',          // Sort descending
+  'clearSort',         // Clear sort (auto-hidden if not sorted)
+  { dividerBefore: true },
+  'freezeColumn',      // Freeze up to this column
+  'unfreezeColumn',    // Unfreeze (auto-hidden if not frozen)
+  { dividerBefore: true },
+  'columnVisibility',  // Submenu to show/hide columns
+  'hideColumn',        // Hide this column
+  {
+    id: 'custom',
+    label: 'Custom Action',
+    icon: '⚡',
+    onclick: (ctx) => console.log(ctx.column.field)
+  }
+];
+
+// Predefined actions:
+// 'sortAsc' | 'sortDesc' | 'clearSort' |
+// 'hideColumn' | 'freezeColumn' | 'unfreezeColumn' |
+// 'columnVisibility'
+
+// Multi-sort: Ctrl+click Sort Asc/Desc adds to sort
+// (when sortMode = 'multi')`}
+				languageType="javascript"
+				titleText="Header Context Menu"
+			/>
+
+			<h4 class="mt-4">Summary</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
 						<tr>
 							<td><code>summaryPosition</code></td>
 							<td><code>string</code></td>

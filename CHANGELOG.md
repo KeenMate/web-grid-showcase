@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Header Context Menu examples** (CM05-CM08) in `/features/context-menu`
+  - CM05: Basic header right-click menu with predefined actions
+  - CM06: Column Visibility submenu with show/hide toggles
+  - CM07: Custom header actions with dynamic visibility
+  - CM08: Multi-sort via Ctrl+click in context menu
 - **Row Selection feature page** (`/features/row-selection`) - Multi-row selection via row numbers
   - Basic selection demo with live selection log
   - Range shortcuts demo with Delete and Ctrl+Alt+E actions
@@ -31,7 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - API reference
 
 ### Changed
-- **Updated @keenmate/web-grid** to 1.0.0-rc08
+- **Updated @keenmate/web-grid** to 1.0.0-rc09
+- **API Component page** - Added headerContextMenu property, onheadercontextmenuopen callback, labels.contextMenu.* documentation
+- **API Columns page** - Added hidden and sortable (with header context menu note) column properties
 - **API Component page** - Added new sections:
   - Row Selection Properties (selectedRows, rangeShortcuts, selection methods)
   - Resizable Columns Properties (gridName, persistColumnWidths, resize methods)
