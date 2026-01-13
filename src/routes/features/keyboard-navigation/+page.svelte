@@ -34,10 +34,10 @@
 				{ field: 'name', title: 'Name', width: '150px', editor: 'text' },
 				{ field: 'email', title: 'Email', editor: 'text' },
 				{ field: 'department', title: 'Department', width: '120px', editor: 'text' },
-				{ field: 'salary', title: 'Salary', width: '100px', align: 'right', editor: 'number', formatCallback: (v: number) => '$' + v.toLocaleString() }
+				{ field: 'salary', title: 'Salary', width: '100px', horizontalAlign: 'right', editor: 'number', formatCallback: (v: number) => '$' + v.toLocaleString() }
 			];
 			navGrid.items = [...employees];
-			navGrid.editable = true;
+			navGrid.isEditable = true;
 			navGrid.editTrigger = 'navigate';
 		}
 
@@ -50,14 +50,14 @@
 				{ field: 'department', title: 'Department', width: '120px', editor: 'select', editorOptions: {
 					options: departments.map(d => ({ value: d, label: d }))
 				}},
-				{ field: 'salary', title: 'Salary', width: '100px', align: 'right', editor: 'number', formatCallback: (v: number) => '$' + v.toLocaleString() }
+				{ field: 'salary', title: 'Salary', width: '100px', horizontalAlign: 'right', editor: 'number', formatCallback: (v: number) => '$' + v.toLocaleString() }
 			];
 			virtualNavGrid.items = generateData(100);
-			virtualNavGrid.virtualScroll = true;
+			virtualNavGrid.isVirtualScrollEnabled = true;
 			virtualNavGrid.virtualScrollRowHeight = 38;
-			virtualNavGrid.infiniteScroll = true;
+			virtualNavGrid.isInfiniteScrollEnabled = true;
 			virtualNavGrid.hasMoreItems = true;
-			virtualNavGrid.editable = true;
+			virtualNavGrid.isEditable = true;
 			virtualNavGrid.editTrigger = 'navigate';
 
 			virtualNavGrid.ondatarequest = (e: any) => {
@@ -101,7 +101,7 @@
 			{#snippet controlsContent()}
 				<CodeBlock
 					codeContent={`// Enable navigate mode
-grid.editable = true;
+grid.isEditable = true;
 grid.editTrigger = 'navigate';
 
 // In navigate mode:
@@ -232,11 +232,11 @@ grid.onrowdelete = (e) => {
 			{#snippet controlsContent()}
 				<CodeBlock
 					codeContent={`// Combine virtual + infinite + navigate
-grid.virtualScroll = true;
+grid.isVirtualScrollEnabled = true;
 grid.virtualScrollRowHeight = 38;
-grid.infiniteScroll = true;
+grid.isInfiniteScrollEnabled = true;
 grid.hasMoreItems = true;
-grid.editable = true;
+grid.isEditable = true;
 grid.editTrigger = 'navigate';
 
 // Load more on scroll

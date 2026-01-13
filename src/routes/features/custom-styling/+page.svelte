@@ -19,10 +19,10 @@
 				{ field: 'id', title: 'ID', width: '60px' },
 				{ field: 'name', title: 'Name', width: '150px' },
 				{ field: 'department', title: 'Department', width: '120px' },
-				{ field: 'salary', title: 'Salary', width: '100px', align: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() }
+				{ field: 'salary', title: 'Salary', width: '100px', horizontalAlign: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() }
 			];
 			themedGrid.items = employees;
-			themedGrid.sortable = true;
+			themedGrid.sortMode = 'single';
 		}
 
 		// Labels/i18n grid with Czech translations
@@ -31,10 +31,11 @@
 				{ field: 'id', title: 'ID', width: '60px' },
 				{ field: 'name', title: 'Jméno', width: '150px' },
 				{ field: 'department', title: 'Oddělení', width: '120px' },
-				{ field: 'salary', title: 'Plat', width: '100px', align: 'right', formatCallback: (v: number) => v.toLocaleString('cs-CZ') + ' Kč' }
+				{ field: 'salary', title: 'Plat', width: '100px', horizontalAlign: 'right', formatCallback: (v: number) => v.toLocaleString('cs-CZ') + ' Kč' }
 			];
 			labelsGrid.items = employees;
-			labelsGrid.pagination = { pageSize: 2 };
+			labelsGrid.isPageable = true;
+			labelsGrid.pageSize = 2;
 			labelsGrid.labels = {
 				rowActions: 'Akce řádku',
 				inlineActionsHeader: 'Akce',

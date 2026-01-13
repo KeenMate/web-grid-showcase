@@ -42,17 +42,18 @@
 		}
 	];
 
-	onMount(() => {
+	onMount(async () => {
+		await import('@keenmate/web-grid');
 		if (grid) {
 			grid.items = [...sampleData];
 			grid.columns = columns;
-			grid.editable = true;
+			grid.isEditable = true;
 			grid.editTrigger = 'navigate';
-			grid.hoverable = true;
-			grid.striped = true;
+			grid.isHoverable = true;
+			grid.isStriped = true;
 			grid.fillDirection = 'vertical';
 
-			grid.onfilldrag = ({ sourceCell, targetCells, direction }: any) => {
+			grid.fillDragCallback = ({ sourceCell, targetCells, direction }: any) => {
 				fillLog = `Filled ${targetCells.length} cell(s) ${direction} from "${sourceCell.field}" column`;
 				return true;
 			};
@@ -87,7 +88,7 @@
 
 		<!-- Demo -->
 		<section class="mb-5">
-			<h2 class="mb-4">Interactive Demo</h2>
+			<h2 class="mb-4">FH01 Interactive Demo</h2>
 			<p>Click a cell to focus it, then drag the small handle at the bottom-right corner to fill adjacent cells.</p>
 
 			<div class="mb-3">
@@ -106,7 +107,7 @@
 
 			<CodeBlock
 				codeContent={`// Enable fill handle (appears when cell is focused and editable)
-grid.editable = true;
+grid.isEditable = true;
 grid.editTrigger = 'navigate';  // Excel-like mode
 
 // Control fill direction
@@ -120,7 +121,7 @@ columns = [
 ];
 
 // Callback before fill (return false to cancel)
-grid.onfilldrag = ({ sourceCell, targetCells, direction }) => {
+grid.fillDragCallback = ({ sourceCell, targetCells, direction }) => {
   console.log(\`Filling \${targetCells.length} cells \${direction}\`);
   return true;  // Allow fill
 };`}
@@ -131,7 +132,7 @@ grid.onfilldrag = ({ sourceCell, targetCells, direction }) => {
 
 		<!-- Type Validation -->
 		<section class="mb-5">
-			<h2 class="mb-4">Type-Based Validation</h2>
+			<h2 class="mb-4">FH02 Type-Based Validation</h2>
 			<p>Fill handle automatically validates values based on column type. Incompatible values are skipped.</p>
 
 			<div class="row g-4">

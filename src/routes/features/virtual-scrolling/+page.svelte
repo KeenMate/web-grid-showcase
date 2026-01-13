@@ -24,14 +24,14 @@
 			{ field: 'name', title: 'Name', width: '150px' },
 			{ field: 'email', title: 'Email' },
 			{ field: 'department', title: 'Department', width: '120px' },
-			{ field: 'salary', title: 'Salary', width: '100px', align: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() }
+			{ field: 'salary', title: 'Salary', width: '100px', horizontalAlign: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() }
 		];
 
 		// Virtual Scrolling Grid - 10,000 rows
 		if (virtualGrid) {
 			virtualGrid.columns = columns;
 			virtualGrid.items = generateData(10000);
-			virtualGrid.virtualScroll = true;
+			virtualGrid.isVirtualScrollEnabled = true;
 			virtualGrid.virtualScrollRowHeight = 38;
 		}
 
@@ -39,7 +39,7 @@
 		if (infiniteGrid) {
 			infiniteGrid.columns = columns;
 			infiniteGrid.items = generateData(50);
-			infiniteGrid.infiniteScroll = true;
+			infiniteGrid.isInfiniteScrollEnabled = true;
 			infiniteGrid.hasMoreItems = true;
 		}
 	});
@@ -71,7 +71,7 @@
 			{#snippet controlsContent()}
 				<CodeBlock
 					codeContent={`// Manual enable
-grid.virtualScroll = true;
+grid.isVirtualScrollEnabled = true;
 grid.virtualScrollRowHeight = 38;
 
 // Or auto-enable when items exceed threshold
@@ -89,7 +89,7 @@ grid.items = generateData(10000);`}
 					<h5>How It Works</h5>
 					<p>Only visible rows (plus buffer) are rendered to the DOM. As you scroll, rows are recycled.</p>
 					<h5>Key Properties</h5>
-					<p><code>virtualScroll</code> - Enable manually</p>
+					<p><code>isVirtualScrollEnabled</code> - Enable manually</p>
 					<p><code>virtualScrollThreshold</code> - Auto-enable threshold (default: 100)</p>
 					<p><code>virtualScrollRowHeight</code> - Row height in px (default: 38)</p>
 					<p><code>virtualScrollBuffer</code> - Extra rows to render (default: 10)</p>
@@ -117,7 +117,7 @@ grid.items = generateData(10000);`}
 
 			{#snippet controlsContent()}
 				<CodeBlock
-					codeContent={`grid.infiniteScroll = true;
+					codeContent={`grid.isInfiniteScrollEnabled = true;
 grid.hasMoreItems = true;
 
 let page = 1;
@@ -147,7 +147,7 @@ grid.ondatarequest = async (e) => {
 					<h5>Infinite Scroll</h5>
 					<p>Load data progressively as user scrolls to bottom.</p>
 					<h5>Properties</h5>
-					<p><code>infiniteScroll</code> - Enable infinite scroll</p>
+					<p><code>isInfiniteScrollEnabled</code> - Enable infinite scroll</p>
 					<p><code>hasMoreItems</code> - More data available</p>
 					<p><code>infiniteScrollThreshold</code> - Pixels from bottom to trigger (default: 100)</p>
 					<h5>Event</h5>

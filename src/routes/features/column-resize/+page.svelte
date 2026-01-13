@@ -15,19 +15,20 @@
 	];
 
 	const columns = [
-		{ field: 'id', title: 'ID', width: '60px', resizable: false },
+		{ field: 'id', title: 'ID', width: '60px', isResizable: false },
 		{ field: 'name', title: 'Name', width: '150px', minWidth: '100px', maxWidth: '300px' },
 		{ field: 'email', title: 'Email', width: '200px', minWidth: '120px' },
 		{ field: 'department', title: 'Department', width: '120px' },
 		{ field: 'salary', title: 'Salary', width: '100px', formatCallback: (v: number) => '$' + v?.toLocaleString() }
 	];
 
-	onMount(() => {
+	onMount(async () => {
+		await import('@keenmate/web-grid');
 		if (grid) {
 			grid.items = [...sampleData];
 			grid.columns = columns;
-			grid.hoverable = true;
-			grid.striped = true;
+			grid.isHoverable = true;
+			grid.isStriped = true;
 
 			grid.oncolumnresize = ({ field, oldWidth, newWidth, allWidths }: any) => {
 				resizeLog = `Column "${field}" resized: ${oldWidth} → ${newWidth}`;
@@ -38,12 +39,12 @@
 
 	function resetWidths() {
 		if (grid) {
-			grid.setColumnWidths({
-				name: '150px',
-				email: '200px',
-				department: '120px',
-				salary: '100px'
-			});
+			grid.setColumnWidths([
+				{ field: 'name', width: '150px' },
+				{ field: 'email', width: '200px' },
+				{ field: 'department', width: '120px' },
+				{ field: 'salary', width: '100px' }
+			]);
 			resizeLog = 'Column widths reset to defaults';
 		}
 	}
@@ -73,8 +74,8 @@
 
 		<!-- Demo -->
 		<section class="mb-5">
-			<h2 class="mb-4">Interactive Demo</h2>
-			<p>Hover between column headers to see the resize cursor. Drag to resize. The ID column has <code>resizable: false</code>.</p>
+			<h2 class="mb-4">CR01 Interactive Demo</h2>
+			<p>Hover between column headers to see the resize cursor. Drag to resize. The ID column has <code>isResizable: false</code>.</p>
 
 			<div class="mb-3">
 				<button class="btn btn-sm btn-outline-primary me-2" on:click={resetWidths}>Reset Widths</button>
@@ -92,7 +93,7 @@
 			<CodeBlock
 				codeContent={`// Columns are resizable by default
 columns = [
-  { field: 'id', title: 'ID', resizable: false },  // Opt-out
+  { field: 'id', title: 'ID', isResizable: false },  // Opt-out
   { field: 'name', title: 'Name',
     minWidth: '100px',   // Minimum constraint
     maxWidth: '300px'    // Maximum constraint
@@ -112,13 +113,13 @@ grid.oncolumnresize = ({ field, oldWidth, newWidth, allWidths }) => {
 
 		<!-- Persistence -->
 		<section class="mb-5">
-			<h2 class="mb-4">LocalStorage Persistence</h2>
+			<h2 class="mb-4">CR02 LocalStorage Persistence</h2>
 			<p>Save column widths to localStorage so they persist across page reloads.</p>
 
 			<CodeBlock
 				codeContent={`// Enable persistence
 grid.gridName = 'my-unique-grid';     // Required: unique identifier
-grid.persistColumnWidths = true;       // Save widths to localStorage
+grid.shouldPersistColumnWidths = true;       // Save widths to localStorage
 
 // Widths are automatically:
 // - Saved after each resize
@@ -138,15 +139,15 @@ grid.persistColumnWidths = true;       // Save widths to localStorage
 grid.setColumnWidth('name', '200px');
 
 // Set widths of multiple columns
-grid.setColumnWidths({
-  name: '200px',
-  email: '250px',
-  department: '150px'
-});
+grid.setColumnWidths([
+  { field: 'name', width: '200px' },
+  { field: 'email', width: '250px' },
+  { field: 'department', width: '150px' }
+]);
 
 // Get current widths of all columns
 const widths = grid.getColumnWidthsState();
-// Returns: { name: '200px', email: '250px', ... }`}
+// Returns: [{ field: 'name', width: '200px' }, ...]`}
 				languageType="javascript"
 				titleText="Programmatic Control"
 			/>
@@ -175,7 +176,7 @@ const widths = grid.getColumnWidthsState();
 							<td>Unique name for localStorage persistence</td>
 						</tr>
 						<tr>
-							<td><code>persistColumnWidths</code></td>
+							<td><code>shouldPersistColumnWidths</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Save column widths to localStorage</td>
@@ -240,7 +241,7 @@ const widths = grid.getColumnWidthsState();
 						</tr>
 						<tr>
 							<td><code>setColumnWidths(widths)</code></td>
-							<td>Set widths of multiple columns (object: field → width)</td>
+							<td>Set widths of multiple columns (array of {`{ field, width }`})</td>
 						</tr>
 						<tr>
 							<td><code>getColumnWidthsState()</code></td>
@@ -256,7 +257,12 @@ const widths = grid.getColumnWidthsState();
   field: string;              // Column field that was resized
   oldWidth: string;           // Previous width
   newWidth: string;           // New width
-  allWidths: Record<string, string>;  // All column widths
+  allWidths: ColumnWidthState[];  // All column widths
+}
+
+interface ColumnWidthState {
+  field: string;
+  width: string;
 }`}
 				languageType="typescript"
 				titleText="TypeScript Types"

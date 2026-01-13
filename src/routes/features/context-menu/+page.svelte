@@ -172,7 +172,7 @@
 				{ field: 'name', title: 'Name', width: '150px' },
 				{ field: 'email', title: 'Email' },
 				{ field: 'status', title: 'Status', width: '100px' },
-				{ field: 'salary', title: 'Salary', width: '100px', align: 'right' }
+				{ field: 'salary', title: 'Salary', width: '100px', horizontalAlign: 'right' }
 			];
 			headerMenuGrid.items = [...employees];
 			headerMenuGrid.sortMode = 'single';
@@ -198,7 +198,7 @@
 				{ field: 'name', title: 'Name', width: '150px' },
 				{ field: 'email', title: 'Email' },
 				{ field: 'status', title: 'Status', width: '100px' },
-				{ field: 'salary', title: 'Salary', width: '100px', align: 'right' }
+				{ field: 'salary', title: 'Salary', width: '100px', horizontalAlign: 'right' }
 			];
 			columnVisibilityGrid.items = [...employees];
 			columnVisibilityGrid.headerContextMenu = [
@@ -213,7 +213,7 @@
 		// CM07 Custom Header Actions Grid
 		if (customHeaderGrid) {
 			customHeaderGrid.columns = [
-				{ field: 'id', title: 'ID', width: '60px', sortable: false },
+				{ field: 'id', title: 'ID', width: '60px', isSortable: false },
 				{ field: 'name', title: 'Name', width: '150px' },
 				{ field: 'email', title: 'Email' },
 				{ field: 'status', title: 'Status', width: '100px' }
@@ -260,7 +260,7 @@
 				{ field: 'name', title: 'Name', width: '150px' },
 				{ field: 'email', title: 'Email' },
 				{ field: 'status', title: 'Status', width: '100px' },
-				{ field: 'salary', title: 'Salary', width: '100px', align: 'right' }
+				{ field: 'salary', title: 'Salary', width: '100px', horizontalAlign: 'right' }
 			];
 			multiSortGrid.items = [...employees];
 			multiSortGrid.sortMode = 'multi';
@@ -698,7 +698,7 @@ grid.onheadercontextmenuopen = (ctx) => {
 // Columns use 'hidden' property:
 grid.columns = [
   { field: 'id', title: 'ID' },
-  { field: 'name', title: 'Name', hidden: true }
+  { field: 'name', title: 'Name', isHidden: true }
 ];`}
 					languageType="javascript"
 					titleText="Column Visibility"
@@ -734,7 +734,7 @@ grid.columns = [
 						bind:this={customHeaderGrid}
 						style="max-height: 300px; max-width: 600px;"
 					></web-grid>
-					<p class="small text-muted mt-2">Right-click headers. Note: ID column has sortable: false.</p>
+					<p class="small text-muted mt-2">Right-click headers. Note: ID column has isSortable: false.</p>
 					{#if headerAction}
 						<div class="console-log mt-2">
 							<code>action: "{headerAction.action}", column: "{headerAction.column}"</code>
@@ -745,14 +745,14 @@ grid.columns = [
 
 			{#snippet controlsContent()}
 				<CodeBlock
-					codeContent={`// Column with sortable: false
+					codeContent={`// Column with isSortable: false
 columns = [
-  { field: 'id', title: 'ID', sortable: false },
+  { field: 'id', title: 'ID', isSortable: false },
   { field: 'name', title: 'Name' }
 ];
 
 grid.headerContextMenu = [
-  'sortAsc',  // Hidden if sortable: false
+  'sortAsc',  // Hidden if isSortable: false
   'sortDesc',
   { dividerBefore: true },
   {
@@ -794,7 +794,7 @@ grid.headerContextMenu = [
 						<li><code>allColumns</code> - All columns array</li>
 						<li><code>labels</code> - For translations</li>
 					</ul>
-					<h5>sortable: false</h5>
+					<h5>isSortable: false</h5>
 					<p>Hides sort options in header context menu.</p>
 				</div>
 			{/snippet}

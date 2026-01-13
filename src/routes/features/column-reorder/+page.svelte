@@ -22,13 +22,14 @@
 		{ field: 'salary', title: 'Salary', width: '100px', formatCallback: (v: number) => '$' + v?.toLocaleString() }
 	];
 
-	onMount(() => {
+	onMount(async () => {
+		await import('@keenmate/web-grid');
 		if (grid) {
 			grid.items = [...sampleData];
 			grid.columns = columns;
-			grid.hoverable = true;
-			grid.striped = true;
-			grid.allowColumnReorder = true;
+			grid.isHoverable = true;
+			grid.isStriped = true;
+			grid.isColumnReorderAllowed = true;
 
 			grid.oncolumnreorder = ({ field, fromIndex, toIndex, allOrder }: any) => {
 				reorderLog = `Column "${field}" moved from position ${fromIndex} to ${toIndex}`;
@@ -39,7 +40,13 @@
 
 	function resetOrder() {
 		if (grid) {
-			grid.setColumnOrder(['id', 'name', 'email', 'department', 'salary']);
+			grid.setColumnOrder([
+				{ field: 'id', order: 0 },
+				{ field: 'name', order: 1 },
+				{ field: 'email', order: 2 },
+				{ field: 'department', order: 3 },
+				{ field: 'salary', order: 4 }
+			]);
 			reorderLog = 'Column order reset to default';
 		}
 	}
@@ -54,7 +61,8 @@
 	function getOrder() {
 		if (grid) {
 			const order = grid.getColumnOrderState();
-			reorderLog = `Current order: ${order.join(', ')}`;
+			const fieldNames = order.sort((a: any, b: any) => a.order - b.order).map((o: any) => o.field);
+			reorderLog = `Current order: ${fieldNames.join(', ')}`;
 			console.log('Column order:', order);
 		}
 	}
@@ -76,7 +84,7 @@
 
 		<!-- Demo -->
 		<section class="mb-5">
-			<h2 class="mb-4">Interactive Demo</h2>
+			<h2 class="mb-4">CO01 Interactive Demo</h2>
 			<p>Drag any column header left or right to reorder columns.</p>
 
 			<div class="mb-3">
@@ -95,7 +103,7 @@
 
 			<CodeBlock
 				codeContent={`// Enable column reordering
-grid.allowColumnReorder = true;
+grid.isColumnReorderAllowed = true;
 
 // Listen for reorder events
 grid.oncolumnreorder = ({ field, fromIndex, toIndex, allOrder }) => {
@@ -110,13 +118,13 @@ grid.oncolumnreorder = ({ field, fromIndex, toIndex, allOrder }) => {
 
 		<!-- Persistence -->
 		<section class="mb-5">
-			<h2 class="mb-4">LocalStorage Persistence</h2>
+			<h2 class="mb-4">CO02 LocalStorage Persistence</h2>
 			<p>Save column order to localStorage so it persists across page reloads.</p>
 
 			<CodeBlock
 				codeContent={`// Enable persistence
 grid.gridName = 'my-unique-grid';     // Required: unique identifier
-grid.persistColumnOrder = true;        // Save order to localStorage
+grid.shouldPersistColumnOrder = true;        // Save order to localStorage
 
 // Order is automatically:
 // - Saved after each reorder
@@ -132,8 +140,14 @@ grid.persistColumnOrder = true;        // Save order to localStorage
 			<h2 class="mb-4">Programmatic API</h2>
 
 			<CodeBlock
-				codeContent={`// Set column order by field names
-grid.setColumnOrder(['id', 'email', 'name', 'department', 'salary']);
+				codeContent={`// Set column order (array of { field, order })
+grid.setColumnOrder([
+  { field: 'id', order: 0 },
+  { field: 'email', order: 1 },
+  { field: 'name', order: 2 },
+  { field: 'department', order: 3 },
+  { field: 'salary', order: 4 }
+]);
 
 // Move a single column to a specific index
 grid.moveColumn('email', 0);  // Move email to first position
@@ -141,7 +155,7 @@ grid.moveColumn('salary', 2); // Move salary to third position
 
 // Get current column order
 const order = grid.getColumnOrderState();
-// Returns: ['id', 'email', 'name', 'department', 'salary']`}
+// Returns: [{ field: 'id', order: 0 }, { field: 'email', order: 1 }, ...]`}
 				languageType="javascript"
 				titleText="Programmatic Control"
 			/>
@@ -164,7 +178,7 @@ const order = grid.getColumnOrderState();
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>allowColumnReorder</code></td>
+							<td><code>isColumnReorderAllowed</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Enable column drag-to-reorder</td>
@@ -176,7 +190,7 @@ const order = grid.getColumnOrderState();
 							<td>Unique name for localStorage persistence</td>
 						</tr>
 						<tr>
-							<td><code>persistColumnOrder</code></td>
+							<td><code>shouldPersistColumnOrder</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Save column order to localStorage</td>
@@ -203,7 +217,7 @@ const order = grid.getColumnOrderState();
 					<tbody>
 						<tr>
 							<td><code>setColumnOrder(order)</code></td>
-							<td>Set column order by array of field names</td>
+							<td>Set column order (array of {`{ field, order }`})</td>
 						</tr>
 						<tr>
 							<td><code>moveColumn(field, toIndex)</code></td>
@@ -211,7 +225,7 @@ const order = grid.getColumnOrderState();
 						</tr>
 						<tr>
 							<td><code>getColumnOrderState()</code></td>
-							<td>Get current column order as array of field names</td>
+							<td>Get current column order (array of {`{ field, order }`})</td>
 						</tr>
 					</tbody>
 				</table>
@@ -223,7 +237,12 @@ const order = grid.getColumnOrderState();
   field: string;           // Column field that was moved
   fromIndex: number;       // Original position
   toIndex: number;         // New position
-  allOrder: string[];      // Complete column order after reorder
+  allOrder: ColumnOrderState[];  // Complete column order after reorder
+}
+
+interface ColumnOrderState {
+  field: string;
+  order: number;
 }`}
 				languageType="typescript"
 				titleText="TypeScript Types"
@@ -237,7 +256,7 @@ const order = grid.getColumnOrderState();
 				<ul class="mb-0">
 					<li><strong>Frozen columns</strong> cannot be reordered</li>
 					<li><strong>Drag threshold</strong> (5px) prevents accidental reorder when clicking to sort</li>
-					<li>Grab cursor only shown when <code>allowColumnReorder</code> is enabled</li>
+					<li>Grab cursor only shown when <code>isColumnReorderAllowed</code> is enabled</li>
 					<li>Works together with column resizing - both can be enabled simultaneously</li>
 				</ul>
 			</div>

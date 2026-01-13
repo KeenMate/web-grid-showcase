@@ -16,7 +16,7 @@
 		await import('@keenmate/web-grid');
 		if (basicGrid) {
 			basicGrid.columns = [
-				{ field: 'id', title: 'ID', width: '60px', align: 'center' },
+				{ field: 'id', title: 'ID', width: '60px', horizontalAlign: 'center' },
 				{ field: 'name', title: 'Name', width: '150px' },
 				{ field: 'email', title: 'Email' },
 				{ field: 'department', title: 'Department', width: '120px' },
@@ -24,15 +24,15 @@
 					field: 'salary',
 					title: 'Salary',
 					width: '120px',
-					align: 'right',
+					horizontalAlign: 'right',
 					formatCallback: (val: number) => '$' + val.toLocaleString(),
 					cellClassCallback: (val: number) => val > 90000 ? 'high-salary' : null
 				}
 			];
 			basicGrid.items = employees;
-			basicGrid.striped = true;
-			basicGrid.hoverable = true;
-			basicGrid.showRowNumbers = true;
+			basicGrid.isStriped = true;
+			basicGrid.isHoverable = true;
+			basicGrid.isRowNumbersVisible = true;
 			basicGrid.customStylesCallback = () => `
 				.high-salary { background-color: #d1fae5 !important; color: #065f46; font-weight: 600; }
 			`;
@@ -66,7 +66,7 @@
 			{#snippet controlsContent()}
 				<CodeBlock
 					codeContent={`grid.columns = [
-  { field: 'id', title: 'ID', width: '60px', align: 'center' },
+  { field: 'id', title: 'ID', width: '60px', horizontalAlign: 'center' },
   { field: 'name', title: 'Name', width: '150px' },
   { field: 'email', title: 'Email' },
   { field: 'department', title: 'Department', width: '120px' },
@@ -74,16 +74,16 @@
     field: 'salary',
     title: 'Salary',
     width: '120px',
-    align: 'right',
+    horizontalAlign: 'right',
     formatCallback: (val) => '$' + val.toLocaleString(),
     cellClassCallback: (val) => val > 90000 ? 'high-salary' : null
   }
 ];
 
 grid.items = employees;
-grid.striped = true;
-grid.hoverable = true;
-grid.showRowNumbers = true;
+grid.isStriped = true;
+grid.isHoverable = true;
+grid.isRowNumbersVisible = true;
 
 grid.customStylesCallback = () => \`
   .high-salary {
@@ -112,9 +112,9 @@ grid.customStylesCallback = () => \`
 					</ul>
 
 					<h5>Display Options</h5>
-					<p><code>striped</code> - Alternate row colors</p>
-					<p><code>hoverable</code> - Highlight on hover</p>
-					<p><code>showRowNumbers</code> - Show row index</p>
+					<p><code>isStriped</code> - Alternate row colors</p>
+					<p><code>isHoverable</code> - Highlight on hover</p>
+					<p><code>isRowNumbersVisible</code> - Show row index</p>
 
 					<h5>Formatting & Styling</h5>
 					<p><code>formatCallback</code> - Transform display values</p>

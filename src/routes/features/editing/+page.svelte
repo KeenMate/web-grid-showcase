@@ -18,13 +18,13 @@
 		// Text Editor Grid
 		if (textEditorGrid) {
 			textEditorGrid.columns = [
-				{ field: 'id', title: 'ID', width: '60px', editable: false },
+				{ field: 'id', title: 'ID', width: '60px', isEditable: false },
 				{ field: 'name', title: 'Name', width: '150px', editor: 'text', editorOptions: { placeholder: 'Enter name...' } },
 				{ field: 'email', title: 'Email', editor: 'text', editorOptions: { placeholder: 'Enter email...', editStartSelection: 'selectAll' } },
-				{ field: 'salary', title: 'Salary', width: '120px', align: 'right', editor: 'number', editorOptions: { min: 0, step: 1000 }, formatCallback: (v: number) => '$' + v.toLocaleString() }
+				{ field: 'salary', title: 'Salary', width: '120px', horizontalAlign: 'right', editor: 'number', editorOptions: { min: 0, step: 1000 }, formatCallback: (v: number) => '$' + v.toLocaleString() }
 			];
 			textEditorGrid.items = [...employees];
-			textEditorGrid.editable = true;
+			textEditorGrid.isEditable = true;
 			textEditorGrid.editTrigger = 'click';
 		}
 
@@ -36,7 +36,7 @@
 					field: 'status',
 					title: 'Status',
 					width: '120px',
-					editable: true,
+					isEditable: true,
 					editor: 'select',
 					editorOptions: {
 						options: [
@@ -50,18 +50,18 @@
 				}
 			];
 			selectEditorGrid.items = [...employees];
-			selectEditorGrid.editable = true;
+			selectEditorGrid.isEditable = true;
 			selectEditorGrid.editTrigger = 'click';
 		}
 
 		// Validation Grid
 		if (validationGrid) {
 			validationGrid.columns = [
-				{ field: 'name', title: 'Name', width: '150px', editable: true, editor: 'text' },
+				{ field: 'name', title: 'Name', width: '150px', isEditable: true, editor: 'text' },
 				{
 					field: 'email',
 					title: 'Email',
-					editable: true,
+					isEditable: true,
 					editor: 'text',
 					beforeCommitCallback: ({ value }: { value: string }) => {
 						if (!value || !value.includes('@')) {
@@ -74,9 +74,9 @@
 					field: 'salary',
 					title: 'Salary',
 					width: '120px',
-					editable: true,
+					isEditable: true,
 					editor: 'number',
-					align: 'right',
+					horizontalAlign: 'right',
 					formatCallback: (v: number) => '$' + v.toLocaleString(),
 					beforeCommitCallback: ({ value }: { value: number }) => {
 						if (value < 30000) {
@@ -90,7 +90,7 @@
 				}
 			];
 			validationGrid.items = [...employees];
-			validationGrid.editable = true;
+			validationGrid.isEditable = true;
 			validationGrid.editTrigger = 'navigate';
 		}
 
@@ -99,11 +99,11 @@
 			const escapeHtml = (str: string) => str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] || c));
 
 			richValidationGrid.columns = [
-				{ field: 'name', title: 'Name', width: '150px', editable: true, editor: 'text' },
+				{ field: 'name', title: 'Name', width: '150px', isEditable: true, editor: 'text' },
 				{
 					field: 'email',
 					title: 'Email',
-					editable: true,
+					isEditable: true,
 					editor: 'text',
 					beforeCommitCallback: ({ value }: { value: string }) => {
 						if (!value || !value.includes('@')) {
@@ -124,9 +124,9 @@
 					field: 'salary',
 					title: 'Salary',
 					width: '120px',
-					editable: true,
+					isEditable: true,
 					editor: 'number',
-					align: 'right',
+					horizontalAlign: 'right',
 					formatCallback: (v: number) => '$' + v.toLocaleString(),
 					beforeCommitCallback: ({ value }: { value: number }) => {
 						if (value < 30000) return { valid: false, message: 'Below minimum' };
@@ -136,7 +136,7 @@
 				}
 			];
 			richValidationGrid.items = [...employees];
-			richValidationGrid.editable = true;
+			richValidationGrid.isEditable = true;
 			richValidationGrid.editTrigger = 'navigate';
 			// Grid-level rich tooltip (applies to salary column which has no column-level callback)
 			richValidationGrid.validationTooltipCallback = ({ field, error, value }: any) => {
@@ -176,7 +176,7 @@
 
 			{#snippet controlsContent()}
 				<CodeBlock
-					codeContent={`grid.editable = true;
+					codeContent={`grid.isEditable = true;
 grid.editTrigger = 'click';
 grid.editStartSelection = 'mousePosition'; // default
 
@@ -467,7 +467,7 @@ grid.validationTooltipCallback = ({ field, error, value }) => {
 						<tr>
 							<td><code>autocomplete</code></td>
 							<td>Async search</td>
-							<td>onSearchCallback, minSearchLength, debounceMs</td>
+							<td>searchCallback, minSearchLength, debounceMs</td>
 						</tr>
 					</tbody>
 				</table>

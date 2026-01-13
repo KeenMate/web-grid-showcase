@@ -33,7 +33,7 @@
 			{ field: 'id', title: 'ID', width: '60px' },
 			{ field: 'name', title: 'Name', width: '150px' },
 			{ field: 'department', title: 'Department', width: '120px' },
-			{ field: 'salary', title: 'Salary', width: '100px', align: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() },
+			{ field: 'salary', title: 'Salary', width: '100px', horizontalAlign: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() },
 			{ field: 'hireDate', title: 'Hire Date', width: '110px' }
 		];
 
@@ -120,7 +120,7 @@ grid.sortMode = 'single';
 
 // Disable sorting for specific column
 grid.columns = [
-  { field: 'id', title: 'ID', sortable: false },
+  { field: 'id', title: 'ID', isSortable: false },
   { field: 'name', title: 'Name' }
 ];`}
 					languageType="javascript"

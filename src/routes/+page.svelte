@@ -167,7 +167,7 @@ import type { Column } from '@keenmate/web-grid';`}
     { id: 2, name: 'Bob', email: 'bob@example.com', salary: 72000 }
   ];
 
-  grid.sortable = true;
+  grid.isSortable = true;
   grid.pageable = true;
 </script>`}
 						languageType="html"
@@ -182,7 +182,7 @@ import type { Column } from '@keenmate/web-grid';`}
 <script>
   const grid = document.getElementById('grid');
 
-  grid.editable = true;
+  grid.isEditable = true;
   grid.editTrigger = 'navigate'; // Excel-like
 
   grid.columns = [

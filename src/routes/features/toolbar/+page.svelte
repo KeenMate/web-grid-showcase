@@ -23,14 +23,14 @@
 			{ field: 'id', title: 'ID', width: '60px' },
 			{ field: 'name', title: 'Name', width: '150px' },
 			{ field: 'department', title: 'Department', width: '120px' },
-			{ field: 'salary', title: 'Salary', width: '100px', align: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() }
+			{ field: 'salary', title: 'Salary', width: '100px', horizontalAlign: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() }
 		];
 
 		// Basic Toolbar
 		if (basicToolbarGrid) {
 			basicToolbarGrid.columns = columns;
 			basicToolbarGrid.items = [...employees];
-			basicToolbarGrid.showRowToolbar = true;
+			basicToolbarGrid.isRowToolbarVisible = true;
 			basicToolbarGrid.rowToolbar = ['add', 'duplicate', 'delete'];
 			basicToolbarGrid.ontoolbarclick = (e: any) => {
 				console.log('Toolbar clicked:', e.item.id, 'Row:', e.rowIndex);
@@ -41,7 +41,7 @@
 		if (customToolbarGrid) {
 			customToolbarGrid.columns = columns;
 			customToolbarGrid.items = [...employees];
-			customToolbarGrid.showRowToolbar = true;
+			customToolbarGrid.isRowToolbarVisible = true;
 			customToolbarGrid.toolbarTrigger = 'hover';
 			customToolbarGrid.rowToolbar = [
 				{ id: 'edit', icon: 'E', title: 'Edit (E)', label: 'Edit' },
@@ -95,7 +95,7 @@
 			];
 			positioningGrid.columns = columns;
 			positioningGrid.items = moreEmployees;
-			positioningGrid.showRowToolbar = true;
+			positioningGrid.isRowToolbarVisible = true;
 			positioningGrid.toolbarTrigger = 'hover';
 			positioningGrid.toolbarPosition = toolbarPosition;
 			positioningGrid.toolbarVerticalAlign = toolbarVerticalAlign;
@@ -130,7 +130,7 @@
 				{ field: 'status', title: 'Status', width: '80px' }
 			];
 			inlineToolbarGrid.items = inlineEmployees;
-			inlineToolbarGrid.showRowToolbar = true;
+			inlineToolbarGrid.isRowToolbarVisible = true;
 			inlineToolbarGrid.toolbarPosition = 'inline';
 			inlineToolbarGrid.inlineActionsTitle = 'Actions';
 			inlineToolbarGrid.rowToolbar = [
@@ -239,7 +239,7 @@
 
 			{#snippet controlsContent()}
 				<CodeBlock
-					codeContent={`grid.showRowToolbar = true;
+					codeContent={`grid.isRowToolbarVisible = true;
 grid.rowToolbar = ['add', 'duplicate', 'delete'];
 
 // Handle clicks
@@ -300,7 +300,7 @@ grid.ontoolbarclick = (e) => {
 
 			{#snippet controlsContent()}
 				<CodeBlock
-					codeContent={`grid.showRowToolbar = true;
+					codeContent={`grid.isRowToolbarVisible = true;
 grid.toolbarTrigger = 'hover';
 
 grid.rowToolbar = [
@@ -501,7 +501,7 @@ grid.toolbarVerticalAlign = '${toolbarVerticalAlign}';`}
 
 			{#snippet controlsContent()}
 				<CodeBlock
-					codeContent={`grid.showRowToolbar = true;
+					codeContent={`grid.isRowToolbarVisible = true;
 grid.toolbarPosition = 'inline';
 grid.inlineActionsTitle = 'Actions';
 

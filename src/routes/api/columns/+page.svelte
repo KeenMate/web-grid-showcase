@@ -177,11 +177,11 @@
 
 			<CodeBlock
 				codeContent={`grid.columns = [
-  { field: 'id', title: 'ID', align: 'center', sortable: false },
+  { field: 'id', title: 'ID', align: 'center', isSortable: false },
   { field: 'name', title: 'Name', textOverflow: 'ellipsis' },
   { field: 'salary', title: 'Salary', align: 'right' },
   { field: 'notes', title: 'Notes', textOverflow: 'wrap' },
-  { field: 'internal', title: 'Internal', hidden: true }  // Hidden by default
+  { field: 'internal', title: 'Internal', isHidden: true }  // Hidden by default
 ];
 
 // Hidden columns can be shown via headerContextMenu:
@@ -344,7 +344,7 @@ grid.customStylesCallback = () => \`
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>editable</code></td>
+							<td><code>isEditable</code></td>
 							<td><code>boolean</code></td>
 							<td>Per-column editable override</td>
 						</tr>
@@ -385,7 +385,7 @@ grid.customStylesCallback = () => \`
 			<CodeBlock
 				codeContent={`grid.columns = [
   // Read-only column
-  { field: 'id', title: 'ID', editable: false },
+  { field: 'id', title: 'ID', isEditable: false },
 
   // Text editor
   { field: 'name', title: 'Name', editor: 'text' },
@@ -579,7 +579,7 @@ const columns: Column<Employee>[] = [
     title: 'ID',
     width: '60px',
     align: 'center',
-    editable: false
+    isEditable: false
   },
   {
     field: 'name',

@@ -117,7 +117,7 @@ grid.items = [
 ];
 
 // Enable features
-grid.sortable = true;
+grid.isSortable = true;
 grid.pageable = true;
 grid.pageSize = 10;`}
 					languageType="javascript"
@@ -155,7 +155,7 @@ grid.pageSize = 10;`}
 				<CodeBlock
 					codeContent={`const grid = document.querySelector('#my-grid');
 
-grid.editable = true;
+grid.isEditable = true;
 grid.editTrigger = 'navigate'; // Excel-like mode
 
 grid.columns = [
@@ -288,7 +288,7 @@ function DataGrid({ data, columns }) {
     if (gridRef.current) {
       gridRef.current.columns = columns;
       gridRef.current.items = data;
-      gridRef.current.sortable = true;
+      gridRef.current.isSortable = true;
     }
   }, [data, columns]);
 
@@ -320,7 +320,7 @@ const gridRef = ref(null);
 onMounted(() => {
   gridRef.value.columns = props.columns;
   gridRef.value.items = props.data;
-  gridRef.value.sortable = true;
+  gridRef.value.isSortable = true;
 });
 
 watch(() => props.data, (newData) => {
@@ -354,7 +354,7 @@ export class DataGridComponent {
   ngAfterViewInit() {
     this.gridRef.nativeElement.columns = this.columns;
     this.gridRef.nativeElement.items = this.data;
-    this.gridRef.nativeElement.sortable = true;
+    this.gridRef.nativeElement.isSortable = true;
   }
 }`}
 						languageType="typescript"

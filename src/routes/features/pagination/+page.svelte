@@ -39,7 +39,7 @@
 
 	$effect(() => {
 		if (customPagination) {
-			customPagination.summaryInline = summaryInline;
+			customPagination.isSummaryInline = summaryInline;
 		}
 	});
 
@@ -89,10 +89,10 @@
 	onMount(async () => {
 		await import('@keenmate/web-grid');
 		const columns = [
-			{ field: 'id', title: 'ID', width: '60px', align: 'center' },
+			{ field: 'id', title: 'ID', width: '60px', horizontalAlign: 'center' },
 			{ field: 'name', title: 'Name', width: '140px' },
 			{ field: 'department', title: 'Department', width: '120px' },
-			{ field: 'salary', title: 'Salary', width: '100px', align: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() },
+			{ field: 'salary', title: 'Salary', width: '100px', horizontalAlign: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() },
 			{ field: 'status', title: 'Status', width: '100px' },
 			{ field: 'location', title: 'Location', width: '120px' }
 		];
@@ -102,7 +102,7 @@
 			basicPagination.columns = columns;
 			basicPagination.items = allEmployees.slice(0, 50);
 			basicPagination.sortMode = 'multi';
-			basicPagination.pageable = true;
+			basicPagination.isPageable = true;
 			basicPagination.pageSize = 10;
 		}
 
@@ -111,14 +111,14 @@
 			customPagination.columns = columns;
 			customPagination.items = allEmployees.slice(0, 50);
 			customPagination.sortMode = 'multi';
-			customPagination.pageable = true;
+			customPagination.isPageable = true;
 			customPagination.pageSize = 10;
 			customPagination.pageSizes = [5, 10, 25, 50];
 			customPagination.paginationPosition = 'bottom-right';
 			customPagination.paginationLayout = 'first|previous|pageInfo|next|last';
 			// Summary
 			customPagination.summaryPosition = 'bottom-right';
-			customPagination.summaryInline = true;
+			customPagination.isSummaryInline = true;
 			customPagination.summaryContentCallback = ({ allItems }: any) => {
 				const totalSalary = allItems.reduce((sum: number, item: any) => sum + item.salary, 0);
 				const avgSalary = Math.round(totalSalary / allItems.length);
@@ -130,7 +130,7 @@
 		if (serverPagination) {
 			serverPagination.columns = columns;
 			serverPagination.sortMode = 'multi';
-			serverPagination.pageable = true;
+			serverPagination.isPageable = true;
 			serverPagination.pageSize = 10;
 			serverPagination.pageSizes = [10, 25, 50, 100];
 			serverPagination.paginationPosition = 'bottom-right';
@@ -282,7 +282,7 @@
 
 			{#snippet controlsContent()}
 				<CodeBlock
-					codeContent={`grid.pageable = true;
+					codeContent={`grid.isPageable = true;
 grid.pageSize = 10;
 
 // Access current page
@@ -298,7 +298,7 @@ grid.currentPage = 3;`}
 			{#snippet descriptionContent()}
 				<div class="prose small">
 					<h5>Basic Setup</h5>
-					<p><code>pageable</code> - Enable pagination</p>
+					<p><code>isPageable</code> - Enable pagination</p>
 					<p><code>pageSize</code> - Items per page (default: 10)</p>
 					<h5>Navigation</h5>
 					<ul>
@@ -329,7 +329,7 @@ grid.currentPage = 3;`}
 
 			{#snippet controlsContent()}
 				<CodeBlock
-					codeContent={`grid.pageable = true;
+					codeContent={`grid.isPageable = true;
 grid.pageSize = 10;
 grid.pageSizes = [5, 10, 25, 50];
 grid.paginationPosition = '${getPaginationPositionString()}';
@@ -337,7 +337,7 @@ grid.paginationLayout = '${layoutElements.join('|')}';
 
 // Summary (totals, aggregates)
 grid.summaryPosition = '${summaryPosition}';
-grid.summaryInline = ${summaryInline};
+grid.isSummaryInline = ${summaryInline};
 grid.summaryContentCallback = ({ allItems }) => {
   const total = allItems.reduce((s, r) => s + r.salary, 0);
   return \`<strong>Total:</strong> $\${total.toLocaleString()}\`;

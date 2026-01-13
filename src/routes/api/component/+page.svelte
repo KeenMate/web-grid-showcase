@@ -88,19 +88,19 @@ grid.columns = [
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>striped</code></td>
+							<td><code>isStriped</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Alternating row background colors</td>
 						</tr>
 						<tr>
-							<td><code>hoverable</code></td>
+							<td><code>isHoverable</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Highlight rows on hover</td>
 						</tr>
 						<tr>
-							<td><code>showRowNumbers</code></td>
+							<td><code>isRowNumbersVisible</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Show row number column on the left</td>
@@ -145,7 +145,7 @@ grid.columns = [
 							<td>Unique name for localStorage persistence</td>
 						</tr>
 						<tr>
-							<td><code>persistColumnWidths</code></td>
+							<td><code>shouldPersistColumnWidths</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Save column widths to localStorage</td>
@@ -219,12 +219,12 @@ grid.columns = [
 			<CodeBlock
 				codeContent={`// Enable persistence
 grid.gridName = 'my-grid';
-grid.persistColumnWidths = true;
+grid.shouldPersistColumnWidths = true;
 
 // Column with constraints
 columns = [
   { field: 'name', title: 'Name', minWidth: '100px', maxWidth: '300px' },
-  { field: 'id', title: 'ID', resizable: false }  // Opt-out
+  { field: 'id', title: 'ID', isResizable: false }  // Opt-out
 ];
 
 // Listen for resize events
@@ -257,13 +257,13 @@ const widths = grid.getColumnWidthsState();`}
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>allowColumnReorder</code></td>
+							<td><code>isColumnReorderAllowed</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Enable column drag-to-reorder</td>
 						</tr>
 						<tr>
-							<td><code>persistColumnOrder</code></td>
+							<td><code>shouldPersistColumnOrder</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Save column order to localStorage (requires gridName)</td>
@@ -306,11 +306,11 @@ const widths = grid.getColumnWidthsState();`}
 
 			<CodeBlock
 				codeContent={`// Enable column reordering
-grid.allowColumnReorder = true;
+grid.isColumnReorderAllowed = true;
 
 // With persistence
 grid.gridName = 'my-grid';
-grid.persistColumnOrder = true;
+grid.shouldPersistColumnOrder = true;
 
 // Listen for reorder events
 grid.oncolumnreorder = ({ field, fromIndex, toIndex, allOrder }) => {
@@ -430,7 +430,7 @@ grid.onfilldrag = ({ sourceCell, targetCells, direction }) => {
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>stickyRowNumbers</code></td>
+							<td><code>isStickyRowNumbers</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Make row number column sticky (frozen)</td>
@@ -467,8 +467,8 @@ grid.onfilldrag = ({ sourceCell, targetCells, direction }) => {
 
 			<CodeBlock
 				codeContent={`// Enable sticky row numbers
-grid.showRowNumbers = true;
-grid.stickyRowNumbers = true;
+grid.isRowNumbersVisible = true;
+grid.isStickyRowNumbers = true;
 
 // Freeze first 2 columns
 grid.freezeColumns = 2;
@@ -477,9 +477,9 @@ grid.freezeColumns = 2;
 columns = [
   { field: 'id', title: 'ID', width: '80px' },
   { field: 'name', title: 'Name', width: '150px' },
-  { field: 'status', title: 'Status', width: '100px', frozen: true }
+  { field: 'status', title: 'Status', width: '100px', isFrozen: true }
 ];
-// Status will appear first (after row numbers) due to frozen: true`}
+// Status will appear first (after row numbers) due to isFrozen: true`}
 				languageType="javascript"
 				titleText="Freeze Panes"
 			/>
@@ -631,7 +631,7 @@ grid.sort = [
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>editable</code></td>
+							<td><code>isEditable</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Enable editing on all columns with editors</td>
@@ -868,7 +868,7 @@ grid.showShortcutsHelp = true;`}
 
 			<CodeBlock
 				codeContent={`// Enable row numbers (required for row selection)
-grid.showRowNumbers = true;
+grid.isRowNumbersVisible = true;
 
 // Selection interactions:
 // - Click row number → select (clears others)
@@ -991,7 +991,7 @@ grid.labels = {
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>virtualScroll</code></td>
+							<td><code>isVirtualScrollEnabled</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Enable virtual scrolling</td>
@@ -1318,9 +1318,9 @@ grid.rowClassCallback = (row, index) => {
 grid.mode = 'excel';
 
 // Equivalent to:
-grid.editable = true;
+grid.isEditable = true;
 grid.editTrigger = 'navigate';
-grid.hoverable = true;`}
+grid.isHoverable = true;`}
 				languageType="javascript"
 				titleText="Grid Mode"
 			/>

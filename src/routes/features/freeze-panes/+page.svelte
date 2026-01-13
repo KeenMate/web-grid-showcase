@@ -44,27 +44,28 @@
 		{ field: 'role', title: 'Role', width: '100px' },
 		{ field: 'location', title: 'Location', width: '120px' },
 		{ field: 'salary', title: 'Salary', width: '100px', formatCallback: (v: number) => '$' + v?.toLocaleString() },
-		{ field: 'status', title: 'Status', width: '100px', frozen: true }  // Moves to left
+		{ field: 'status', title: 'Status', width: '100px', isFrozen: true }  // Moves to left
 	];
 
-	onMount(() => {
+	onMount(async () => {
+		await import('@keenmate/web-grid');
 		if (grid) {
 			grid.items = [...wideData];
 			grid.columns = columns;
-			grid.showRowNumbers = true;
-			grid.stickyRowNumbers = true;
+			grid.isRowNumbersVisible = true;
+			grid.isStickyRowNumbers = true;
 			grid.freezeColumns = 2;
-			grid.striped = true;
-			grid.hoverable = true;
+			grid.isStriped = true;
+			grid.isHoverable = true;
 		}
 
 		if (grid2) {
 			grid2.items = wideData.slice(0, 15);
 			grid2.columns = columnsWithFrozen;
-			grid2.showRowNumbers = true;
-			grid2.stickyRowNumbers = true;
-			grid2.striped = true;
-			grid2.hoverable = true;
+			grid2.isRowNumbersVisible = true;
+			grid2.isStickyRowNumbers = true;
+			grid2.isStriped = true;
+			grid2.isHoverable = true;
 		}
 	});
 
@@ -76,13 +77,13 @@
 
 	function updateStickyRowNumbers() {
 		if (grid) {
-			grid.stickyRowNumbers = stickyRowNumbers;
+			grid.isStickyRowNumbers = stickyRowNumbers;
 		}
 	}
 
 	function updateShowRowNumbers() {
 		if (grid) {
-			grid.showRowNumbers = showRowNumbers;
+			grid.isRowNumbersVisible = showRowNumbers;
 		}
 	}
 </script>
@@ -103,7 +104,7 @@
 
 		<!-- Demo -->
 		<section class="mb-5">
-			<h2 class="mb-4">Frozen Columns Demo</h2>
+			<h2 class="mb-4">FP01 Frozen Columns Demo</h2>
 			<p>Scroll horizontally to see frozen columns stay in place. The row numbers and first columns are frozen.</p>
 
 			<div class="mb-3 d-flex gap-3 flex-wrap align-items-center">
@@ -133,8 +134,8 @@
 
 			<CodeBlock
 				codeContent={`// Enable row numbers and make them sticky
-grid.showRowNumbers = true;
-grid.stickyRowNumbers = true;
+grid.isRowNumbersVisible = true;
+grid.isStickyRowNumbers = true;
 
 // Freeze first N columns
 grid.freezeColumns = 2;  // ID and Name columns stay fixed
@@ -153,15 +154,15 @@ columns = [
 
 		<!-- Column-Level Frozen -->
 		<section class="mb-5">
-			<h2 class="mb-4">Column-Level Frozen Property</h2>
-			<p>Individual columns can be marked as <code>frozen: true</code>. Frozen columns automatically move to the left side, regardless of their definition order.</p>
+			<h2 class="mb-4">FP02 Column-Level Frozen Property</h2>
+			<p>Individual columns can be marked as <code>isFrozen: true</code>. Frozen columns automatically move to the left side, regardless of their definition order.</p>
 
 			<div class="demo-container mb-3">
 				<web-grid bind:this={grid2} style="max-width: 100%; max-height: 300px;"></web-grid>
 			</div>
 
 			<div class="alert alert-info">
-				<strong>Visual Reorder:</strong> In this example, the "Status" column is defined last in the columns array but has <code>frozen: true</code>, so it appears first (after row numbers).
+				<strong>Visual Reorder:</strong> In this example, the "Status" column is defined last in the columns array but has <code>isFrozen: true</code>, so it appears first (after row numbers).
 			</div>
 
 			<CodeBlock
@@ -171,8 +172,8 @@ columns = [
   { field: 'name', title: 'Name', width: '150px' },
   { field: 'email', title: 'Email', width: '200px' },
   { field: 'department', title: 'Department', width: '120px' },
-  // Status defined last but will appear first due to frozen: true
-  { field: 'status', title: 'Status', width: '100px', frozen: true }
+  // Status defined last but will appear first due to isFrozen: true
+  { field: 'status', title: 'Status', width: '100px', isFrozen: true }
 ];
 
 // Visual order will be: Row Numbers → Status → ID → Name → ...`}
@@ -198,13 +199,13 @@ columns = [
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>showRowNumbers</code></td>
+							<td><code>isRowNumbersVisible</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Show row number column on the left</td>
 						</tr>
 						<tr>
-							<td><code>stickyRowNumbers</code></td>
+							<td><code>isStickyRowNumbers</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Make row number column sticky (frozen)</td>
@@ -232,7 +233,7 @@ columns = [
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>frozen</code></td>
+							<td><code>isFrozen</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Mark column as frozen (moves to left automatically)</td>
@@ -256,7 +257,7 @@ columns = [
 					<li><strong>Explicit widths:</strong> Always set explicit widths on frozen columns for consistent behavior</li>
 					<li><strong>Shadow indicator:</strong> A subtle shadow appears on the right edge of frozen columns when scrolling</li>
 					<li><strong>Frozen columns cannot be reordered:</strong> Drag-to-reorder is disabled for frozen columns</li>
-					<li><strong>Row numbers:</strong> When <code>stickyRowNumbers</code> is enabled, row numbers are always frozen regardless of <code>freezeColumns</code></li>
+					<li><strong>Row numbers:</strong> When <code>isStickyRowNumbers</code> is enabled, row numbers are always frozen regardless of <code>freezeColumns</code></li>
 				</ul>
 			</div>
 		</section>

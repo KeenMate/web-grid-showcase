@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Updated @keenmate/web-grid** to 1.0.0-rc10 with breaking API changes
+- **Property Renames** - All property names updated to match new `is*`/`should*` naming convention:
+  - `striped` → `isStriped`
+  - `hoverable` → `isHoverable`
+  - `editable` → `isEditable`
+  - `showRowNumbers` → `isRowNumbersVisible`
+  - `stickyRowNumbers` → `isStickyRowNumbers`
+  - `virtualScroll` → `isVirtualScrollEnabled`
+  - `persistColumnWidths` → `shouldPersistColumnWidths`
+  - `persistColumnOrder` → `shouldPersistColumnOrder`
+  - `allowColumnReorder` → `isColumnReorderAllowed`
+  - `sortable` → `isSortable`
+- **Column Property Renames**:
+  - `frozen` → `isFrozen`
+  - `hidden` → `isHidden`
+  - `resizable` → `isResizable`
+  - `sortable` → `isSortable`
+  - `filterable` → `isFilterable`
+  - `editable` → `isEditable`
+
+---
+
+## [0.0.2] - 2026-01-11
+
 ### Added
 - **Header Context Menu examples** (CM05-CM08) in `/features/context-menu`
   - CM05: Basic header right-click menu with predefined actions

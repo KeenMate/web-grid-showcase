@@ -36,6 +36,19 @@ Quick reference for all showcase examples with their codes.
 | CS03 | CSS Variables Manifest | [custom-styling](/features/custom-styling) |
 | CS04 | Dynamic Cell Styling | [custom-styling](/features/custom-styling) |
 | CS05 | Global Scaling | [custom-styling](/features/custom-styling) |
+| FH01 | Fill Handle Demo | [fill-handle](/features/fill-handle) |
+| FH02 | Type-Based Validation | [fill-handle](/features/fill-handle) |
+| CR01 | Column Resizing | [column-resize](/features/column-resize) |
+| CR02 | Resize Persistence | [column-resize](/features/column-resize) |
+| CO01 | Column Reordering | [column-reorder](/features/column-reorder) |
+| CO02 | Reorder Persistence | [column-reorder](/features/column-reorder) |
+| FP01 | Freeze First N Columns | [freeze-panes](/features/freeze-panes) |
+| FP02 | Column-Level Frozen | [freeze-panes](/features/freeze-panes) |
+| RS01 | Basic Selection | [row-selection](/features/row-selection) |
+| RS02 | Range Shortcuts | [row-selection](/features/row-selection) |
+| RL01 | Property-Based Locking | [row-locking](/features/row-locking) |
+| RL02 | Callback-Based Locking | [row-locking](/features/row-locking) |
+| RL03 | External API Locking | [row-locking](/features/row-locking) |
 
 ## Code Prefixes
 
@@ -50,3 +63,9 @@ Quick reference for all showcase examples with their codes.
 | KN | Keyboard Navigation | `src/routes/features/keyboard-navigation/+page.svelte` |
 | VS | Virtual Scrolling | `src/routes/features/virtual-scrolling/+page.svelte` |
 | CS | Custom Styling | `src/routes/features/custom-styling/+page.svelte` |
+| FH | Fill Handle | `src/routes/features/fill-handle/+page.svelte` |
+| CR | Column Resize | `src/routes/features/column-resize/+page.svelte` |
+| CO | Column Reorder | `src/routes/features/column-reorder/+page.svelte` |
+| FP | Freeze Panes | `src/routes/features/freeze-panes/+page.svelte` |
+| RS | Row Selection | `src/routes/features/row-selection/+page.svelte` |
+| RL | Row Locking | `src/routes/features/row-locking/+page.svelte` |

@@ -46,16 +46,16 @@
 		const columns = [
 			{ field: 'name', title: 'Name', width: '150px', editor: 'text' },
 			{ field: 'department', title: 'Department', width: '120px', editor: 'text' },
-			{ field: 'salary', title: 'Salary', width: '100px', align: 'right', editor: 'number', formatCallback: (v: number) => '$' + v.toLocaleString() }
+			{ field: 'salary', title: 'Salary', width: '100px', horizontalAlign: 'right', editor: 'number', formatCallback: (v: number) => '$' + v.toLocaleString() }
 		];
 
 		// Property-based locking
 		if (propertyGrid) {
 			propertyGrid.columns = columns;
 			propertyGrid.items = [...employees];
-			propertyGrid.editable = true;
+			propertyGrid.isEditable = true;
 			propertyGrid.editTrigger = 'click';
-			propertyGrid.showRowNumbers = true;
+			propertyGrid.isRowNumbersVisible = true;
 			propertyGrid.idValueMember = 'id';
 			propertyGrid.rowLocking = {
 				lockedMember: 'isLocked',
@@ -73,9 +73,9 @@
 			];
 			callbackGrid.columns = statusColumns;
 			callbackGrid.items = [...callbackEmployees];
-			callbackGrid.editable = true;
+			callbackGrid.isEditable = true;
 			callbackGrid.editTrigger = 'click';
-			callbackGrid.showRowNumbers = true;
+			callbackGrid.isRowNumbersVisible = true;
 			callbackGrid.idValueMember = 'id';
 			callbackGrid.rowLocking = {
 				getLockInfoCallback: (row: any) => {
@@ -96,9 +96,9 @@
 		if (externalGrid) {
 			externalGrid.columns = columns;
 			externalGrid.items = [...externalEmployees];
-			externalGrid.editable = true;
+			externalGrid.isEditable = true;
 			externalGrid.editTrigger = 'click';
-			externalGrid.showRowNumbers = true;
+			externalGrid.isRowNumbersVisible = true;
 			externalGrid.idValueMember = 'id';
 			externalGrid.rowLocking = {
 				lockedEditBehavior: 'block'

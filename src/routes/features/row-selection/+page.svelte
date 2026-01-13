@@ -26,13 +26,14 @@
 		{ field: 'status', title: 'Status', width: '100px' }
 	];
 
-	onMount(() => {
+	onMount(async () => {
+		await import('@keenmate/web-grid');
 		if (grid) {
 			grid.items = [...sampleData];
 			grid.columns = columns;
-			grid.showRowNumbers = true;
-			grid.hoverable = true;
-			grid.striped = true;
+			grid.isRowNumbersVisible = true;
+			grid.isHoverable = true;
+			grid.isStriped = true;
 
 			// Poll for selection changes
 			setInterval(() => {
@@ -49,9 +50,9 @@
 		if (grid2) {
 			grid2.items = [...sampleData];
 			grid2.columns = columns;
-			grid2.showRowNumbers = true;
-			grid2.hoverable = true;
-			grid2.striped = true;
+			grid2.isRowNumbersVisible = true;
+			grid2.isHoverable = true;
+			grid2.isStriped = true;
 
 			grid2.rangeShortcuts = [
 				{
@@ -97,7 +98,7 @@
 
 		<!-- Basic Selection Demo -->
 		<section class="mb-5">
-			<h2 class="mb-4">Basic Selection</h2>
+			<h2 class="mb-4">RS01 Basic Selection</h2>
 			<p>Click row numbers to select rows. Use Ctrl+Click to toggle, Shift+Click for range selection, or drag to select multiple rows.</p>
 
 			<div class="demo-container mb-3">
@@ -123,7 +124,7 @@
 
 			<CodeBlock
 				codeContent={`// Enable row numbers (required for selection)
-grid.showRowNumbers = true;
+grid.isRowNumbersVisible = true;
 
 // Read selected rows
 console.log(grid.selectedRows);  // [0, 2, 4] - array of indices
@@ -144,7 +145,7 @@ grid.clearSelection();            // Clear all`}
 
 		<!-- Range Shortcuts Demo -->
 		<section class="mb-5">
-			<h2 class="mb-4">Range Shortcuts</h2>
+			<h2 class="mb-4">RS02 Range Shortcuts</h2>
 			<p>Select rows and press Delete to remove them, or Ctrl+Alt+E to "export" (logs to console).</p>
 
 			<div class="demo-container mb-3">

@@ -25,14 +25,14 @@
 		{ field: 'id', title: 'ID', width: '60px' },
 		{ field: 'name', title: 'Name', width: '150px' },
 		{ field: 'department', title: 'Department', width: '120px' },
-		{ field: 'salary', title: 'Salary', width: '100px', align: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() }
+		{ field: 'salary', title: 'Salary', width: '100px', horizontalAlign: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() }
 	];
 
 	const wideColumns = [
 		{ field: 'id', title: 'ID', width: '80px' },
 		{ field: 'name', title: 'Full Name', width: '200px' },
 		{ field: 'department', title: 'Department', width: '150px' },
-		{ field: 'salary', title: 'Annual Salary', width: '150px', align: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() },
+		{ field: 'salary', title: 'Annual Salary', width: '150px', horizontalAlign: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() },
 		{ field: 'department', title: 'Division', width: '150px' },
 		{ field: 'name', title: 'Manager', width: '200px' }
 	];
@@ -44,7 +44,7 @@
 		if (containerGrid) {
 			containerGrid.columns = columns;
 			containerGrid.items = employees;
-			containerGrid.pageable = true;
+			containerGrid.isPageable = true;
 			containerGrid.pageSize = 5;
 			containerGrid.paginationPosition = 'top-left|bottom-left';
 		}
@@ -53,7 +53,7 @@
 		if (pageGrid) {
 			pageGrid.columns = columns;
 			pageGrid.items = employees;
-			pageGrid.pageable = true;
+			pageGrid.isPageable = true;
 			pageGrid.pageSize = 5;
 			pageGrid.paginationPosition = 'top-left|bottom-left';
 		}
@@ -62,7 +62,7 @@
 		if (hybridGrid) {
 			hybridGrid.columns = wideColumns;
 			hybridGrid.items = employees;
-			hybridGrid.pageable = true;
+			hybridGrid.isPageable = true;
 			hybridGrid.pageSize = 5;
 			hybridGrid.paginationPosition = 'top-left|bottom-left';
 		}
