@@ -7,7 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Expanded Selection feature page** (`/features/row-selection`) - Unified page for all selection features
+  - RS01: Basic Row Selection - Click, Ctrl+Click, Shift+Click, drag to select
+  - RS02: Row Selection with Shortcuts - Ctrl+C to copy, Delete to remove rows
+  - CS01: Cell Range Selection (Click+Drag Mode) - Click and drag to select cells
+  - CS02: Cell Range Selection (Shift Mode) - Click then Shift+Click to select range
+  - Copy to Clipboard demo - Copy cell ranges or selected rows as TSV (Excel-compatible)
+  - Full API reference with properties, methods, TypeScript types, and CSS variables
+
 ### Changed
+- **Updated @keenmate/web-grid** to 1.0.0-rc11
+  - New copy to clipboard feature: `copyCellSelectionToClipboard()`, `copySelectedRowsToClipboard()`
+  - New `shouldCopyWithHeaders` property for including headers when copying
+  - Bug fixes for cell selection border alignment and focus timing
+- **Navigation** - Renamed "Row Selection" to "Selection" for the expanded feature page
+
+### Changed (rc10)
 - **Updated @keenmate/web-grid** to 1.0.0-rc10 with breaking API changes
 - **Property Renames** - All property names updated to match new `is*`/`should*` naming convention:
   - `striped` → `isStriped`

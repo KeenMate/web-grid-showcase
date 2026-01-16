@@ -45,7 +45,7 @@ const config: PartialDocsConfig = {
 					{ label: 'Keyboard Navigation', href: '/features/keyboard-navigation' },
 					{ label: 'Custom Styling', href: '/features/custom-styling' },
 					{ label: 'Row Locking', href: '/features/row-locking' },
-					{ label: 'Row Selection', href: '/features/row-selection' }
+					{ label: 'Selection', href: '/features/row-selection' }
 				]
 			},
 			{
