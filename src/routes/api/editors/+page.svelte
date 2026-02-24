@@ -11,7 +11,7 @@
 		<section class="mb-5">
 			<h2 class="mb-3">Overview</h2>
 			<p class="lead">
-				Web Grid provides 7 built-in editor types plus a custom editor option for specialized input needs.
+				Web Grid provides 8 editor types (including custom) for specialized input needs.
 			</p>
 
 			<CodeBlock
@@ -71,9 +71,9 @@
 						</tr>
 						<tr>
 							<td><code>editStartSelection</code></td>
-							<td><code>'selectAll' | 'cursorAtStart' | 'cursorAtEnd'</code></td>
-							<td><code>'selectAll'</code></td>
-							<td>Cursor position when entering edit mode</td>
+							<td><code>'selectAll' | 'cursorAtStart' | 'cursorAtEnd' | 'mousePosition'</code></td>
+							<td>inherits</td>
+							<td>Cursor position when entering edit mode (inherits from grid-level <code>editStartSelection</code>)</td>
 						</tr>
 					</tbody>
 				</table>
@@ -252,6 +252,7 @@
 						<tr>
 							<th>Option</th>
 							<th>Type</th>
+							<th>Default</th>
 							<th>Description</th>
 						</tr>
 					</thead>
@@ -259,37 +260,44 @@
 						<tr>
 							<td><code>options</code></td>
 							<td><code>EditorOption[]</code></td>
+							<td>-</td>
 							<td>Static list of options</td>
 						</tr>
 						<tr>
 							<td><code>loadOptions</code></td>
 							<td><code>(row, field) => Promise&lt;EditorOption[]&gt;</code></td>
+							<td>-</td>
 							<td>Dynamic options loader</td>
 						</tr>
 						<tr>
 							<td><code>optionsLoadTrigger</code></td>
 							<td><code>'immediate' | 'oneditstart' | 'ondropdownopen'</code></td>
+							<td><code>'oneditstart'</code></td>
 							<td>When to load dynamic options</td>
 						</tr>
 						<tr>
 							<td><code>allowEmpty</code></td>
 							<td><code>boolean</code></td>
+							<td><code>false</code></td>
 							<td>Allow null/empty selection</td>
 						</tr>
 						<tr>
 							<td><code>emptyLabel</code></td>
 							<td><code>string</code></td>
-							<td>Label for empty option (default: "-- Select --")</td>
+							<td><code>'-- Select --'</code></td>
+							<td>Label for empty option</td>
 						</tr>
 						<tr>
 							<td><code>valueMember</code></td>
 							<td><code>string</code></td>
-							<td>Property for value (default: "value")</td>
+							<td><code>'value'</code></td>
+							<td>Property for value</td>
 						</tr>
 						<tr>
 							<td><code>displayMember</code></td>
 							<td><code>string</code></td>
-							<td>Property for display text (default: "label")</td>
+							<td><code>'label'</code></td>
+							<td>Property for display text</td>
 						</tr>
 					</tbody>
 				</table>
@@ -342,6 +350,7 @@
 						<tr>
 							<th>Option</th>
 							<th>Type</th>
+							<th>Default</th>
 							<th>Description</th>
 						</tr>
 					</thead>
@@ -349,32 +358,68 @@
 						<tr>
 							<td><code>options</code></td>
 							<td><code>EditorOption[]</code></td>
+							<td>-</td>
 							<td>Options to filter from</td>
+						</tr>
+						<tr>
+							<td><code>loadOptions</code></td>
+							<td><code>(row, field) => Promise&lt;EditorOption[]&gt;</code></td>
+							<td>-</td>
+							<td>Dynamic options loader (alternative to static options)</td>
+						</tr>
+						<tr>
+							<td><code>optionsLoadTrigger</code></td>
+							<td><code>'immediate' | 'oneditstart' | 'ondropdownopen'</code></td>
+							<td><code>'oneditstart'</code></td>
+							<td>When to load dynamic options</td>
 						</tr>
 						<tr>
 							<td><code>searchMember</code></td>
 							<td><code>string</code></td>
+							<td>-</td>
 							<td>Property for searchable text (falls back to displayMember)</td>
 						</tr>
 						<tr>
 							<td><code>iconMember</code></td>
 							<td><code>string</code></td>
+							<td>-</td>
 							<td>Property for icon/emoji</td>
 						</tr>
 						<tr>
 							<td><code>subtitleMember</code></td>
 							<td><code>string</code></td>
+							<td>-</td>
 							<td>Property for subtitle/description</td>
 						</tr>
 						<tr>
 							<td><code>groupMember</code></td>
 							<td><code>string</code></td>
+							<td>-</td>
 							<td>Property for grouping options</td>
 						</tr>
 						<tr>
 							<td><code>disabledMember</code></td>
 							<td><code>string</code></td>
+							<td>-</td>
 							<td>Property for disabled state</td>
+						</tr>
+						<tr>
+							<td><code>allowEmpty</code></td>
+							<td><code>boolean</code></td>
+							<td><code>false</code></td>
+							<td>Allow null/empty selection</td>
+						</tr>
+						<tr>
+							<td><code>emptyLabel</code></td>
+							<td><code>string</code></td>
+							<td>-</td>
+							<td>Label for empty option</td>
+						</tr>
+						<tr>
+							<td><code>dropdownMinWidth</code></td>
+							<td><code>string</code></td>
+							<td>-</td>
+							<td>Minimum width of dropdown panel</td>
 						</tr>
 					</tbody>
 				</table>
@@ -485,10 +530,16 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>onSearchCallback</code></td>
+							<td><code>searchCallback</code></td>
 							<td><code>(query, row, signal?) => Promise&lt;EditorOption[]&gt;</code></td>
 							<td>-</td>
 							<td>Async search function (required)</td>
+						</tr>
+						<tr>
+							<td><code>placeholder</code></td>
+							<td><code>string</code></td>
+							<td>-</td>
+							<td>Placeholder text shown when input is empty</td>
 						</tr>
 						<tr>
 							<td><code>initialOptions</code></td>
@@ -530,7 +581,7 @@
   title: 'Customer',
   editor: 'autocomplete',
   editorOptions: {
-    onSearchCallback: async (query, row, signal) => {
+    searchCallback: async (query, row, signal) => {
       const response = await fetch(
         \`/api/customers?search=\${encodeURIComponent(query)}\`,
         { signal }  // Support cancellation
@@ -604,7 +655,7 @@ type CustomEditorContext<T> = {
   field: 'address',
   title: 'Address',
   editor: 'custom',
-  showEditButton: true,
+  isEditButtonVisible: true,
   cellEditCallback: (ctx) => {
     openAddressModal(ctx.value, (newAddress) => {
       if (newAddress) {
@@ -689,6 +740,11 @@ type CustomEditorContext<T> = {
 							<td><code>searchingText</code></td>
 							<td><code>string</code></td>
 							<td>Text while searching (autocomplete only, default: from grid.labels)</td>
+						</tr>
+						<tr>
+							<td><code>dropdownMinWidth</code></td>
+							<td><code>string</code></td>
+							<td>Minimum width of dropdown panel</td>
 						</tr>
 					</tbody>
 				</table>

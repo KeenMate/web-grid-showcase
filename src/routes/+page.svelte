@@ -13,7 +13,7 @@
 				<span class="text-primary">@keenmate/web-grid</span>
 			</h1>
 			<p class="lead mb-4">
-				A powerful, framework-agnostic data grid web component with Excel-like editing, multi-column sorting, virtual scrolling, and extensive customization through 100+ CSS variables.
+				A powerful, framework-agnostic data grid web component with Excel-like editing, multi-column sorting, virtual scrolling, and extensive customization through 170+ CSS variables.
 			</p>
 			<div class="d-flex gap-3 justify-content-center flex-wrap">
 				<a href="/getting-started" class="btn btn-primary btn-lg">
@@ -44,7 +44,7 @@
 			<div class="col-md-6 col-lg-4">
 				<FeatureCard
 					iconEmoji="&#x270F;&#xFE0F;"
-					titleText="7+ Editor Types"
+					titleText="8 Editor Types"
 					descriptionText="Text, number, checkbox, select, combobox, date picker, autocomplete, plus custom editor support"
 					variantType="success"
 				/>
@@ -78,6 +78,54 @@
 					iconEmoji="&#x26A1;"
 					titleText="Virtual Scrolling"
 					descriptionText="Handle 10,000+ rows with smooth scrolling. Infinite scroll support for progressive loading"
+					variantType="secondary"
+				/>
+			</div>
+			<div class="col-md-6 col-lg-4">
+				<FeatureCard
+					iconEmoji="&#x1F4CB;"
+					titleText="3 Grid Modes"
+					descriptionText="Read-only, Excel, and Input-Matrix modes with sensible defaults for common use cases"
+					variantType="primary"
+				/>
+			</div>
+			<div class="col-md-6 col-lg-4">
+				<FeatureCard
+					iconEmoji="&#x1F4C4;"
+					titleText="Copy & Paste"
+					descriptionText="Multi-cell TSV paste from Excel, column selection via header click, and Select All support"
+					variantType="success"
+				/>
+			</div>
+			<div class="col-md-6 col-lg-4">
+				<FeatureCard
+					iconEmoji="&#x1F9CA;"
+					titleText="Frozen Columns"
+					descriptionText="Pin columns to the left while scrolling horizontally. Fill handle for Excel-like autofill"
+					variantType="info"
+				/>
+			</div>
+			<div class="col-md-6 col-lg-4">
+				<FeatureCard
+					iconEmoji="&#x1F512;"
+					titleText="Row Locking"
+					descriptionText="Optimistic locking with WebSocket support. Lock rows externally for collaborative editing"
+					variantType="warning"
+				/>
+			</div>
+			<div class="col-md-6 col-lg-4">
+				<FeatureCard
+					iconEmoji="&#x1F4CA;"
+					titleText="Summary Bar"
+					descriptionText="Customizable summary content with aggregates, totals, and metadata from server-side data"
+					variantType="danger"
+				/>
+			</div>
+			<div class="col-md-6 col-lg-4">
+				<FeatureCard
+					iconEmoji="&#x1F310;"
+					titleText="i18n & Labels"
+					descriptionText="Translatable UI strings for pagination, context menus, and dropdown editors. Full label customization"
 					variantType="secondary"
 				/>
 			</div>
@@ -127,13 +175,13 @@ import type { Column } from '@keenmate/web-grid';`}
 					<p>
 						Install the package, import it once, and use the <code>&lt;web-grid&gt;</code> element anywhere in your application.
 					</p>
-					<h4>Zero Dependencies</h4>
+					<h4>Lightweight</h4>
 					<p>
-						No framework lock-in. Works everywhere modern web components are supported. Built with TypeScript for excellent IDE support.
+						Only one runtime dependency. No framework lock-in. Works everywhere modern web components are supported. Built with TypeScript for excellent IDE support.
 					</p>
 					<h4>Highly Customizable</h4>
 					<p>
-						100+ CSS variables for complete theming control. Integrates with @keenmate/theme-designer for enterprise theming.
+						170+ CSS variables for complete theming control. Integrates with @keenmate/theme-designer for enterprise theming.
 					</p>
 				</div>
 			{/snippet}
@@ -167,8 +215,8 @@ import type { Column } from '@keenmate/web-grid';`}
     { id: 2, name: 'Bob', email: 'bob@example.com', salary: 72000 }
   ];
 
-  grid.isSortable = true;
-  grid.pageable = true;
+  grid.sortMode = 'single';
+  grid.isPageable = true;
 </script>`}
 						languageType="html"
 						titleText="Basic Usage"
@@ -225,11 +273,11 @@ import type { Column } from '@keenmate/web-grid';`}
 		<!-- Stats/Features Icons -->
 		<div class="row text-center mt-5 pt-5 border-top">
 			<div class="col-md-3">
-				<h3 class="display-6 fw-bold text-primary">7+</h3>
+				<h3 class="display-6 fw-bold text-primary">8</h3>
 				<p class="text-muted">Editor Types</p>
 			</div>
 			<div class="col-md-3">
-				<h3 class="display-6 fw-bold text-primary">100+</h3>
+				<h3 class="display-6 fw-bold text-primary">170+</h3>
 				<p class="text-muted">CSS Variables</p>
 			</div>
 			<div class="col-md-3">
@@ -237,8 +285,8 @@ import type { Column } from '@keenmate/web-grid';`}
 				<p class="text-muted">Virtual Scroll Rows</p>
 			</div>
 			<div class="col-md-3">
-				<h3 class="display-6 fw-bold text-primary">0</h3>
-				<p class="text-muted">Dependencies</p>
+				<h3 class="display-6 fw-bold text-primary">3</h3>
+				<p class="text-muted">Grid Modes</p>
 			</div>
 		</div>
 	</div>

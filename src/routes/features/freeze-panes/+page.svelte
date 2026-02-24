@@ -256,10 +256,28 @@ columns = [
 				<ul class="mb-0">
 					<li><strong>Explicit widths:</strong> Always set explicit widths on frozen columns for consistent behavior</li>
 					<li><strong>Shadow indicator:</strong> A subtle shadow appears on the right edge of frozen columns when scrolling</li>
+					<li><strong>Accent tint:</strong> Frozen column headers have a subtle tint to visually distinguish them</li>
 					<li><strong>Frozen columns cannot be reordered:</strong> Drag-to-reorder is disabled for frozen columns</li>
 					<li><strong>Row numbers:</strong> When <code>isStickyRowNumbers</code> is enabled, row numbers are always frozen regardless of <code>freezeColumns</code></li>
 				</ul>
 			</div>
+		</section>
+
+		<!-- CSS Variables -->
+		<section class="mb-5">
+			<h2 class="mb-4">CSS Variables</h2>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>--wg-frozen-column-shadow-gradient</code></td><td><code>linear-gradient(to right, ...)</code></td><td>Shadow gradient on the edge of frozen columns</td></tr>
+						<tr><td><code>--wg-frozen-column-shadow-width</code></td><td><code>8px</code></td><td>Width of the frozen column shadow</td></tr>
+					</tbody>
+				</table>
+			</div>
+			<p class="mt-3">Frozen columns can also be managed via the header context menu using the <code>'freezeColumn'</code> and <code>'unfreezeColumn'</code> predefined items.</p>
 		</section>
 	</div>
 </DocLayout>

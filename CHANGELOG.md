@@ -5,7 +5,50 @@ All notable changes to web-grid-showcase will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unreleased] - rc14 Showcase Update
+
+Comprehensive update bringing the showcase up to date with `@keenmate/web-grid@1.0.0-rc14`.
+
+### Added
+
+- **Home page** - 6 new feature cards: Grid Modes, Copy & Paste, Frozen Columns, Row Locking, Summary Bar, i18n & Labels
+- **Getting Started** - Grid Modes and Paste Support explanations; CDN pinned to `@1.0.0-rc14`
+- **Basic Features** - Expanded column property reference: `verticalAlign`, `headerHorizontalAlign`/`headerVerticalAlign`, `headerInfo`, `textOverflow`, `maxLines`, `cellClass`; display options: `isStickyRowNumbers`, `isFilterable`, `freezeColumns`, `tableBorderOnly`, `focusedRowIndex`, `sortMode`; content rendering section (`formatCallback`, `templateCallback`, `renderCallback`); styling callbacks; Grid Modes quick reference
+- **Editing** - Code examples for all 8 editors (checkbox, combobox, autocomplete, date, custom); Shared Dropdown Options section (`loadOptions`, `optionsLoadTrigger`, `renderOptionCallback`, `dropdownMinWidth`, `subtitleMember`, `disabledMember`)
+- **Sorting** - Sort Behavior section explaining sort indicator vs header click (rc12); multi-sort via context menu code example
+- **Pagination** - `paginationMode`, `showPagination`, `totalItems` in Additional Properties table
+- **Row Selection** - Column Selection section with API; Select All section; Paste from Clipboard section with `onbeforepaste`/`onpaste`; Row Focus / Master-Detail section; `--wg-selection-border-width`/`--wg-selection-border-color` CSS variables
+- **Toolbar** - TB05 Advanced Toolbar Features section (`toolbarFollowsCursor`, `cellToolbar`, `cellToolbarOffset`, `toolbarColumn`, `toolbarBtnMinWidth`); `'inline'` option in TB03 position switcher
+- **Context Menu** - `children` property in Menu Item Properties; Behavior Notes section (header filler, close on scroll, viewport awareness)
+- **Fill Handle** - Behavior Notes section (Escape cancels, row locking skips locked rows)
+- **Column Reorder** - Column Drag Selection section; `isMovable` column property section
+- **Freeze Panes** - CSS Variables section (`--wg-frozen-column-shadow-gradient`, `--wg-frozen-column-shadow-width`); accent tint note; context menu freeze/unfreeze note
+- **Keyboard Navigation** - Clipboard Operations table (Ctrl+V paste, Ctrl+A select all); Column Selection shortcuts; Checkbox Editor keyboard table; Date Picker keyboard table
+- **Scroll Modes** - `isScrollable`, `scrollMaxHeight`, `tableBorderOnly` in Additional Properties
+- **Custom Styling** - New CSS variable categories in reference: Selection & Focus, Row Locking, New in rc14 (7 variables); `--wg-checkbox-scale`, dropdown/tooltip/frozen column variables; context menu labels (`labels.contextMenu.*`) and dropdown labels in CS06 with code example and live demo
+- **Row Locking** - `lockTooltipCallback` in config table; `--wg-row-locked-bg`/`--wg-row-locked-opacity` CSS vars; Integration Notes (fill handle, paste, read-only toggles)
+- **Virtual Scrolling** - Wired up infinite scroll demo (VS02) with `ondatarequest` handler
+- **API Component** - ~25 new methods (focus, drafts, validation, row ID, row updates, row locking, cell/row selection); New property sections (Cell Selection, Scroll, Tooltip, New Empty Row, Pagination Mode); `validationTooltipCallback`, `summaryMetadata`; toolbar properties; callbacks section
+- **API Columns** - `verticalAlign`, `headerHorizontalAlign`/`headerVerticalAlign`, `maxLines`, `isMovable`, `isResizable`, `isFrozen`, `validationTooltipCallback`, `shouldOpenDropdownOnEnter`, `dropdownToggleVisibility`; `'justify'` added to `horizontalAlign`; clipboard callbacks section
+- **API Editors** - `loadOptions`, `optionsLoadTrigger`, `dropdownMinWidth` for combobox; `allowEmpty`/`emptyLabel` for combobox/autocomplete
+- **API Events** - `onheadercontextmenuopen`, `onbeforepaste`/`onpaste`, `onrowaction`, `oncolumnresize`, `oncolumnreorder`, `fillDragCallback` sections; `shortcutsHelpContentCallback`, `validationTooltipCallback`, `idValueCallback`, `renderCallback` in quick reference
+
+### Changed
+
+- **Updated @keenmate/web-grid** to 1.0.0-rc14
+- **Home page** - "8 Editor Types" (was 7), "170+ CSS Variables" (was 100+), "3 Grid Modes" replaces "0 Dependencies"
+- **Getting Started** - Editor types list includes `'custom'`; CDN URLs pinned to rc14
+- **Sorting** - Description updated from "Click any column header" to "Click the sort indicator"
+- **Custom Styling** - CSS variable counts updated to 215 (37 base + 178 component)
+
+### Fixed
+
+- **All pages** - 16 property name renames applied across showcase (`pageable` → `isPageable`, `sortable` → `isSortable`, `hidden` → `isHidden`, `align` → `horizontalAlign`, `onfilldrag` → `fillDragCallback`, `onSearchCallback` → `searchCallback`, etc.)
+- **API Component** - `editTrigger` default corrected from `'click'` to `'dblclick'`; `editStartSelection` default corrected to `'selectAll'`
+- **Fill Handle** - `onfilldrag` → `fillDragCallback` in API reference table and text
+- **Context Menu** - `hidden` → `isHidden` in column visibility section
+
+## [0.0.3] - Unreleased (rc11)
 
 ### Added
 - **Expanded Selection feature page** (`/features/row-selection`) - Unified page for all selection features

@@ -99,7 +99,8 @@
 			gridCellClick.isRowNumbersVisible = true;
 			gridCellClick.isHoverable = true;
 			gridCellClick.cellSelectionMode = 'click';
-			gridCellClick.mode = 'navigate';
+			gridCellClick.isEditable = true;
+			gridCellClick.editTrigger = 'navigate';
 
 			gridCellClick.rangeShortcuts = [
 				{
@@ -156,7 +157,8 @@
 			gridCopy.isRowNumbersVisible = true;
 			gridCopy.isHoverable = true;
 			gridCopy.cellSelectionMode = 'click';
-			gridCopy.mode = 'navigate';
+			gridCopy.isEditable = true;
+			gridCopy.editTrigger = 'navigate';
 
 			gridCopy.rangeShortcuts = [
 				{
@@ -192,16 +194,17 @@
 
 <DocLayout
 	titleText="Selection"
-	descriptionText="Row and cell range selection with keyboard shortcuts and copy to clipboard">
+	descriptionText="Row, cell, and column selection with keyboard shortcuts, clipboard copy/paste, and select all">
 
 	<div class="py-4">
 		<!-- Overview -->
 		<section class="mb-5">
 			<h2 class="mb-3">Overview</h2>
 			<p class="lead">
-				WebGrid supports two selection modes: <strong>row selection</strong> via row numbers and
-				<strong>cell range selection</strong> via click+drag or shift+click. Both modes support
-				keyboard shortcuts for batch operations and copying to clipboard.
+				WebGrid supports <strong>row selection</strong> via row numbers,
+				<strong>cell range selection</strong> via click+drag or shift+click,
+				<strong>column selection</strong> via header clicks, and <strong>select all</strong> via Ctrl+A or clicking the <code>#</code> header.
+				All modes support keyboard shortcuts for batch operations, copying to clipboard, and pasting from Excel.
 			</p>
 		</section>
 
@@ -624,6 +627,16 @@ interface RangeShortcutContext<T> {
 							<td><code>white</code></td>
 							<td>Text color of selected row number</td>
 						</tr>
+						<tr>
+							<td><code>--wg-selection-border-width</code></td>
+							<td><code>2px</code></td>
+							<td>Border width around selected row block</td>
+						</tr>
+						<tr>
+							<td><code>--wg-selection-border-color</code></td>
+							<td><code>var(--wg-accent-color)</code></td>
+							<td>Border color around selected row block</td>
+						</tr>
 						<tr><td colspan="3" class="table-secondary"><strong>Cell Selection</strong></td></tr>
 						<tr>
 							<td><code>--wg-cell-selection-bg</code></td>
@@ -643,6 +656,123 @@ interface RangeShortcutContext<T> {
 					</tbody>
 				</table>
 			</div>
+		</section>
+
+		<!-- Column Selection -->
+		<section class="mb-5">
+			<h2 class="mb-4">Column Selection</h2>
+			<p>Click column headers to select entire columns. Use <kbd>Ctrl+Click</kbd> for multi-column and <kbd>Shift+Click</kbd> for range selection.</p>
+
+			<CodeBlock
+				codeContent={`// Column selection is available when:
+// - cellSelectionMode is enabled
+// - isColumnReorderAllowed = false (otherwise drag reorders)
+
+// Programmatic column selection
+grid.selectColumn(2);                    // Select column at index 2
+grid.selectColumn(3, 'add');             // Add column 3 to selection
+grid.selectColumnRange(1, 4);            // Select columns 1-4
+grid.isColumnSelected(2);               // Check if column selected
+grid.clearColumnSelection();             // Clear selection
+grid.copySelectedColumnsToClipboard();   // Copy to clipboard`}
+				languageType="javascript"
+				titleText="Column Selection API"
+			/>
+		</section>
+
+		<!-- Select All -->
+		<section class="mb-5">
+			<h2 class="mb-4">Select All</h2>
+			<p>Click the row number header (<code>#</code>) or use <kbd>Ctrl+A</kbd> to select all cells.</p>
+
+			<CodeBlock
+				codeContent={`// Select all cells programmatically
+grid.selectAll();
+
+// Copy with headers
+grid.shouldCopyWithHeaders = true;
+grid.copyCellSelectionToClipboard();`}
+				languageType="javascript"
+				titleText="Select All"
+			/>
+		</section>
+
+		<!-- Paste from Clipboard -->
+		<section class="mb-5">
+			<h2 class="mb-4">Paste from Clipboard</h2>
+			<p>Paste TSV data from clipboard (e.g., copied from Excel) with <kbd>Ctrl+V</kbd>. The grid parses tab-separated values and applies them to the selected cell range.</p>
+
+			<CodeBlock
+				codeContent={`// Enable paste
+grid.isEditable = true;
+
+// Paste callbacks
+grid.onbeforepaste = (detail) => {
+  console.log('About to paste:', detail.parsedRows);
+  console.log('Target:', detail.targetRowIndex, detail.targetColIndex);
+  console.log('New rows needed:', detail.newRowsCount);
+  // Set cancel = true to prevent paste
+  detail.cancel = true;
+};
+
+grid.onpaste = (detail) => {
+  console.log('Total cells:', detail.totalCells);
+  console.log('Successful:', detail.successfulCells);
+  console.log('Failed:', detail.failedCells);
+};
+
+// Per-column paste processing
+grid.columns = [
+  {
+    field: 'salary',
+    editor: 'number',
+    beforePasteCallback: (value) => {
+      // Parse pasted text to number
+      return parseInt(value.replace(/[^0-9]/g, '')) || 0;
+    }
+  }
+];`}
+				languageType="javascript"
+				titleText="Paste Configuration"
+			/>
+
+			<h4 class="mt-4">Paste Configuration Properties</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>pasteMode</code></td><td><code>'skip-non-editable' | 'all-columns' | 'editable-only'</code></td><td><code>'skip-non-editable'</code></td><td>How to handle non-editable cells during paste</td></tr>
+						<tr><td><code>shouldValidateOnPaste</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Run column validation on pasted values</td></tr>
+						<tr><td><code>createRowCallback</code></td><td><code>(pastedData, rowIndex) =&gt; T</code></td><td>-</td><td>Callback to create new rows when pasting beyond existing data</td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="alert alert-info mt-3">
+				<strong>Note:</strong> Paste respects row locking — locked rows are automatically skipped during paste operations.
+			</div>
+		</section>
+
+		<!-- Row Focus -->
+		<section class="mb-5">
+			<h2 class="mb-4">Row Focus / Master-Detail</h2>
+			<p>Track which row is focused for master/detail patterns:</p>
+
+			<CodeBlock
+				codeContent={`// Get/set focused row
+grid.focusedRowIndex = 0;  // Focus first row
+
+// Listen for focus changes
+grid.onrowfocus = (detail) => {
+  console.log('Focused row:', detail.rowIndex);
+  // Update detail panel
+  loadDetailView(detail.row);
+};`}
+				languageType="javascript"
+				titleText="Row Focus"
+			/>
 		</section>
 	</div>
 </DocLayout>

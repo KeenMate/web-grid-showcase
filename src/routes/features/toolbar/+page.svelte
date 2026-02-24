@@ -31,7 +31,7 @@
 			basicToolbarGrid.columns = columns;
 			basicToolbarGrid.items = [...employees];
 			basicToolbarGrid.isRowToolbarVisible = true;
-			basicToolbarGrid.rowToolbar = ['add', 'duplicate', 'delete'];
+			basicToolbarGrid.rowToolbar = ['add', 'duplicate', 'delete', 'moveUp', 'moveDown'];
 			basicToolbarGrid.ontoolbarclick = (e: any) => {
 				console.log('Toolbar clicked:', e.item.id, 'Row:', e.rowIndex);
 			};
@@ -240,7 +240,7 @@
 			{#snippet controlsContent()}
 				<CodeBlock
 					codeContent={`grid.isRowToolbarVisible = true;
-grid.rowToolbar = ['add', 'duplicate', 'delete'];
+grid.rowToolbar = ['add', 'duplicate', 'delete', 'moveUp', 'moveDown'];
 
 // Handle clicks
 grid.ontoolbarclick = (e) => {
@@ -387,8 +387,12 @@ grid.rowToolbar = [
 							type="button"
 							class="btn btn-sm {toolbarPosition === 'top' ? 'btn-primary' : 'btn-outline-secondary'}"
 							onclick={() => updateToolbarPosition('top')}>top</button>
+						<button
+							type="button"
+							class="btn btn-sm {toolbarPosition === 'inline' ? 'btn-primary' : 'btn-outline-secondary'}"
+							onclick={() => updateToolbarPosition('inline')}>inline</button>
 					</div>
-					<p class="small text-muted mt-1">Preferred side (falls back if no space)</p>
+					<p class="small text-muted mt-1">Preferred side (falls back if no space). Inline = always-visible column.</p>
 				</div>
 
 				<div class="mb-3">
@@ -567,6 +571,59 @@ grid.rowShortcuts = [
 							<tr><td>Good for many actions</td><td>Good for few actions</td></tr>
 						</tbody>
 					</table>
+				</div>
+			{/snippet}
+		</ShowcaseSection>
+
+		<!-- Advanced Toolbar Features -->
+		<ShowcaseSection
+			titleText="TB05 Advanced Toolbar Features"
+			subtitleText="Cell toolbar, cursor following, and column pinning"
+			col1Title="Features"
+			col2Title="Code"
+			col3Title="Description">
+
+			{#snippet demoContent()}
+				<p class="text-muted">These features are configured via JavaScript API.</p>
+			{/snippet}
+
+			{#snippet controlsContent()}
+				<CodeBlock
+					codeContent={`// Toolbar follows cursor horizontally
+grid.toolbarFollowsCursor = true;
+
+// Cell-specific toolbar (shows different items per cell)
+grid.cellToolbar = (row, rowIndex, column, colIndex) => {
+  if (column.field === 'status') {
+    return [
+      { id: 'approve', icon: '✓', title: 'Approve' },
+      { id: 'reject', icon: '✗', title: 'Reject' }
+    ];
+  }
+  return null; // Use default toolbar
+};
+
+// Pin toolbar over specific column
+grid.toolbarColumn = 'actions';
+
+// Cell toolbar horizontal offset
+grid.cellToolbarOffset = '10px';
+
+// Minimum button width
+grid.toolbarBtnMinWidth = '32px';`}
+					languageType="javascript"
+					titleText="Advanced Configuration"
+				/>
+			{/snippet}
+
+			{#snippet descriptionContent()}
+				<div class="prose small">
+					<h5>Toolbar Follows Cursor</h5>
+					<p><code>toolbarFollowsCursor</code> makes the toolbar track the mouse position horizontally within the row.</p>
+					<h5>Cell Toolbar</h5>
+					<p><code>cellToolbar</code> callback returns different toolbar items based on which cell is hovered. Return <code>null</code> to use the default toolbar.</p>
+					<h5>Column Pinning</h5>
+					<p><code>toolbarColumn</code> pins the toolbar to appear over a specific column instead of floating at the row edge.</p>
 				</div>
 			{/snippet}
 		</ShowcaseSection>

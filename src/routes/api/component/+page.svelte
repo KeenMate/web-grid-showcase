@@ -45,7 +45,7 @@
 						<tr>
 							<td><code>mode</code></td>
 							<td><code>'read-only' | 'excel' | 'input-matrix'</code></td>
-							<td>-</td>
+							<td><code>'excel'</code></td>
 							<td>Grid mode - sets sensible defaults for common use cases</td>
 						</tr>
 					</tbody>
@@ -90,13 +90,13 @@ grid.columns = [
 						<tr>
 							<td><code>isStriped</code></td>
 							<td><code>boolean</code></td>
-							<td><code>false</code></td>
+							<td><code>true</code></td>
 							<td>Alternating row background colors</td>
 						</tr>
 						<tr>
 							<td><code>isHoverable</code></td>
 							<td><code>boolean</code></td>
-							<td><code>false</code></td>
+							<td><code>true</code></td>
 							<td>Highlight rows on hover</td>
 						</tr>
 						<tr>
@@ -104,6 +104,12 @@ grid.columns = [
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Show row number column on the left</td>
+						</tr>
+						<tr>
+							<td><code>isFilterable</code></td>
+							<td><code>boolean</code></td>
+							<td><code>false</code></td>
+							<td>Show filter inputs below column headers</td>
 						</tr>
 						<tr>
 							<td><code>class</code></td>
@@ -172,7 +178,7 @@ grid.columns = [
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>resizable</code></td>
+							<td><code>isResizable</code></td>
 							<td><code>boolean</code></td>
 							<td>Per-column opt-out (default: true)</td>
 						</tr>
@@ -298,7 +304,7 @@ const widths = grid.getColumnWidthsState();`}
 						</tr>
 						<tr>
 							<td><code>moveColumn(field, toIndex)</code></td>
-							<td>Move a column to a specific index</td>
+							<td>Move a column to a specific index (internal - available on WebGrid, not directly on the web component element)</td>
 						</tr>
 					</tbody>
 				</table>
@@ -353,7 +359,7 @@ const order = grid.getColumnOrderState();`}
 							<td>Allowed fill directions (grid-level default)</td>
 						</tr>
 						<tr>
-							<td><code>onfilldrag</code></td>
+							<td><code>fillDragCallback</code></td>
 							<td><code>function</code></td>
 							<td>-</td>
 							<td>Callback before fill: return false to cancel</td>
@@ -393,7 +399,7 @@ columns = [
 ];
 
 // Callback to validate or cancel fill
-grid.onfilldrag = ({ sourceCell, targetCells, direction }) => {
+grid.fillDragCallback = ({ sourceCell, targetCells, direction }) => {
   console.log(\`Filling \${targetCells.length} cells \${direction}\`);
   // Return false to cancel the fill operation
   return true;
@@ -408,7 +414,7 @@ grid.onfilldrag = ({ sourceCell, targetCells, direction }) => {
 					<li><strong>Number columns:</strong> Only numeric values accepted</li>
 					<li><strong>Select/Combobox:</strong> Only values from options accepted</li>
 					<li><strong>Date columns:</strong> Only valid dates accepted</li>
-					<li><strong>Text/Autocomplete:</strong> Any value (use onfilldrag for custom validation)</li>
+					<li><strong>Text/Autocomplete:</strong> Any value (use fillDragCallback for custom validation)</li>
 				</ul>
 			</div>
 		</section>
@@ -457,7 +463,7 @@ grid.onfilldrag = ({ sourceCell, targetCells, direction }) => {
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>frozen</code></td>
+							<td><code>isFrozen</code></td>
 							<td><code>boolean</code></td>
 							<td>Mark column as frozen (moves to left automatically)</td>
 						</tr>
@@ -557,7 +563,7 @@ grid.sort = [
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>pageable</code></td>
+							<td><code>isPageable</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Enable pagination</td>
@@ -589,7 +595,7 @@ grid.sort = [
 						<tr>
 							<td><code>showPagination</code></td>
 							<td><code>boolean | 'auto'</code></td>
-							<td><code>'auto'</code></td>
+							<td><code>true</code></td>
 							<td>When to show: true=always, false=never, 'auto'=hide when 1 page</td>
 						</tr>
 						<tr>
@@ -639,23 +645,23 @@ grid.sort = [
 						<tr>
 							<td><code>editTrigger</code></td>
 							<td><code>EditTrigger</code></td>
-							<td><code>'click'</code></td>
+							<td><code>'dblclick'</code></td>
 							<td>How editing is triggered: 'click', 'dblclick', 'button', 'always', 'navigate'</td>
 						</tr>
 						<tr>
 							<td><code>dropdownToggleVisibility</code></td>
 							<td><code>'always' | 'on-focus'</code></td>
-							<td><code>'on-focus'</code></td>
+							<td><code>'always'</code></td>
 							<td>When to show dropdown toggle button</td>
 						</tr>
 						<tr>
-							<td><code>openDropdownOnEnter</code></td>
+							<td><code>shouldOpenDropdownOnEnter</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Enter opens dropdown (true) or moves down (false)</td>
 						</tr>
 						<tr>
-							<td><code>checkboxAlwaysEditable</code></td>
+							<td><code>isCheckboxAlwaysEditable</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Make checkboxes always interactive</td>
@@ -664,8 +670,81 @@ grid.sort = [
 							<td><code>invalidCells</code></td>
 							<td><code>CellValidationState[]</code></td>
 							<td><code>[]</code></td>
-							<td>Currently invalid cells (for external tracking)</td>
+							<td>Currently invalid cells (for external/server-side validation)</td>
 						</tr>
+						<tr>
+							<td><code>editStartSelection</code></td>
+							<td><code>'selectAll' | 'cursorAtStart' | 'cursorAtEnd' | 'mousePosition'</code></td>
+							<td><code>'mousePosition'</code></td>
+							<td>Cursor position when entering edit mode</td>
+						</tr>
+						<tr>
+							<td><code>shouldShowDropdownOnFocus</code></td>
+							<td><code>boolean</code></td>
+							<td><code>true</code></td>
+							<td>Show dropdown when cell receives focus</td>
+						</tr>
+						<tr>
+							<td><code>focusedRowIndex</code></td>
+							<td><code>number | null</code></td>
+							<td><code>null</code></td>
+							<td>Currently focused row index (read-only)</td>
+						</tr>
+						<tr>
+							<td><code>validationTooltipCallback</code></td>
+							<td><code>function</code></td>
+							<td>-</td>
+							<td>Grid-level callback returning HTML for validation error tooltips</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<!-- Pagination Mode -->
+		<section class="mb-5">
+			<h2 class="mb-4">Pagination Mode</h2>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>paginationMode</code></td><td><code>'client' | 'server'</code></td><td><code>'client'</code></td><td>Client-side pagination (grid paginates items) or server-side (you manage pages via ondatarequest)</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<!-- Cell Selection Properties -->
+		<section class="mb-5">
+			<h2 class="mb-4">Cell Selection Properties</h2>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>cellSelectionMode</code></td><td><code>'disabled' | 'click' | 'shift'</code></td><td><code>'click'</code></td><td>Cell selection behavior</td></tr>
+						<tr><td><code>shouldCopyWithHeaders</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Include column headers when copying to clipboard</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<!-- Paste Properties -->
+		<section class="mb-5">
+			<h2 class="mb-4">Paste Properties</h2>
+			<p>Configure how <kbd>Ctrl+V</kbd> paste operations work in editable grids.</p>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>pasteMode</code></td><td><code>'skip-non-editable' | 'all-columns' | 'editable-only'</code></td><td><code>'skip-non-editable'</code></td><td>How to handle non-editable cells during paste: skip over them, paste to all columns, or only paste to editable columns</td></tr>
+						<tr><td><code>shouldValidateOnPaste</code></td><td><code>boolean</code></td><td><code>true</code></td><td>Run column validation (beforeCommitCallback) on pasted values</td></tr>
+						<tr><td><code>createRowCallback</code></td><td><code>(pastedData, rowIndex) =&gt; T</code></td><td>-</td><td>Callback to create new rows when pasting beyond existing data. Receives the parsed paste data and target row index.</td></tr>
 					</tbody>
 				</table>
 			</div>
@@ -687,7 +766,7 @@ grid.sort = [
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>showRowToolbar</code></td>
+							<td><code>isRowToolbarVisible</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Enable row toolbar</td>
@@ -695,7 +774,7 @@ grid.sort = [
 						<tr>
 							<td><code>rowToolbar</code></td>
 							<td><code>RowToolbarConfig[]</code></td>
-							<td><code>[]</code></td>
+							<td><code>['add', 'delete', 'duplicate']</code></td>
 							<td>Toolbar items: strings ('add', 'delete', etc.) or custom objects</td>
 						</tr>
 						<tr>
@@ -728,6 +807,36 @@ grid.sort = [
 							<td><code>''</code></td>
 							<td>Column header for inline toolbar mode</td>
 						</tr>
+						<tr>
+							<td><code>toolbarFollowsCursor</code></td>
+							<td><code>boolean</code></td>
+							<td><code>false</code></td>
+							<td>Toolbar tracks mouse cursor horizontally</td>
+						</tr>
+						<tr>
+							<td><code>cellToolbar</code></td>
+							<td><code>function</code></td>
+							<td>-</td>
+							<td>Callback returning cell-specific toolbar items</td>
+						</tr>
+						<tr>
+							<td><code>toolbarColumn</code></td>
+							<td><code>string | number</code></td>
+							<td>-</td>
+							<td>Pin toolbar over a specific column</td>
+						</tr>
+						<tr>
+							<td><code>cellToolbarOffset</code></td>
+							<td><code>number | string</code></td>
+							<td><code>0.2</code></td>
+							<td>Horizontal offset for cell-specific toolbar</td>
+						</tr>
+						<tr>
+							<td><code>toolbarBtnMinWidth</code></td>
+							<td><code>string</code></td>
+							<td>-</td>
+							<td>Minimum width for toolbar buttons (e.g., '80px')</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -755,7 +864,7 @@ grid.sort = [
 							<td>Keyboard shortcuts for row operations (work on focused or hovered row)</td>
 						</tr>
 						<tr>
-							<td><code>showShortcutsHelp</code></td>
+							<td><code>isShortcutsHelpVisible</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Show info icon with available shortcuts overlay</td>
@@ -794,7 +903,7 @@ grid.rowShortcuts = [
 ];
 
 // Show help overlay
-grid.showShortcutsHelp = true;`}
+grid.isShortcutsHelpVisible = true;`}
 				languageType="javascript"
 				titleText="Row Shortcuts"
 			/>
@@ -910,6 +1019,99 @@ grid.clearSelection();`}
 				languageType="javascript"
 				titleText="Row Selection"
 			/>
+
+			<h4 class="mt-4">Focus & Editing Methods</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Method</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>focusCell(rowIndex, colIndex)</code></td><td>Focus a specific cell</td></tr>
+						<tr><td><code>startEditing(rowIndex, colIndex)</code></td><td>Start editing a specific cell</td></tr>
+						<tr><td><code>openCustomEditor(rowIndex, colIndex)</code></td><td>Open custom editor for a cell</td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4 class="mt-4">Draft Management Methods</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Method</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>getRowDraft(rowIndex)</code></td><td>Get the draft (edited) state of a row</td></tr>
+						<tr><td><code>hasRowDraft(rowIndex)</code></td><td>Check if row has unsaved edits</td></tr>
+						<tr><td><code>discardRowDraft(rowIndex)</code></td><td>Discard edits for a specific row</td></tr>
+						<tr><td><code>discardCellDraft(rowIndex, field)</code></td><td>Discard edits for a specific cell (internal - available on WebGrid, not directly on the web component element)</td></tr>
+						<tr><td><code>getDraftRowIndices()</code></td><td>Get indices of all rows with unsaved edits</td></tr>
+						<tr><td><code>discardAllDrafts()</code></td><td>Discard all unsaved edits</td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4 class="mt-4">Validation Methods</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Method</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>isCellInvalid(rowIndex, field)</code></td><td>Check if a cell has a validation error</td></tr>
+						<tr><td><code>getCellValidationError(rowIndex, field)</code></td><td>Get the validation error message for a cell</td></tr>
+						<tr><td><code>canEditCell(rowIndex, field)</code></td><td>Check if a cell is editable (not locked, column is editable). Second parameter is the field name string</td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4 class="mt-4">Row Identification Methods</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Method</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>getRowId(row)</code></td><td>Get the ID of a row data object (uses idValueMember or idValueCallback)</td></tr>
+						<tr><td><code>findRowById(id)</code></td><td>Find row index by ID</td></tr>
+						<tr><td><code>updateRowById(id, changes)</code></td><td>Merge changes into a row identified by ID</td></tr>
+						<tr><td><code>replaceRowById(id, newRow)</code></td><td>Replace entire row data by ID</td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4 class="mt-4">Row Locking Methods</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Method</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>isRowLocked(rowOrId)</code></td><td>Check if a row is locked. Takes a row data object or row ID</td></tr>
+						<tr><td><code>getRowLockInfo(rowOrId)</code></td><td>Get lock info for a row. Takes a row data object or row ID</td></tr>
+						<tr><td><code>lockRowById(id, lockInfo?)</code></td><td>Lock a row externally (for WebSocket scenarios)</td></tr>
+						<tr><td><code>unlockRowById(id)</code></td><td>Unlock an externally locked row</td></tr>
+						<tr><td><code>getExternalLocks()</code></td><td>Get all external locks</td></tr>
+						<tr><td><code>clearExternalLocks()</code></td><td>Clear all external locks</td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4 class="mt-4">Cell Selection Methods</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Method</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>selectCellRange(range)</code></td><td>Select a range of cells. Takes a CellRange object with startRowIndex, startColIndex, endRowIndex, endColIndex</td></tr>
+						<tr><td><code>clearCellSelection()</code></td><td>Clear cell selection</td></tr>
+						<tr><td><code>getSelectedCells()</code></td><td>Get all selected cell coordinates</td></tr>
+						<tr><td><code>copyCellSelectionToClipboard()</code></td><td>Copy selected cells to clipboard as TSV</td></tr>
+						<tr><td><code>copySelectedRowsToClipboard()</code></td><td>Copy selected rows to clipboard</td></tr>
+					</tbody>
+				</table>
+			</div>
 		</section>
 
 		<!-- Labels/i18n Properties -->
@@ -1015,7 +1217,7 @@ grid.labels = {
 							<td>Extra rows above/below viewport</td>
 						</tr>
 						<tr>
-							<td><code>infiniteScroll</code></td>
+							<td><code>isInfiniteScrollEnabled</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Enable infinite scroll (load more)</td>
@@ -1032,6 +1234,39 @@ grid.labels = {
 							<td><code>true</code></td>
 							<td>Set to false when no more data</td>
 						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<!-- Scroll Properties -->
+		<section class="mb-5">
+			<h2 class="mb-4">Scroll Properties</h2>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>isScrollable</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Constrain grid to viewport height</td></tr>
+						<tr><td><code>scrollMaxHeight</code></td><td><code>string</code></td><td><code>'100vh'</code></td><td>Custom max-height for the grid container</td></tr>
+						<tr><td><code>tableBorderOnly</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show border only around the table, not the full container</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<!-- Tooltip Properties -->
+		<section class="mb-5">
+			<h2 class="mb-4">Tooltip Properties</h2>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>tooltipShowDelay</code></td><td><code>number</code></td><td><code>400</code></td><td>Delay in ms before showing tooltip</td></tr>
+						<tr><td><code>tooltipHideDelay</code></td><td><code>number</code></td><td><code>100</code></td><td>Delay in ms before hiding tooltip</td></tr>
 					</tbody>
 				</table>
 			</div>
@@ -1159,11 +1394,35 @@ grid.headerContextMenu = [
 							<td>Callback returning HTML content for summary</td>
 						</tr>
 						<tr>
-							<td><code>summaryInline</code></td>
+							<td><code>isSummaryInline</code></td>
 							<td><code>boolean</code></td>
 							<td><code>true</code></td>
 							<td>Share row with pagination</td>
 						</tr>
+						<tr>
+							<td><code>summaryMetadata</code></td>
+							<td><code>unknown</code></td>
+							<td>-</td>
+							<td>Server-provided metadata passed to summaryContentCallback</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<!-- New Empty Row (Experimental) -->
+		<section class="mb-5">
+			<h2 class="mb-4">New Empty Row <span class="badge bg-warning text-dark">Experimental</span></h2>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>isNewRowEnabled</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Show an empty row for adding new data</td></tr>
+						<tr><td><code>newRowPosition</code></td><td><code>'top' | 'bottom'</code></td><td><code>'bottom'</code></td><td>Position of the new row</td></tr>
+						<tr><td><code>newRowIndicator</code></td><td><code>string</code></td><td><code>'+'</code></td><td>Indicator shown in row number cell</td></tr>
+						<tr><td><code>createEmptyRowCallback</code></td><td><code>() => T</code></td><td>-</td><td>Callback to create a new empty row object</td></tr>
 					</tbody>
 				</table>
 			</div>
@@ -1326,6 +1585,27 @@ grid.isHoverable = true;`}
 			/>
 		</section>
 
+		<!-- Callbacks (on Component page) -->
+		<section class="mb-5">
+			<h2 class="mb-4">Callbacks</h2>
+			<p>See <a href="/api/events">Events API</a> for full details. Key callbacks not listed in other sections:</p>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Callback</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>onrowfocus</code></td><td>Fired when focused row changes (master/detail)</td></tr>
+						<tr><td><code>onrowlockchange</code></td><td>Fired when a row's lock state changes</td></tr>
+						<tr><td><code>oncellselectionchange</code></td><td>Fired when cell selection changes</td></tr>
+						<tr><td><code>onbeforepaste</code></td><td>Fired before paste operation - return false to cancel</td></tr>
+						<tr><td><code>onpaste</code></td><td>Fired after paste operation completes</td></tr>
+						<tr><td><code>idValueCallback</code></td><td>Callback to compute row ID (alternative to idValueMember)</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
 		<!-- TypeScript Support -->
 		<section class="mb-5">
 			<h2 class="mb-4">TypeScript Support</h2>
@@ -1426,7 +1706,7 @@ allGrids.forEach(grid => {
 				<li><strong>Generic Types:</strong> Component supports any data structure via <code>T</code> parameter</li>
 				<li><strong>Reactive:</strong> All properties are reactive - changes update the UI automatically</li>
 				<li><strong>Shadow DOM:</strong> Component uses Shadow DOM for style encapsulation</li>
-				<li><strong>CSS Variables:</strong> Customize appearance with 100+ CSS variables</li>
+				<li><strong>CSS Variables:</strong> Customize appearance with 170+ CSS variables</li>
 				<li><strong>Events vs Callbacks:</strong> Events use <code>on*</code> naming, callbacks use <code>*Callback</code> suffix</li>
 			</ul>
 		</div>

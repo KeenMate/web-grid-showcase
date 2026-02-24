@@ -384,6 +384,158 @@ grid.summaryContentCallback = (ctx) => {
 			/>
 		</section>
 
+		<!-- Row Focus Event -->
+		<section class="mb-5">
+			<h2 class="mb-4">onrowfocus</h2>
+			<p>Fired when the focused row changes. Useful for master/detail patterns.</p>
+			<CodeBlock
+				codeContent={`grid.onrowfocus = (detail) => {
+  console.log('Focused row:', detail.rowIndex);
+  console.log('Row data:', detail.row);
+
+  // Update detail panel
+  showDetailPanel(detail.row);
+};`}
+				languageType="javascript"
+				titleText="Row Focus"
+			/>
+		</section>
+
+		<!-- Row Lock Change Event -->
+		<section class="mb-5">
+			<h2 class="mb-4">onrowlockchange</h2>
+			<p>Fired when a row's lock state changes (locked or unlocked).</p>
+			<CodeBlock
+				codeContent={`grid.onrowlockchange = (detail) => {
+  console.log('Row lock changed:', detail.rowId);
+  console.log('Row:', detail.row);
+  console.log('Row index:', detail.rowIndex);
+  console.log('Locked:', detail.lockInfo !== null);
+  console.log('Lock info:', detail.lockInfo);
+  console.log('Source:', detail.source);
+};`}
+				languageType="javascript"
+				titleText="Row Lock Change"
+			/>
+		</section>
+
+		<!-- Cell Selection Change Event -->
+		<section class="mb-5">
+			<h2 class="mb-4">oncellselectionchange</h2>
+			<p>Fired when cell selection changes.</p>
+			<CodeBlock
+				codeContent={`grid.oncellselectionchange = (detail) => {
+  console.log('Selection range:', detail.range);
+  console.log('Cell count:', detail.cellCount);
+};`}
+				languageType="javascript"
+				titleText="Cell Selection Change"
+			/>
+		</section>
+
+		<!-- Column Resize Event -->
+		<section class="mb-5">
+			<h2 class="mb-4">oncolumnresize</h2>
+			<p>Fired after a column is resized by dragging.</p>
+			<CodeBlock
+				codeContent={`grid.oncolumnresize = ({ field, oldWidth, newWidth, allWidths }) => {
+  console.log(\`\${field} resized: \${oldWidth} → \${newWidth}\`);
+};`}
+				languageType="javascript"
+				titleText="Column Resize"
+			/>
+		</section>
+
+		<!-- Column Reorder Event -->
+		<section class="mb-5">
+			<h2 class="mb-4">oncolumnreorder</h2>
+			<p>Fired after a column is reordered by drag-and-drop.</p>
+			<CodeBlock
+				codeContent={`grid.oncolumnreorder = ({ field, fromIndex, toIndex, allOrder }) => {
+  console.log(\`\${field} moved: \${fromIndex} → \${toIndex}\`);
+};`}
+				languageType="javascript"
+				titleText="Column Reorder"
+			/>
+		</section>
+
+		<!-- Fill Drag Callback -->
+		<section class="mb-5">
+			<h2 class="mb-4">fillDragCallback</h2>
+			<p>Called before fill handle completes. Return <code>false</code> to cancel the fill operation.</p>
+			<CodeBlock
+				codeContent={`grid.fillDragCallback = ({ sourceCell, targetCells, direction }) => {
+  console.log(\`Filling \${targetCells.length} cells \${direction}\`);
+  // Return false to cancel
+  return true;
+};`}
+				languageType="javascript"
+				titleText="Fill Drag"
+			/>
+		</section>
+
+		<!-- Header Context Menu Open -->
+		<section class="mb-5">
+			<h2 class="mb-4">onheadercontextmenuopen</h2>
+			<p>Fired when the header context menu opens.</p>
+			<CodeBlock
+				codeContent={`grid.onheadercontextmenuopen = (ctx) => {
+  console.log('Header menu for:', ctx.column.field);
+  console.log('Column index:', ctx.columnIndex);
+  console.log('Is frozen:', ctx.isFrozen);
+  console.log('Sort direction:', ctx.sortDirection);
+};`}
+				languageType="javascript"
+				titleText="Header Context Menu Open"
+			/>
+		</section>
+
+		<!-- Paste Callbacks -->
+		<section class="mb-5">
+			<h2 class="mb-4">onbeforepaste / onpaste</h2>
+			<p>Control and respond to paste operations from clipboard (Ctrl+V with TSV data). Use <code>detail.cancel = true</code> in <code>onbeforepaste</code> to prevent the paste.</p>
+			<CodeBlock
+				codeContent={`// Before paste - validate or cancel
+grid.onbeforepaste = (detail) => {
+  console.log('Parsed rows:', detail.parsedRows);       // 2D array of values
+  console.log('Target start:', detail.targetRowIndex, detail.targetColIndex);
+  console.log('New rows count:', detail.newRowsCount);
+  console.log('Has headers:', detail.hasHeaders);
+
+  // Set cancel to true to prevent paste
+  if (detail.newRowsCount > 100) {
+    detail.cancel = true;
+  }
+};
+
+// After paste completes
+grid.onpaste = (detail) => {
+  console.log('Total cells:', detail.totalCells);
+  console.log('Successful:', detail.successfulCells);
+  console.log('Failed:', detail.failedCells);
+  console.log('Skipped:', detail.skippedCells);
+  console.log('New rows created:', detail.newRowsCreated);
+};`}
+				languageType="javascript"
+				titleText="Paste Callbacks"
+			/>
+		</section>
+
+		<!-- ontoolbarclick alias -->
+		<section class="mb-5">
+			<h2 class="mb-4">onrowaction (legacy)</h2>
+			<p>Legacy alias for <code>ontoolbarclick</code>. Both work identically - prefer <code>ontoolbarclick</code> for new code.</p>
+			<CodeBlock
+				codeContent={`// Legacy (still works)
+grid.onrowaction = (detail) => { ... };
+
+// Preferred
+grid.ontoolbarclick = (detail) => { ... };`}
+				languageType="javascript"
+				titleText="Legacy Alias"
+			/>
+		</section>
+
 		<!-- Events vs Callbacks Reference -->
 		<section class="mb-5">
 			<h2 class="mb-4">Quick Reference</h2>
@@ -406,6 +558,15 @@ grid.summaryContentCallback = (ctx) => {
 									<tr><td><code>ontoolbarclick</code></td><td>Toolbar button clicked</td></tr>
 									<tr><td><code>oncontextmenuopen</code></td><td>Context menu opening</td></tr>
 									<tr><td><code>onrowdelete</code></td><td>Ctrl+Delete pressed</td></tr>
+									<tr><td><code>onrowfocus</code></td><td>Row focus changed</td></tr>
+									<tr><td><code>onrowlockchange</code></td><td>Row lock state changed</td></tr>
+									<tr><td><code>oncellselectionchange</code></td><td>Cell selection changed</td></tr>
+									<tr><td><code>oncolumnresize</code></td><td>Column resized</td></tr>
+									<tr><td><code>oncolumnreorder</code></td><td>Column reordered</td></tr>
+									<tr><td><code>onheadercontextmenuopen</code></td><td>Header menu opening</td></tr>
+									<tr><td><code>onbeforepaste</code></td><td>Before paste operation</td></tr>
+									<tr><td><code>onpaste</code></td><td>After paste completes</td></tr>
+									<tr><td><code>onrowaction</code></td><td>Toolbar click (legacy alias)</td></tr>
 								</tbody>
 							</table>
 						</div>
@@ -430,6 +591,14 @@ grid.summaryContentCallback = (ctx) => {
 									<tr><td><code>customStylesCallback</code></td><td>Returns CSS string</td></tr>
 									<tr><td><code>paginationLabelsCallback</code></td><td>Returns labels object</td></tr>
 									<tr><td><code>summaryContentCallback</code></td><td>Returns HTML string</td></tr>
+									<tr><td><code>fillDragCallback</code></td><td>Controls fill handle behavior</td></tr>
+									<tr><td><code>validationTooltipCallback</code></td><td>Returns HTML for validation tooltip</td></tr>
+									<tr><td><code>beforeCopyCallback</code></td><td>Transforms value before copy</td></tr>
+									<tr><td><code>beforePasteCallback</code></td><td>Processes value before paste</td></tr>
+									<tr><td><code>cellEditCallback</code></td><td>Takes over cell editing</td></tr>
+									<tr><td><code>shortcutsHelpContentCallback</code></td><td>Returns custom HTML for shortcuts overlay</td></tr>
+									<tr><td><code>idValueCallback</code></td><td>Returns row ID for identification</td></tr>
+									<tr><td><code>renderCallback</code></td><td>Imperative DOM rendering</td></tr>
 								</tbody>
 							</table>
 						</div>

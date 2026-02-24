@@ -204,7 +204,7 @@ const widths = grid.getColumnWidthsState();
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>resizable</code></td>
+							<td><code>isResizable</code></td>
 							<td><code>boolean</code></td>
 							<td><code>true</code></td>
 							<td>Whether column can be resized</td>

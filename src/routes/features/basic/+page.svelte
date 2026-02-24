@@ -107,19 +107,39 @@ grid.customStylesCallback = () => \`
 					<ul>
 						<li><code>field</code> - Property name in data</li>
 						<li><code>title</code> - Header text</li>
-						<li><code>width</code> - Fixed width</li>
-						<li><code>align</code> - left, center, right</li>
+						<li><code>width</code> / <code>minWidth</code> / <code>maxWidth</code></li>
+						<li><code>horizontalAlign</code> - left, center, right, justify</li>
+						<li><code>verticalAlign</code> - top, middle, bottom</li>
+						<li><code>headerHorizontalAlign</code> / <code>headerVerticalAlign</code></li>
+						<li><code>headerInfo</code> - tooltip icon next to header</li>
+						<li><code>textOverflow</code> - 'wrap' | 'ellipsis'</li>
+						<li><code>maxLines</code> - line-clamp (with textOverflow: 'wrap')</li>
+						<li><code>cellClass</code> - static CSS class per column</li>
 					</ul>
 
 					<h5>Display Options</h5>
 					<p><code>isStriped</code> - Alternate row colors</p>
 					<p><code>isHoverable</code> - Highlight on hover</p>
 					<p><code>isRowNumbersVisible</code> - Show row index</p>
+					<p><code>isStickyRowNumbers</code> - Freeze row numbers</p>
+					<p><code>isFilterable</code> - Enable column filtering</p>
+					<p><code>freezeColumns</code> - Freeze N columns from left</p>
+					<p><code>tableBorderOnly</code> - Border only around table</p>
+					<p><code>focusedRowIndex</code> - Track focused row</p>
+					<p><code>sortMode</code> - 'none' | 'single' | 'multi'</p>
 
-					<h5>Formatting & Styling</h5>
-					<p><code>formatCallback</code> - Transform display values</p>
-					<p><code>cellClassCallback</code> - Dynamic CSS classes</p>
-					<p><code>customStylesCallback</code> - Inject CSS</p>
+					<h5>Content Rendering</h5>
+					<p><code>formatCallback(value, row)</code> - Return display string</p>
+					<p><code>templateCallback(row)</code> - Return HTML string for the cell</p>
+					<p><code>renderCallback(row, element)</code> - Imperative DOM rendering into the element</p>
+
+					<h5>Styling</h5>
+					<p><code>cellClassCallback(value, row)</code> - Dynamic CSS classes</p>
+					<p><code>rowClassCallback(row, index)</code> - Dynamic row classes</p>
+					<p><code>customStylesCallback</code> - Inject CSS into shadow DOM</p>
+
+					<h5>Grid Modes</h5>
+					<p>Use <code>mode</code> for quick setup: <code>'read-only'</code>, <code>'excel'</code>, or <code>'input-matrix'</code></p>
 				</div>
 			{/snippet}
 		</ShowcaseSection>

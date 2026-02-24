@@ -41,6 +41,16 @@
 			infiniteGrid.items = generateData(50);
 			infiniteGrid.isInfiniteScrollEnabled = true;
 			infiniteGrid.hasMoreItems = true;
+
+			infiniteGrid.ondatarequest = (e: any) => {
+				if (e.trigger === 'loadMore') {
+					const currentCount = infiniteGrid.items.length;
+					const newItems = generateData(currentCount + 50).slice(currentCount);
+					infiniteGrid.items = [...infiniteGrid.items, ...newItems];
+					// Stop at 500 for demo
+					infiniteGrid.hasMoreItems = infiniteGrid.items.length < 500;
+				}
+			};
 		}
 	});
 </script>
@@ -155,6 +165,10 @@ grid.ondatarequest = async (e) => {
 				</div>
 			{/snippet}
 		</ShowcaseSection>
+
+		<div class="alert alert-warning mb-5">
+			<strong>Note:</strong> For infinite scroll to work, you must provide an <code>ondatarequest</code> handler that appends new items when <code>e.trigger === 'loadMore'</code>. Set <code>hasMoreItems = false</code> when there are no more items to load.
+		</div>
 
 		<!-- Performance Tips -->
 		<div class="mt-5">

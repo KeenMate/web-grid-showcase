@@ -142,8 +142,8 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td><code>align</code></td>
-							<td><code>'left' | 'center' | 'right'</code></td>
+							<td><code>horizontalAlign</code></td>
+							<td><code>'left' | 'center' | 'right' | 'justify'</code></td>
 							<td><code>'left'</code></td>
 							<td>Text alignment in cells</td>
 						</tr>
@@ -154,22 +154,70 @@
 							<td>How to handle text overflow</td>
 						</tr>
 						<tr>
-							<td><code>sortable</code></td>
+							<td><code>isSortable</code></td>
 							<td><code>boolean</code></td>
 							<td>inherits</td>
 							<td>Per-column sortable override. When <code>false</code>, hides sort options in header context menu.</td>
 						</tr>
 						<tr>
-							<td><code>filterable</code></td>
+							<td><code>isFilterable</code></td>
 							<td><code>boolean</code></td>
 							<td>inherits</td>
 							<td>Per-column filterable override</td>
 						</tr>
 						<tr>
-							<td><code>hidden</code></td>
+							<td><code>isHidden</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
 							<td>Hide column from display. Column stays in array and can be shown again via Column Visibility submenu.</td>
+						</tr>
+						<tr>
+							<td><code>verticalAlign</code></td>
+							<td><code>'top' | 'middle' | 'bottom'</code></td>
+							<td><code>'middle'</code></td>
+							<td>Vertical alignment of cell content</td>
+						</tr>
+						<tr>
+							<td><code>headerHorizontalAlign</code></td>
+							<td><code>'left' | 'center' | 'right' | 'justify'</code></td>
+							<td>inherits</td>
+							<td>Header text alignment</td>
+						</tr>
+						<tr>
+							<td><code>headerVerticalAlign</code></td>
+							<td><code>'top' | 'middle' | 'bottom'</code></td>
+							<td><code>'middle'</code></td>
+							<td>Header vertical alignment</td>
+						</tr>
+						<tr>
+							<td><code>maxLines</code></td>
+							<td><code>number</code></td>
+							<td>-</td>
+							<td>Maximum lines with CSS line-clamp (requires textOverflow: 'wrap')</td>
+						</tr>
+						<tr>
+							<td><code>isMovable</code></td>
+							<td><code>boolean</code></td>
+							<td><code>true</code></td>
+							<td>Whether column can be reordered</td>
+						</tr>
+						<tr>
+							<td><code>isResizable</code></td>
+							<td><code>boolean</code></td>
+							<td><code>true</code></td>
+							<td>Whether column can be resized</td>
+						</tr>
+						<tr>
+							<td><code>isFrozen</code></td>
+							<td><code>boolean</code></td>
+							<td><code>false</code></td>
+							<td>Pin column to the left side</td>
+						</tr>
+						<tr>
+							<td><code>fillDirection</code></td>
+							<td><code>'vertical' | 'all'</code></td>
+							<td>-</td>
+							<td>Per-column override for fill direction</td>
 						</tr>
 					</tbody>
 				</table>
@@ -177,9 +225,9 @@
 
 			<CodeBlock
 				codeContent={`grid.columns = [
-  { field: 'id', title: 'ID', align: 'center', isSortable: false },
+  { field: 'id', title: 'ID', horizontalAlign: 'center', isSortable: false },
   { field: 'name', title: 'Name', textOverflow: 'ellipsis' },
-  { field: 'salary', title: 'Salary', align: 'right' },
+  { field: 'salary', title: 'Salary', horizontalAlign: 'right' },
   { field: 'notes', title: 'Notes', textOverflow: 'wrap' },
   { field: 'internal', title: 'Internal', isHidden: true }  // Hidden by default
 ];
@@ -364,7 +412,7 @@ grid.customStylesCallback = () => \`
 							<td>Editor-specific configuration (see <a href="/api/editors">Editors API</a>)</td>
 						</tr>
 						<tr>
-							<td><code>showEditButton</code></td>
+							<td><code>isEditButtonVisible</code></td>
 							<td><code>boolean</code></td>
 							<td>Show edit button in cell</td>
 						</tr>
@@ -374,7 +422,7 @@ grid.customStylesCallback = () => \`
 							<td>Per-column dropdown toggle visibility</td>
 						</tr>
 						<tr>
-							<td><code>openDropdownOnEnter</code></td>
+							<td><code>shouldOpenDropdownOnEnter</code></td>
 							<td><code>boolean</code></td>
 							<td>Enter opens dropdown vs moves down</td>
 						</tr>
@@ -437,18 +485,23 @@ grid.customStylesCallback = () => \`
 					<tbody>
 						<tr>
 							<td><code>validateCallback</code></td>
-							<td><code>(value, row) => string | null</code></td>
+							<td><code>(value, row) => string | null | Promise&lt;string | null&gt;</code></td>
 							<td>Return error message or null if valid (deprecated)</td>
 						</tr>
 						<tr>
 							<td><code>beforeCommitCallback</code></td>
-							<td><code>(context) => ValidationResult</code></td>
+							<td><code>(context) => ValidationResult | boolean | string | null | undefined | Promise&lt;...&gt;</code></td>
 							<td>Validate and optionally transform value before commit</td>
 						</tr>
 						<tr>
 							<td><code>cellEditCallback</code></td>
 							<td><code>(context) => void</code></td>
 							<td>Take over cell editing with custom logic</td>
+						</tr>
+						<tr>
+							<td><code>validationTooltipCallback</code></td>
+							<td><code>(context) => string | null</code></td>
+							<td>Return custom HTML for validation tooltip (column-level override)</td>
 						</tr>
 					</tbody>
 				</table>
@@ -578,7 +631,7 @@ const columns: Column<Employee>[] = [
     field: 'id',
     title: 'ID',
     width: '60px',
-    align: 'center',
+    horizontalAlign: 'center',
     isEditable: false
   },
   {
@@ -618,7 +671,7 @@ const columns: Column<Employee>[] = [
     field: 'salary',
     title: 'Salary',
     width: '100px',
-    align: 'right',
+    horizontalAlign: 'right',
     editor: 'number',
     formatCallback: (v) => '$' + v.toLocaleString(),
     editorOptions: { min: 0, step: 1000 },
@@ -635,7 +688,7 @@ const columns: Column<Employee>[] = [
     field: 'active',
     title: 'Active',
     width: '80px',
-    align: 'center',
+    horizontalAlign: 'center',
     editor: 'checkbox'
   }
 ];

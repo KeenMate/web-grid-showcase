@@ -130,8 +130,8 @@ grid.columns = [
 
 			{#snippet descriptionContent()}
 				<div class="prose small">
-					<h5>Click Behavior</h5>
-					<p>Click any column header to sort:</p>
+					<h5>Sort Behavior</h5>
+					<p>Click the sort indicator in column headers to sort:</p>
 					<ul>
 						<li>First click: Ascending order</li>
 						<li>Second click: Descending order</li>
@@ -330,5 +330,29 @@ grid.ondatarequest = async (e) => {
 				</div>
 			{/snippet}
 		</ShowcaseSection>
+		<!-- Sort Behavior Notes -->
+		<div class="mt-5">
+			<h2 class="mb-4">Sort Behavior</h2>
+			<div class="alert alert-info">
+				<h5>Sort Indicator vs Header Click</h5>
+				<p>Sorting is triggered by clicking the <strong>sort indicator</strong> (arrow icon) in the column header, not by clicking the header text itself.</p>
+				<p>Clicking the header body now <strong>selects the column</strong> (when cell selection is enabled). This matches Excel behavior where headers are used for selection.</p>
+			</div>
+
+			<h4>Multi-Sort via Context Menu</h4>
+			<p>You can also sort columns via the header context menu using predefined actions:</p>
+
+			<CodeBlock
+				codeContent={`grid.headerContextMenu = [
+  'sortAsc',         // Sort ascending
+  'sortDesc',        // Sort descending
+  'clearSort',       // Remove sort from column
+  'hideColumn',      // Hide column
+  'columnVisibility' // Show/hide columns submenu
+];`}
+				languageType="javascript"
+				titleText="Header Context Menu Sort Actions"
+			/>
+		</div>
 	</div>
 </DocLayout>

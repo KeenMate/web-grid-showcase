@@ -167,11 +167,15 @@ grid.fillDragCallback = ({ sourceCell, targetCells, direction }) => {
 					<div class="card h-100">
 						<div class="card-header">Text / Autocomplete</div>
 						<div class="card-body">
-							<p class="card-text">Accepts any value. Use <code>onfilldrag</code> callback for custom validation.</p>
+							<p class="card-text">Accepts any value. Use <code>fillDragCallback</code> for custom validation.</p>
 							<code>editor: 'text' | 'autocomplete'</code>
 						</div>
 					</div>
 				</div>
+			</div>
+
+			<div class="alert alert-info mt-3">
+				<strong>Custom Validation:</strong> Use the <code>fillDragCallback</code> to implement custom fill validation logic beyond the built-in type checks.
 			</div>
 		</section>
 
@@ -198,7 +202,7 @@ grid.fillDragCallback = ({ sourceCell, targetCells, direction }) => {
 							<td>Allowed fill directions (grid-level default)</td>
 						</tr>
 						<tr>
-							<td><code>onfilldrag</code></td>
+							<td><code>fillDragCallback</code></td>
 							<td><code>function</code></td>
 							<td>-</td>
 							<td>Callback before fill - return false to cancel</td>
@@ -258,6 +262,19 @@ grid.fillDragCallback = ({ sourceCell, targetCells, direction }) => {
 					<li>Draft row values (recently edited) are used as source values</li>
 					<li>Drag threshold (5px) prevents accidental fill on click</li>
 					<li><code>onrowchange</code> fires for each modified cell after fill completes</li>
+				</ul>
+			</div>
+		</section>
+
+		<!-- Behavior Notes -->
+		<section class="mb-5">
+			<h2 class="mb-4">Behavior Notes</h2>
+			<div class="alert alert-info">
+				<h5>Fill Handle Interactions</h5>
+				<ul class="mb-0">
+					<li><strong>Escape cancels:</strong> Press Escape during a fill drag to cancel the operation</li>
+					<li><strong>Row locking:</strong> Locked rows are automatically skipped during fill operations</li>
+					<li><strong>Direction:</strong> Use <code>fillDirection</code> column property to restrict fill to specific directions (<code>'vertical'</code> or <code>'all'</code>)</li>
 				</ul>
 			</div>
 		</section>

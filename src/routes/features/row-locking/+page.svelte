@@ -429,6 +429,37 @@ socket.on('row-unlocked', ({ id }) => {
 							<td><code>(row, lockInfo) => boolean</code></td>
 							<td>Custom permission check (when behavior='callback')</td>
 						</tr>
+						<tr>
+							<td><code>rowLocking.lockTooltipCallback</code></td>
+							<td><code>(lockInfo, row) => string</code></td>
+							<td>Custom HTML tooltip for locked rows (overrides default)</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<!-- Integration Notes -->
+		<section class="mb-5">
+			<h2 class="mb-4">Integration with Other Features</h2>
+			<div class="alert alert-info">
+				<h5>Row Locking Interactions</h5>
+				<ul class="mb-0">
+					<li><strong>Fill handle:</strong> Locked rows are automatically skipped during fill operations</li>
+					<li><strong>Paste:</strong> Paste operations respect row locking - locked rows are skipped</li>
+					<li><strong>Read-only toggles:</strong> Dropdown and date picker toggles are hidden on locked rows</li>
+				</ul>
+			</div>
+
+			<h4 class="mt-4">CSS Variables</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>--wg-row-locked-bg</code></td><td><code>rgba(0, 0, 0, 0.03)</code></td><td>Background for locked rows</td></tr>
+						<tr><td><code>--wg-row-locked-opacity</code></td><td><code>0.6</code></td><td>Opacity for locked row content</td></tr>
 					</tbody>
 				</table>
 			</div>

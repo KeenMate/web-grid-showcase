@@ -359,6 +359,7 @@
 					<p><code>dividerBefore</code> - Add separator</p>
 					<p><code>disabled</code> - Boolean or callback</p>
 					<p><code>visible</code> - Boolean or callback</p>
+					<p><code>children</code> - Array of sub-items (submenu)</p>
 				</div>
 			{/snippet}
 		</ShowcaseSection>
@@ -576,8 +577,8 @@ grid.contextMenuYOffset = ${yOffset};
 			{#snippet descriptionContent()}
 				<div class="prose small">
 					<h5>Offset Properties</h5>
-					<p><code>contextMenuXOffset</code> - Horizontal distance from click (default: 0)</p>
-					<p><code>contextMenuYOffset</code> - Vertical distance from click (default: 4)</p>
+					<p><code>contextMenuXOffset</code> - Horizontal distance from click (default: 8)</p>
+					<p><code>contextMenuYOffset</code> - Vertical distance from click (default: 0)</p>
 					<h5>Values</h5>
 					<ul>
 						<li>Positive X = menu appears right of cursor</li>
@@ -633,10 +634,9 @@ grid.contextMenuYOffset = ${yOffset};
   'hideColumn'
 ];
 
-// Callback before menu opens
+// Event when menu opens (fire-and-forget)
 grid.onheadercontextmenuopen = (ctx) => {
   console.log('Column:', ctx.column.field);
-  // Return false to prevent opening
 };`}
 					languageType="javascript"
 					titleText="Header Menu Config"
@@ -695,7 +695,7 @@ grid.onheadercontextmenuopen = (ctx) => {
 // - Hidden columns show unchecked
 // - Menu stays open for toggling
 
-// Columns use 'hidden' property:
+// Columns use 'isHidden' property:
 grid.columns = [
   { field: 'id', title: 'ID' },
   { field: 'name', title: 'Name', isHidden: true }
@@ -714,7 +714,7 @@ grid.columns = [
 						<li><strong>Stays open</strong> - Toggle multiple columns</li>
 						<li><strong>Reactive</strong> - Updates after each toggle</li>
 					</ul>
-					<h5>column.hidden Property</h5>
+					<h5>column.isHidden Property</h5>
 					<p>Hidden columns stay in the array but are excluded from rendering. They can be shown again via the submenu.</p>
 				</div>
 			{/snippet}
@@ -864,6 +864,67 @@ grid.headerContextMenu = [
 				</div>
 			{/snippet}
 		</ShowcaseSection>
+
+		<!-- Submenu Support -->
+		<section class="mb-5">
+			<h2 class="mb-4">Submenu Support</h2>
+			<p>Header context menu items can have submenus using the <code>children</code> property:</p>
+			<CodeBlock
+				codeContent={`grid.headerContextMenu = [
+  'sortAsc',
+  'sortDesc',
+  'clearSort',
+  '-',  // Separator
+  {
+    id: 'export',
+    label: 'Export',
+    children: [
+      { id: 'exportCsv', label: 'Export as CSV', onclick: (ctx) => exportCsv(ctx.column) },
+      { id: 'exportJson', label: 'Export as JSON', onclick: (ctx) => exportJson(ctx.column) }
+    ]
+  },
+  '-',
+  'columnVisibility',
+  'freezeColumn'
+];`}
+				languageType="javascript"
+				titleText="Submenu Example"
+			/>
+		</section>
+
+		<!-- Behavior Notes -->
+		<section class="mb-5">
+			<h2 class="mb-4">Behavior Notes</h2>
+			<div class="alert alert-secondary">
+				<ul class="mb-0">
+					<li><strong>Header filler:</strong> Right-clicking the empty space after the last column header also opens the header context menu</li>
+					<li><strong>Close on scroll:</strong> Context menus automatically close when the grid is scrolled</li>
+					<li><strong>Viewport awareness:</strong> Menus use <code>@floating-ui/dom</code> to stay within viewport bounds</li>
+				</ul>
+			</div>
+		</section>
+
+		<!-- Translatable Labels -->
+		<section class="mb-5">
+			<h2 class="mb-4">Translatable Labels</h2>
+			<p>Predefined context menu item labels can be customized via the <code>labels.contextMenu</code> property:</p>
+			<CodeBlock
+				codeContent={`grid.labels = {
+  contextMenu: {
+    sortAsc: 'Sort Ascending',
+    sortDesc: 'Sort Descending',
+    clearSort: 'Clear Sort',
+    hideColumn: 'Hide Column',
+    freezeColumn: 'Freeze Column',
+    unfreezeColumn: 'Unfreeze Column',
+    columnVisibility: 'Column Visibility',
+    showAll: 'Show All Columns'
+  }
+};`}
+				languageType="javascript"
+				titleText="Label Customization"
+			/>
+		</section>
 	</div>
 </DocLayout>
 

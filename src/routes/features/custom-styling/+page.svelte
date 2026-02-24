@@ -36,6 +36,8 @@
 			labelsGrid.items = employees;
 			labelsGrid.isPageable = true;
 			labelsGrid.pageSize = 2;
+			labelsGrid.sortMode = 'single';
+			labelsGrid.headerContextMenu = ['sortAsc', 'sortDesc', 'clearSort', 'hideColumn', 'columnVisibility'];
 			labelsGrid.labels = {
 				rowActions: 'Akce řádku',
 				inlineActionsHeader: 'Akce',
@@ -46,7 +48,19 @@
 				paginationLast: '⏭',
 				paginationPageInfo: 'Stránka {current} z {total}',
 				paginationItemCount: '{count} položek',
-				paginationPerPage: 'na stránku'
+				paginationPerPage: 'na stránku',
+				contextMenu: {
+					sortAsc: 'Řadit vzestupně',
+					sortDesc: 'Řadit sestupně',
+					clearSort: 'Zrušit řazení',
+					hideColumn: 'Skrýt sloupec',
+					freezeColumn: 'Zmrazit sloupec',
+					unfreezeColumn: 'Odzmrazit sloupec',
+					columnVisibility: 'Viditelnost sloupců',
+					showAll: 'Zobrazit vše'
+				},
+				dropdownNoOptions: 'Žádné možnosti',
+				dropdownSearching: 'Hledání...'
 			};
 		}
 	});
@@ -54,13 +68,13 @@
 
 <DocLayout
 	titleText="Custom Styling"
-	descriptionText="Customize appearance with 100+ CSS variables">
+	descriptionText="Customize appearance with 170+ CSS variables">
 
 	<div class="py-4">
 		<!-- Themed Grid -->
 		<ShowcaseSection
 			titleText="CS01 CSS Variables"
-			subtitleText="Override colors, headers, and cells with 100+ CSS custom properties"
+			subtitleText="Override colors, headers, and cells with 170+ CSS custom properties"
 			col1Title="Live Demo"
 			col2Title="Code"
 			col3Title="Key Variables">
@@ -135,7 +149,7 @@ web-grid {
 :root {
   --base-accent-color: #e91e63;
   --base-font-family: 'Inter', sans-serif;
-  --base-surface-1: #ffffff;
+  --base-main-bg: #ffffff;
   --base-text-color-1: #1f2937;
 }
 
@@ -166,17 +180,17 @@ web-grid {
 		<!-- CSS Variables Manifest -->
 		<ShowcaseSection
 			titleText="CS03 CSS Variables Manifest"
-			subtitleText="Machine-readable JSON manifest of all 155 CSS variables with categories"
+			subtitleText="Machine-readable JSON manifest of all 214 CSS variables with categories"
 			col1Title="What's Included"
 			col2Title="Code"
 			col3Title="Use Cases">
 
 			{#snippet demoContent()}
 				<div class="prose">
-					<p>The package includes a machine-readable manifest documenting all 155 CSS variables:</p>
+					<p>The package includes a machine-readable manifest documenting all 214 CSS variables:</p>
 					<ul>
-						<li><strong>34 base variables</strong> - <code>--base-*</code> consumed from theme layer</li>
-						<li><strong>121 component variables</strong> - <code>--wg-*</code> with category and usage</li>
+						<li><strong>36 base variables</strong> - <code>--base-*</code> consumed from theme layer</li>
+						<li><strong>178 component variables</strong> - <code>--wg-*</code> with category and usage</li>
 					</ul>
 					<p>Each variable includes its category and a description of what it controls in the UI.</p>
 				</div>
@@ -357,13 +371,20 @@ grid.labels = {
   keyboardShortcuts: 'Klávesové zkratky',
   paginationPageInfo: 'Stránka {current} z {total}',
   paginationItemCount: '{count} položek',
-  paginationPerPage: 'na stránku'
-};
-
-// Placeholder syntax:
-// {current} - current page number
-// {total} - total page count
-// {count} - total item count`}
+  paginationPerPage: 'na stránku',
+  // Context menu labels (sub-object)
+  contextMenu: {
+    sortAsc: 'Řadit vzestupně',
+    sortDesc: 'Řadit sestupně',
+    clearSort: 'Zrušit řazení',
+    hideColumn: 'Skrýt sloupec',
+    columnVisibility: 'Viditelnost sloupců',
+    showAll: 'Zobrazit vše'
+  },
+  // Dropdown labels
+  dropdownNoOptions: 'Žádné možnosti',
+  dropdownSearching: 'Hledání...'
+};`}
 					languageType="javascript"
 					titleText="Labels Configuration"
 				/>
@@ -383,6 +404,18 @@ grid.labels = {
 					<p><code>paginationPageInfo</code></p>
 					<p><code>paginationItemCount</code></p>
 					<p><code>paginationPerPage</code></p>
+					<h5>Context Menu Labels</h5>
+					<p><code>contextMenu.sortAsc</code></p>
+					<p><code>contextMenu.sortDesc</code></p>
+					<p><code>contextMenu.clearSort</code></p>
+					<p><code>contextMenu.hideColumn</code></p>
+					<p><code>contextMenu.freezeColumn</code></p>
+					<p><code>contextMenu.unfreezeColumn</code></p>
+					<p><code>contextMenu.columnVisibility</code></p>
+					<p><code>contextMenu.showAll</code></p>
+					<h5>Dropdown Labels</h5>
+					<p><code>dropdownNoOptions</code></p>
+					<p><code>dropdownSearching</code></p>
 				</div>
 			{/snippet}
 		</ShowcaseSection>
@@ -402,6 +435,26 @@ grid.labels = {
 							<tr><td><code>--wg-surface-2</code></td><td>Alternate background</td></tr>
 							<tr><td><code>--wg-border-color</code></td><td>Borders</td></tr>
 							<tr><td><code>--wg-danger-color</code></td><td>Error/danger</td></tr>
+							<tr><td><code>--wg-overlay-bg</code></td><td>Overlay background</td></tr>
+						</tbody>
+					</table>
+
+					<h5>Selection & Focus</h5>
+					<table class="table table-sm small">
+						<tbody>
+							<tr><td><code>--wg-focus-*</code></td><td>Focus ring/outline styles</td></tr>
+							<tr><td><code>--wg-selection-border-width</code></td><td>Selection border width</td></tr>
+							<tr><td><code>--wg-selection-border-color</code></td><td>Selection border color</td></tr>
+							<tr><td><code>--wg-row-focus-bg</code></td><td>Focused row background</td></tr>
+							<tr><td><code>--wg-row-focus-row-number-bg</code></td><td>Focused row number background</td></tr>
+						</tbody>
+					</table>
+
+					<h5>Row Locking</h5>
+					<table class="table table-sm small">
+						<tbody>
+							<tr><td><code>--wg-row-locked-bg</code></td><td>Locked row background</td></tr>
+							<tr><td><code>--wg-row-locked-opacity</code></td><td>Locked row content opacity</td></tr>
 						</tbody>
 					</table>
 				</div>
@@ -413,6 +466,8 @@ grid.labels = {
 							<tr><td><code>--wg-spacing-*</code></td><td>Spacing (xs, sm, md, lg, xl)</td></tr>
 							<tr><td><code>--wg-font-size-*</code></td><td>Font sizes</td></tr>
 							<tr><td><code>--wg-border-radius-*</code></td><td>Border radii</td></tr>
+							<tr><td><code>--wg-row-number-width</code></td><td>Row number column width</td></tr>
+							<tr><td><code>--wg-actions-column-width</code></td><td>Inline actions column width</td></tr>
 						</tbody>
 					</table>
 					<h5>Components</h5>
@@ -424,7 +479,23 @@ grid.labels = {
 							<tr><td><code>--wg-pagination-*</code></td><td>Pagination</td></tr>
 							<tr><td><code>--wg-toolbar-*</code></td><td>Row toolbar</td></tr>
 							<tr><td><code>--wg-editor-*</code></td><td>Editor/input styling</td></tr>
-							<tr><td><code>--wg-focus-*</code></td><td>Focus states</td></tr>
+							<tr><td><code>--wg-checkbox-scale</code></td><td>Checkbox size scaling</td></tr>
+							<tr><td><code>--wg-dropdown-*</code></td><td>Dropdown styling</td></tr>
+							<tr><td><code>--wg-tooltip-*</code></td><td>Tooltip styling</td></tr>
+							<tr><td><code>--wg-frozen-column-*</code></td><td>Frozen column shadow</td></tr>
+						</tbody>
+					</table>
+
+					<h5>Additional Variables</h5>
+					<table class="table table-sm small">
+						<tbody>
+							<tr><td><code>--wg-dialog-shadow</code></td><td>Dialog box shadow</td></tr>
+							<tr><td><code>--wg-tooltip-max-width</code></td><td>Tooltip max width</td></tr>
+							<tr><td><code>--wg-tooltip-arrow-size</code></td><td>Tooltip arrow size</td></tr>
+							<tr><td><code>--wg-editor-hitbox-height</code></td><td>Editor clickable area height</td></tr>
+							<tr><td><code>--wg-toolbar-divider-height</code></td><td>Toolbar group divider height</td></tr>
+							<tr><td><code>--wg-toolbar-icon-size</code></td><td>Toolbar button icon size</td></tr>
+							<tr><td><code>--wg-dropdown-max-height</code></td><td>Dropdown max height</td></tr>
 						</tbody>
 					</table>
 				</div>

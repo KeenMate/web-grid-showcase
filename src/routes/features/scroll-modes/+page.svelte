@@ -266,5 +266,37 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Additional Scroll Properties -->
+		<section class="mb-5">
+			<h2 class="mb-4">Additional Properties</h2>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>isScrollable</code></td>
+							<td><code>boolean</code></td>
+							<td><code>false</code></td>
+							<td>Constrain grid height to viewport. Enables vertical scrolling within a calculated max-height.</td>
+						</tr>
+						<tr>
+							<td><code>scrollMaxHeight</code></td>
+							<td><code>string</code></td>
+							<td>-</td>
+							<td>Custom max-height for the grid container (e.g., <code>'500px'</code>, <code>'80vh'</code>).</td>
+						</tr>
+						<tr>
+							<td><code>tableBorderOnly</code></td>
+							<td><code>boolean</code></td>
+							<td><code>false</code></td>
+							<td>Only show border around the table, not the outer container (pagination/toolbar area).</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
 	</div>
 </DocLayout>

@@ -261,6 +261,46 @@ interface ColumnOrderState {
 				</ul>
 			</div>
 		</section>
+
+		<!-- Column Drag Selection -->
+		<section class="mb-5">
+			<h2 class="mb-4">Column Drag Selection</h2>
+			<p>Column headers support drag-to-select for selecting entire columns:</p>
+			<ul>
+				<li>When <code>isColumnReorderAllowed = false</code>: Dragging column headers selects columns instead of reordering them.</li>
+				<li>When <code>isColumnReorderAllowed = true</code>: Hold <kbd>Shift</kbd> and drag column headers to select columns instead of reordering.</li>
+			</ul>
+			<CodeBlock
+				codeContent={`// Option 1: Disable reordering → drag always selects
+grid.isColumnReorderAllowed = false;
+grid.cellSelectionMode = 'click';
+
+// Option 2: Reorder enabled → Shift+drag selects
+grid.isColumnReorderAllowed = true;
+grid.cellSelectionMode = 'click';
+// Normal drag = reorder, Shift+drag = select
+
+// Ctrl+drag selects multiple columns
+// Shift+drag selects a range of columns`}
+				languageType="javascript"
+				titleText="Column Drag Selection"
+			/>
+		</section>
+
+		<!-- Per-Column Opt-Out -->
+		<section class="mb-5">
+			<h2 class="mb-4">Per-Column Opt-Out</h2>
+			<p>Use the <code>isMovable</code> column property to prevent specific columns from being reordered:</p>
+			<CodeBlock
+				codeContent={`grid.columns = [
+  { field: 'id', title: 'ID', isMovable: false },  // Cannot be dragged
+  { field: 'name', title: 'Name' },                 // Can be reordered
+  { field: 'email', title: 'Email' }                // Can be reordered
+];`}
+				languageType="javascript"
+				titleText="Column isMovable Property"
+			/>
+		</section>
 	</div>
 </DocLayout>
 

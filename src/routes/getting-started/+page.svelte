@@ -35,12 +35,12 @@
 
 			{#snippet controlsContent()}
 				<CodeBlock
-					codeContent={`<!-- UMD Build -->
-<script src="https://unpkg.com/@keenmate/web-grid/dist/web-grid.umd.js"></script>
+					codeContent={`<!-- UMD Build (pinned version) -->
+<script src="https://unpkg.com/@keenmate/web-grid@1.0.0/dist/web-grid.umd.js"></script>
 
 <!-- ES Module -->
 <script type="module">
-  import '@keenmate/web-grid';
+  import 'https://unpkg.com/@keenmate/web-grid@1.0.0/dist/web-grid.es.js';
 </script>`}
 					languageType="html"
 					titleText="CDN Usage"
@@ -104,7 +104,7 @@ grid.columns = [
   {
     field: 'salary',
     title: 'Salary',
-    align: 'right',
+    horizontalAlign: 'right',
     formatCallback: (v) => '$' + v.toLocaleString()
   }
 ];
@@ -117,8 +117,8 @@ grid.items = [
 ];
 
 // Enable features
-grid.isSortable = true;
-grid.pageable = true;
+grid.sortMode = 'single';
+grid.isPageable = true;
 grid.pageSize = 10;`}
 					languageType="javascript"
 					titleText="JavaScript API"
@@ -135,9 +135,13 @@ grid.pageSize = 10;`}
 					<p>
 						Set <code>items</code> to an array of objects. The grid automatically renders rows based on your column definitions.
 					</p>
-					<h4>Formatting</h4>
+					<h4>Grid Modes</h4>
 					<p>
-						Use <code>formatCallback</code> to transform displayed values (e.g., currency, dates).
+						Use the <code>mode</code> property for quick configuration: <code>'read-only'</code> for display, <code>'excel'</code> for spreadsheet editing, or <code>'input-matrix'</code> for data entry forms.
+					</p>
+					<h4>Paste Support</h4>
+					<p>
+						In editable modes, <kbd>Ctrl+V</kbd> pastes TSV data from Excel/Sheets into the grid with validation.
 					</p>
 				</div>
 			{/snippet}
@@ -193,13 +197,14 @@ grid.columns = [
 			{#snippet controlsContent()}
 				<CodeBlock
 					codeContent={`// Available editor types:
-'text'        // Text input with maxLength, placeholder
-'number'      // Numeric with min, max, step
-'checkbox'    // Boolean toggle
-'select'      // Static dropdown
-'combobox'    // Filterable dropdown
-'date'        // Calendar picker
+'text'         // Text input with maxLength, placeholder
+'number'       // Numeric with min, max, step
+'checkbox'     // Boolean toggle
+'select'       // Static dropdown
+'combobox'     // Filterable dropdown
+'date'         // Calendar picker
 'autocomplete' // Async search dropdown
+'custom'       // Custom editor via cellEditCallback
 
 // Select/combobox example:
 {
@@ -264,10 +269,12 @@ grid.onvalidationerror = (e) => {
     { id: 2, name: 'Item 2' }
   ];
 
-  $: if (gridElement) {
-    gridElement.columns = columns;
-    gridElement.items = items;
-  }
+  $effect(() => {
+    if (gridElement) {
+      gridElement.columns = columns;
+      gridElement.items = items;
+    }
+  });
 </script>
 
 <web-grid bind:this={gridElement} />`}
@@ -288,7 +295,7 @@ function DataGrid({ data, columns }) {
     if (gridRef.current) {
       gridRef.current.columns = columns;
       gridRef.current.items = data;
-      gridRef.current.isSortable = true;
+      gridRef.current.sortMode = 'single';
     }
   }, [data, columns]);
 
@@ -320,7 +327,7 @@ const gridRef = ref(null);
 onMounted(() => {
   gridRef.value.columns = props.columns;
   gridRef.value.items = props.data;
-  gridRef.value.isSortable = true;
+  gridRef.value.sortMode = 'single';
 });
 
 watch(() => props.data, (newData) => {
@@ -354,7 +361,7 @@ export class DataGridComponent {
   ngAfterViewInit() {
     this.gridRef.nativeElement.columns = this.columns;
     this.gridRef.nativeElement.items = this.data;
-    this.gridRef.nativeElement.isSortable = true;
+    this.gridRef.nativeElement.sortMode = 'single';
   }
 }`}
 						languageType="typescript"
@@ -441,7 +448,7 @@ grid.onrowchange = (e) => {
 						<div class="card-body">
 							<h3 class="h5 card-title">Styling Guide</h3>
 							<p class="card-text">
-								Customize the appearance with 100+ CSS variables and theme integration.
+								Customize the appearance with 170+ CSS variables and theme integration.
 							</p>
 							<a href="/features/custom-styling" class="btn btn-primary">
 								Custom Styling

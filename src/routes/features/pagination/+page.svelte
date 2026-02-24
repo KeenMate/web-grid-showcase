@@ -470,5 +470,37 @@ grid.ondatarequest = async (e) => {
 				</div>
 			{/snippet}
 		</ShowcaseSection>
+
+		<!-- Additional Pagination Properties -->
+		<section class="mb-5">
+			<h2 class="mb-4">Additional Properties</h2>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>paginationMode</code></td>
+							<td><code>'client' | 'server'</code></td>
+							<td><code>'client'</code></td>
+							<td>Client-side pagination handles slicing automatically. Server mode requires <code>ondatarequest</code> handler and <code>totalItems</code>.</td>
+						</tr>
+						<tr>
+							<td><code>showPagination</code></td>
+							<td><code>boolean | 'auto'</code></td>
+							<td><code>true</code></td>
+							<td>Show pagination controls. <code>'auto'</code> shows only when items exceed page size.</td>
+						</tr>
+						<tr>
+							<td><code>totalItems</code></td>
+							<td><code>number</code></td>
+							<td>-</td>
+							<td>Total item count for server-side pagination (required when <code>paginationMode: 'server'</code>).</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
 	</div>
 </DocLayout>

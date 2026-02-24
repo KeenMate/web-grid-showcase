@@ -32,7 +32,9 @@ const config: PartialDocsConfig = {
 				children: [
 					{ label: 'Basic Usage', href: '/features/basic' },
 					{ label: 'Sorting', href: '/features/sorting' },
+					{ label: 'Filtering', href: '/features/filtering' },
 					{ label: 'Pagination', href: '/features/pagination' },
+					{ label: 'Grid Modes', href: '/features/grid-modes' },
 					{ label: 'Editing', href: '/features/editing' },
 					{ label: 'Fill Handle', href: '/features/fill-handle' },
 					{ label: 'Column Resizing', href: '/features/column-resize' },
@@ -45,7 +47,8 @@ const config: PartialDocsConfig = {
 					{ label: 'Keyboard Navigation', href: '/features/keyboard-navigation' },
 					{ label: 'Custom Styling', href: '/features/custom-styling' },
 					{ label: 'Row Locking', href: '/features/row-locking' },
-					{ label: 'Selection', href: '/features/row-selection' }
+					{ label: 'Selection', href: '/features/row-selection' },
+					{ label: 'Summary Bar', href: '/features/summary' }
 				]
 			},
 			{

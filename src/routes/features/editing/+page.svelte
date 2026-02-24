@@ -153,7 +153,7 @@
 
 <DocLayout
 	titleText="Editing"
-	descriptionText="In-cell editing with 7 editor types and validation">
+	descriptionText="In-cell editing with 8 editor types and validation">
 
 	<div class="py-4">
 		<!-- Text & Number Editors -->
@@ -213,8 +213,9 @@ grid.columns = [
 					<h5>Edit Triggers</h5>
 					<ul>
 						<li><code>click</code> - Single click</li>
-						<li><code>dblclick</code> - Double click</li>
+						<li><code>dblclick</code> - Double click (default)</li>
 						<li><code>navigate</code> - Excel-like (type to edit)</li>
+						<li><code>button</code> - Edit button in cell</li>
 						<li><code>always</code> - Always in edit mode</li>
 					</ul>
 					<h5>Edit Start Selection</h5>
@@ -227,7 +228,7 @@ grid.columns = [
 					<h5>Text Options</h5>
 					<p><code>maxLength</code>, <code>placeholder</code>, <code>pattern</code></p>
 					<h5>Number Options</h5>
-					<p><code>min</code>, <code>max</code>, <code>step</code>, <code>decimalPlaces</code></p>
+					<p><code>min</code>, <code>max</code>, <code>step</code>, <code>decimalPlaces</code>, <code>allowNegative</code></p>
 				</div>
 			{/snippet}
 		</ShowcaseSection>
@@ -468,6 +469,273 @@ grid.validationTooltipCallback = ({ field, error, value }) => {
 							<td><code>autocomplete</code></td>
 							<td>Async search</td>
 							<td>searchCallback, minSearchLength, debounceMs</td>
+						</tr>
+						<tr>
+							<td><code>custom</code></td>
+							<td>Custom editor</td>
+							<td>cellEditCallback (commit/cancel)</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- Grid Modes -->
+		<div class="mt-5">
+			<h2 class="mb-4">Grid Modes</h2>
+			<p>The <code>mode</code> property sets sensible defaults for common use cases:</p>
+
+			<div class="table-responsive mb-4">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Mode</th>
+							<th>Edit Trigger</th>
+							<th>Cell Selection</th>
+							<th>Best For</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>read-only</code></td>
+							<td>None (not editable)</td>
+							<td>Click selects cells</td>
+							<td>Data display, reporting</td>
+						</tr>
+						<tr>
+							<td><code>excel</code></td>
+							<td><code>navigate</code> (type to edit)</td>
+							<td>Click selects cells</td>
+							<td>Spreadsheet-like editing</td>
+						</tr>
+						<tr>
+							<td><code>input-matrix</code></td>
+							<td><code>always</code> (always editing)</td>
+							<td>Shift+Click selects cells</td>
+							<td>Data entry forms</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<CodeBlock
+				codeContent={`// Use mode instead of setting individual properties
+grid.mode = 'excel';
+// Equivalent to:
+// grid.isEditable = true;
+// grid.editTrigger = 'navigate';
+// grid.dropdownToggleVisibility = 'always';
+// grid.shouldShowDropdownOnFocus = false;
+// grid.cellSelectionMode = 'click';
+
+grid.mode = 'input-matrix';
+// Equivalent to:
+// grid.isEditable = true;
+// grid.editTrigger = 'always';
+// grid.dropdownToggleVisibility = 'always';
+// grid.shouldShowDropdownOnFocus = true;
+// grid.cellSelectionMode = 'shift';
+
+grid.mode = 'read-only';
+// Equivalent to:
+// grid.isEditable = false;
+// grid.dropdownToggleVisibility = 'on-focus';
+// grid.cellSelectionMode = 'click';`}
+				languageType="javascript"
+				titleText="Grid Modes"
+			/>
+		</div>
+
+		<!-- Additional Editor Examples -->
+		<div class="mt-5">
+			<h2 class="mb-4">Additional Editor Examples</h2>
+
+			<h4>Checkbox Editor</h4>
+			<CodeBlock
+				codeContent={`{
+  field: 'active',
+  title: 'Active',
+  editor: 'checkbox',
+  editorOptions: {
+    trueValue: 'Y',     // Custom true value (default: true)
+    falseValue: 'N'     // Custom false value (default: false)
+  }
+}
+
+// Always show checkbox (no need to enter edit mode)
+grid.isCheckboxAlwaysEditable = true;
+
+// Scale checkbox size via CSS variable
+// --wg-checkbox-scale: 1.2;`}
+				languageType="javascript"
+				titleText="Checkbox Editor"
+			/>
+
+			<h4 class="mt-4">Combobox Editor</h4>
+			<CodeBlock
+				codeContent={`{
+  field: 'country',
+  title: 'Country',
+  editor: 'combobox',
+  editorOptions: {
+    options: [
+      { value: 'US', label: 'United States', icon: '🇺🇸', group: 'Americas' },
+      { value: 'CA', label: 'Canada', icon: '🇨🇦', group: 'Americas' },
+      { value: 'GB', label: 'United Kingdom', icon: '🇬🇧', group: 'Europe' }
+    ],
+    iconMember: 'icon',
+    groupMember: 'group',
+    placeholder: 'Search countries...',
+    allowEmpty: true,
+    emptyLabel: '-- None --'
+  }
+}`}
+				languageType="javascript"
+				titleText="Combobox Editor"
+			/>
+
+			<h4 class="mt-4">Autocomplete Editor</h4>
+			<CodeBlock
+				codeContent={`{
+  field: 'customerId',
+  title: 'Customer',
+  editor: 'autocomplete',
+  editorOptions: {
+    searchCallback: async (query, row, signal) => {
+      const res = await fetch(
+        \`/api/customers?q=\${encodeURIComponent(query)}\`,
+        { signal }  // Support cancellation
+      );
+      return await res.json();
+    },
+    initialOptions: [
+      { value: 1, label: 'Recent Customer 1' }
+    ],
+    minSearchLength: 2,
+    debounceMs: 300,
+    subtitleMember: 'email',
+    multiple: false
+  }
+}`}
+				languageType="javascript"
+				titleText="Autocomplete Editor"
+			/>
+
+			<h4 class="mt-4">Date Editor</h4>
+			<CodeBlock
+				codeContent={`{
+  field: 'startDate',
+  title: 'Start Date',
+  editor: 'date',
+  editorOptions: {
+    minDate: new Date(),
+    maxDate: '2025-12-31',
+    dateFormat: 'DD.MM.YYYY',
+    outputFormat: 'iso'  // 'date' | 'iso' | 'timestamp'
+  }
+}`}
+				languageType="javascript"
+				titleText="Date Editor"
+			/>
+
+			<h4 class="mt-4">Custom Editor</h4>
+			<CodeBlock
+				codeContent={`{
+  field: 'color',
+  title: 'Color',
+  editor: 'custom',
+  cellEditCallback: (ctx) => {
+    // ctx.value - current value
+    // ctx.row - row data
+    // ctx.commit(newValue) - save
+    // ctx.cancel() - discard
+
+    const picker = document.createElement('input');
+    picker.type = 'color';
+    picker.value = ctx.value || '#000000';
+
+    picker.addEventListener('change', () => {
+      ctx.commit(picker.value);
+    });
+    picker.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') ctx.cancel();
+    });
+    picker.click();
+  }
+}
+
+// With edit button visible
+{
+  field: 'address',
+  title: 'Address',
+  editor: 'custom',
+  isEditButtonVisible: true,
+  cellEditCallback: (ctx) => {
+    openAddressModal(ctx.value, (result) => {
+      result ? ctx.commit(result) : ctx.cancel();
+    });
+  }
+}`}
+				languageType="javascript"
+				titleText="Custom Editor"
+			/>
+		</div>
+
+		<!-- Shared Dropdown Options -->
+		<div class="mt-5">
+			<h2 class="mb-4">Shared Dropdown Options</h2>
+			<p>These <code>editorOptions</code> work with select, combobox, and autocomplete editors:</p>
+
+			<div class="table-responsive mb-4">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Option</th><th>Description</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><code>loadOptions</code></td><td>Async function to load options dynamically: <code>(row, field) => Promise&lt;Option[]&gt;</code></td></tr>
+						<tr><td><code>optionsLoadTrigger</code></td><td>When to load: <code>'immediate'</code> | <code>'oneditstart'</code> | <code>'ondropdownopen'</code></td></tr>
+						<tr><td><code>renderOptionCallback</code></td><td>Custom HTML for each option: <code>(option, ctx) => string</code></td></tr>
+						<tr><td><code>dropdownMinWidth</code></td><td>Minimum width for dropdown panel</td></tr>
+						<tr><td><code>subtitleMember</code></td><td>Property name for subtitle text below option label</td></tr>
+						<tr><td><code>disabledMember</code></td><td>Property name for disabled state on options</td></tr>
+						<tr><td><code>onselect</code></td><td>Callback when an option is selected: <code>(option, row) => void</code></td></tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- Dropdown Configuration -->
+		<div class="mt-5">
+			<h2 class="mb-4">Dropdown Configuration</h2>
+			<p>These properties control dropdown behavior for select, combobox, and autocomplete editors:</p>
+
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr>
+							<th>Property</th>
+							<th>Level</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>dropdownToggleVisibility</code></td>
+							<td>Grid / Column</td>
+							<td><code>'always'</code></td>
+							<td><code>'always'</code> shows toggle arrow even when not editing; <code>'on-focus'</code> shows only when cell is focused</td>
+						</tr>
+						<tr>
+							<td><code>shouldShowDropdownOnFocus</code></td>
+							<td>Grid</td>
+							<td><code>true</code></td>
+							<td>Auto-open dropdown when cell receives focus</td>
+						</tr>
+						<tr>
+							<td><code>shouldOpenDropdownOnEnter</code></td>
+							<td>Grid / Column</td>
+							<td><code>false</code></td>
+							<td>Enter key opens dropdown (vs moving to next row)</td>
 						</tr>
 					</tbody>
 				</table>

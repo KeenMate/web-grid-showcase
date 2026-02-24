@@ -311,5 +311,69 @@ grid.ondatarequest = (e) => {
 				</div>
 			</div>
 		</div>
+
+		<!-- Additional Keyboard Features -->
+		<section class="mb-5">
+			<h2 class="mb-4">Additional Keyboard Features</h2>
+
+			<h4>Clipboard Operations</h4>
+			<div class="table-responsive mb-4">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Shortcut</th><th>Action</th><th>Context</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><kbd>Ctrl+C</kbd></td><td>Copy selected cells/rows to clipboard</td><td>Cell or row selection active</td></tr>
+						<tr><td><kbd>Ctrl+V</kbd></td><td>Paste TSV data from clipboard</td><td>Editable grid with cell selection</td></tr>
+						<tr><td><kbd>Ctrl+A</kbd></td><td>Select all cells</td><td>Navigate mode</td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4>Column Selection</h4>
+			<div class="table-responsive mb-4">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Shortcut</th><th>Action</th><th>Context</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><kbd>Click header</kbd></td><td>Select entire column</td><td>Cell selection enabled</td></tr>
+						<tr><td><kbd>Ctrl+Click header</kbd></td><td>Add/remove column from selection</td><td>Multi-column selection</td></tr>
+						<tr><td><kbd>Shift+Click header</kbd></td><td>Select range of columns</td><td>Extends from last selected column</td></tr>
+						<tr><td><kbd>Drag header</kbd></td><td>Select columns by dragging</td><td>When <code>isColumnReorderAllowed = false</code></td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4>Checkbox Editor</h4>
+			<div class="table-responsive mb-4">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Key</th><th>Action</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><kbd>Space</kbd></td><td>Toggle checkbox value</td></tr>
+						<tr><td><kbd>Enter</kbd> / <kbd>Tab</kbd></td><td>Commit and move to next cell</td></tr>
+						<tr><td><kbd>Escape</kbd></td><td>Discard change and exit edit</td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<h4>Date Picker</h4>
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead class="table-light">
+						<tr><th>Key</th><th>Action</th></tr>
+					</thead>
+					<tbody>
+						<tr><td><kbd>Arrow Keys</kbd></td><td>Navigate between days</td></tr>
+						<tr><td><kbd>Page Up/Down</kbd></td><td>Previous/next month</td></tr>
+						<tr><td><kbd>Home/End</kbd></td><td>First/last day of month</td></tr>
+						<tr><td><kbd>Enter</kbd></td><td>Select date and commit</td></tr>
+						<tr><td><kbd>Escape</kbd></td><td>Close picker without selecting</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
 	</div>
 </DocLayout>
