@@ -5,7 +5,50 @@ All notable changes to web-grid-showcase will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - rc14 Showcase Update
+## [Unreleased] - v1.0.4 Showcase Update
+
+### Added
+
+- **Dirty Indicator** - `isDirtyIndicatorVisible` property in API Component Display Properties
+- **Dirty Indicator methods** - `isCellDirty()`, `isRowDirty()` in API Component Draft Management Methods
+- **Dirty Indicator CSS variables** - 4 new variables in Custom Styling CSS Variables Reference
+
+### Changed
+
+- **CDN URLs** pinned to `@1.0.4` in Getting Started page
+
+---
+
+## [Unreleased] - v1.0.0 Showcase Update
+
+Comprehensive update bringing the showcase up to date with `@keenmate/web-grid@1.0.0`.
+
+### Added
+
+- **Filtering feature page** (`/features/filtering`) - New dedicated page for filtering
+  - FI01: Basic Filtering demo with `isFilterable = true`
+  - FI02: Per-Column Control demo with `isFilterable: false` on specific columns
+  - CSS Variables section for filter input styling
+  - API Reference table (grid-level and column-level `isFilterable`)
+- **Summary Bar feature page** (`/features/summary`) - New dedicated page for summary bar
+  - SU01: Client-Side Summary with `summaryContentCallback` and position controls
+  - SU02: Server-Side Summary with `summaryMetadata` for server-provided aggregates
+  - API Reference table (`summaryPosition`, `summaryContentCallback`, `summaryMetadata`, `isSummaryInline`)
+- **Navigation** - Added Filtering and Summary Bar to sidebar navigation
+
+### Changed
+
+- **Updated @keenmate/web-grid** dependency from local file reference to `^1.0.0` (npm)
+
+### Fixed
+
+- **Editing page (ED01)** - `editStartSelection` default corrected from `'selectAll'` to `'mousePosition'` in both CodeBlock example and description list
+- **Selection page (CS01, Copy)** - Replaced invalid `mode = 'navigate'` with correct `isEditable = true; editTrigger = 'navigate'` (`'navigate'` is not a valid grid mode)
+- **Context Menu page (CM04)** - `contextMenuYOffset` default corrected from `4` to `0`
+
+---
+
+## [0.0.4] - rc14 Showcase Update
 
 Comprehensive update bringing the showcase up to date with `@keenmate/web-grid@1.0.0-rc14`.
 

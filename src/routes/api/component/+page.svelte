@@ -106,6 +106,12 @@ grid.columns = [
 							<td>Show row number column on the left</td>
 						</tr>
 						<tr>
+							<td><code>isDirtyIndicatorVisible</code></td>
+							<td><code>boolean</code></td>
+							<td><code>true</code></td>
+							<td>Show visual indicator on cells with unsaved changes (orange tint + corner triangle). Row numbers get an orange left border when any cell in the row is dirty</td>
+						</tr>
+						<tr>
 							<td><code>isFilterable</code></td>
 							<td><code>boolean</code></td>
 							<td><code>false</code></td>
@@ -1047,6 +1053,8 @@ grid.clearSelection();`}
 						<tr><td><code>discardCellDraft(rowIndex, field)</code></td><td>Discard edits for a specific cell (internal - available on WebGrid, not directly on the web component element)</td></tr>
 						<tr><td><code>getDraftRowIndices()</code></td><td>Get indices of all rows with unsaved edits</td></tr>
 						<tr><td><code>discardAllDrafts()</code></td><td>Discard all unsaved edits</td></tr>
+						<tr><td><code>isCellDirty(rowIndex, field)</code></td><td>Check if a specific cell has been modified (draft value differs from original)</td></tr>
+						<tr><td><code>isRowDirty(rowIndex)</code></td><td>Check if any cell in a row has been modified</td></tr>
 					</tbody>
 				</table>
 			</div>

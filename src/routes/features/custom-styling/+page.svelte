@@ -457,6 +457,16 @@ grid.labels = {
 							<tr><td><code>--wg-row-locked-opacity</code></td><td>Locked row content opacity</td></tr>
 						</tbody>
 					</table>
+
+					<h5>Dirty Indicator</h5>
+					<table class="table table-sm small">
+						<tbody>
+							<tr><td><code>--wg-dirty-indicator-color</code></td><td>Corner triangle color (default: #ed8b00)</td></tr>
+							<tr><td><code>--wg-dirty-indicator-size</code></td><td>Corner triangle size (default: 6px)</td></tr>
+							<tr><td><code>--wg-dirty-cell-bg</code></td><td>Dirty cell background tint</td></tr>
+							<tr><td><code>--wg-dirty-row-number-border-color</code></td><td>Row number left border color</td></tr>
+						</tbody>
+					</table>
 				</div>
 				<div class="col-md-6">
 					<h5>Sizing</h5>

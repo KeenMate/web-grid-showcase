@@ -36,11 +36,11 @@
 			{#snippet controlsContent()}
 				<CodeBlock
 					codeContent={`<!-- UMD Build (pinned version) -->
-<script src="https://unpkg.com/@keenmate/web-grid@1.0.0/dist/web-grid.umd.js"></script>
+<script src="https://unpkg.com/@keenmate/web-grid@1.0.4/dist/web-grid.umd.js"></script>
 
 <!-- ES Module -->
 <script type="module">
-  import 'https://unpkg.com/@keenmate/web-grid@1.0.0/dist/web-grid.es.js';
+  import 'https://unpkg.com/@keenmate/web-grid@1.0.4/dist/web-grid.es.js';
 </script>`}
 					languageType="html"
 					titleText="CDN Usage"
