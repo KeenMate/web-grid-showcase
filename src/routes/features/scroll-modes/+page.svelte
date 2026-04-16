@@ -2,9 +2,45 @@
 	import { DocLayout, ShowcaseSection, CodeBlock } from '@keenmate/svelte-docs';
 	import { onMount } from 'svelte';
 
-	let containerGrid: any;
-	let pageGrid: any;
 	let hybridGrid: any;
+	let interactiveGrid: any = $state(null);
+
+	// Interactive demo state
+	let mode: 'container' | 'full' = $state('container');
+	let isPageable = $state(false);
+	let height = $state(350);
+	let rowCount = $state(40);
+
+	const firstNames = ['Alice', 'Bob', 'Carol', 'David', 'Eva', 'Frank', 'Grace', 'Henry', 'Ivy', 'Jack', 'Karen', 'Leo', 'Mia', 'Noah', 'Olivia', 'Paul', 'Quinn', 'Rita', 'Sam', 'Tina'];
+	const lastNames = ['Johnson', 'Smith', 'Williams', 'Brown', 'Martinez', 'Lee', 'Kim', 'Chen', 'Wang', 'Davis', 'Wilson', 'Garcia', 'Taylor', 'Anderson'];
+	const depts = ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance', 'Design', 'Support'];
+	const statuses = ['Active', 'On Leave', 'Inactive'];
+
+	function buildRows(count: number) {
+		const rows: any[] = [];
+		for (let i = 0; i < count; i++) {
+			const first = firstNames[i % firstNames.length];
+			const last = lastNames[(i * 3) % lastNames.length];
+			rows.push({
+				id: 1000 + i,
+				name: `${first} ${last}`,
+				email: `${first.toLowerCase()}.${last.toLowerCase()}@example.com`,
+				department: depts[i % depts.length],
+				salary: 55000 + (i * 1371) % 55000,
+				status: statuses[i % statuses.length]
+			});
+		}
+		return rows;
+	}
+
+	const interactiveColumns = [
+		{ field: 'id', title: 'ID', width: '70px', horizontalAlign: 'center' },
+		{ field: 'name', title: 'Name', width: '160px' },
+		{ field: 'email', title: 'Email', width: '220px' },
+		{ field: 'department', title: 'Department', width: '140px' },
+		{ field: 'salary', title: 'Salary', width: '110px', horizontalAlign: 'right', formatCallback: (v: number) => v != null ? `$${v.toLocaleString()}` : '' },
+		{ field: 'status', title: 'Status', width: '110px' }
+	];
 
 	const employees = [
 		{ id: 1, name: 'Alice Johnson', department: 'Engineering', salary: 95000 },
@@ -28,6 +64,29 @@
 		{ field: 'salary', title: 'Salary', width: '100px', horizontalAlign: 'right', formatCallback: (v: number) => '$' + v.toLocaleString() }
 	];
 
+	$effect(() => {
+		if (!interactiveGrid) return;
+		if (mode === 'container') {
+			interactiveGrid.style.maxHeight = `${height}px`;
+			interactiveGrid.style.height = '';
+			interactiveGrid.tableBorderOnly = false;
+		} else {
+			interactiveGrid.style.height = '100%';
+			interactiveGrid.style.maxHeight = '';
+			interactiveGrid.tableBorderOnly = true;
+		}
+	});
+
+	$effect(() => {
+		if (!interactiveGrid) return;
+		interactiveGrid.items = buildRows(rowCount);
+	});
+
+	$effect(() => {
+		if (!interactiveGrid) return;
+		interactiveGrid.isPageable = isPageable;
+	});
+
 	const wideColumns = [
 		{ field: 'id', title: 'ID', width: '80px' },
 		{ field: 'name', title: 'Full Name', width: '200px' },
@@ -40,22 +99,15 @@
 	onMount(async () => {
 		await import('@keenmate/web-grid');
 
-		// Container scroll grid (with max-height)
-		if (containerGrid) {
-			containerGrid.columns = columns;
-			containerGrid.items = employees;
-			containerGrid.isPageable = true;
-			containerGrid.pageSize = 5;
-			containerGrid.paginationPosition = 'top-left|bottom-left';
-		}
-
-		// Page scroll grid (no max-height, with pagination top+bottom)
-		if (pageGrid) {
-			pageGrid.columns = columns;
-			pageGrid.items = employees;
-			pageGrid.isPageable = true;
-			pageGrid.pageSize = 5;
-			pageGrid.paginationPosition = 'top-left|bottom-left';
+		// Interactive demo grid
+		if (interactiveGrid) {
+			interactiveGrid.columns = interactiveColumns;
+			interactiveGrid.pageSize = 10;
+			interactiveGrid.paginationPosition = 'top-center|bottom-center';
+			interactiveGrid.isStriped = true;
+			interactiveGrid.isHoverable = true;
+			interactiveGrid.isRowNumbersVisible = true;
+			interactiveGrid.sortMode = 'single';
 		}
 
 		// Hybrid grid (max-width only, wide columns)
@@ -74,108 +126,101 @@
 	descriptionText="Control whether grid uses its own scrollbar or the page scrollbar">
 
 	<div class="py-4">
-		<!-- Container Scroll -->
+		<!-- Interactive Height Modes -->
 		<ShowcaseSection
-			titleText="SM01 Container Scroll"
-			subtitleText="Self-contained grid with max-height and internal scrollbar"
+			titleText="SM01 Interactive Demo"
+			subtitleText="Toggle between container and full-height modes live"
 			col1Title="Live Demo"
 			col2Title="Code"
-			col3Title="When to Use">
+			col3Title="How it works">
 
 			{#snippet demoContent()}
 				<div class="grid-demo">
-					<web-grid
-						bind:this={containerGrid}
-						style="max-height: 200px;"
-					></web-grid>
-					<p class="small text-muted mt-2">Grid with internal scrollbar. Scroll inside the grid.</p>
+					<div class="d-flex flex-wrap gap-3 align-items-center mb-3">
+						<div class="btn-group btn-group-sm" role="group">
+							<button
+								type="button"
+								class="btn {mode === 'container' ? 'btn-primary' : 'btn-outline-primary'}"
+								onclick={() => (mode = 'container')}
+							>Container</button>
+							<button
+								type="button"
+								class="btn {mode === 'full' ? 'btn-primary' : 'btn-outline-primary'}"
+								onclick={() => (mode = 'full')}
+							>Full Height</button>
+						</div>
+
+						<div class="form-check form-check-inline mb-0">
+							<input class="form-check-input" type="checkbox" id="sm00Pager" bind:checked={isPageable} />
+							<label class="form-check-label small" for="sm00Pager">Pager</label>
+						</div>
+
+						<label class="small d-flex align-items-center gap-1 mb-0" style="opacity: {mode === 'container' ? 1 : 0.4};">
+							Height:
+							<input
+								type="number"
+								class="form-control form-control-sm"
+								style="width: 80px;"
+								min="100"
+								max="900"
+								step="25"
+								bind:value={height}
+								disabled={mode !== 'container'}
+							/>
+							px
+						</label>
+
+						<label class="small d-flex align-items-center gap-1 mb-0">
+							Rows:
+							<input
+								type="number"
+								class="form-control form-control-sm"
+								style="width: 80px;"
+								min="0"
+								max="500"
+								step="5"
+								bind:value={rowCount}
+							/>
+						</label>
+					</div>
+
+					<web-grid bind:this={interactiveGrid}></web-grid>
+
+					<p class="small text-muted mt-2">
+						{#if mode === 'container'}
+							Grid caps at <strong>{height}px</strong> and scrolls internally when content exceeds it.
+						{:else}
+							Grid sizes to its full content — the page scroll handles overflow. <code>tableBorderOnly = true</code> removes the outer scroll container so wheel events pass through to the page.
+						{/if}
+					</p>
 				</div>
 			{/snippet}
 
 			{#snippet controlsContent()}
 				<CodeBlock
-					codeContent={`<!-- Set max-height to constrain grid -->
-<web-grid style="max-height: 300px;">
-</web-grid>
-
-/* How it works:
-   .wg container uses:
-   - max-height: inherit
-   - overflow: auto
-
-   This creates an internal scroll
-   container for the grid content.
-*/`}
+					codeContent={mode === 'container'
+						? `<!-- Container mode: self-contained scroll -->\n<web-grid style="max-height: ${height}px">\n</web-grid>`
+						: `<!-- Full Height mode: page handles scroll -->\n<web-grid style="height: 100%">\n</web-grid>\n\ngrid.tableBorderOnly = true`}
 					languageType="html"
-					titleText="Container Scroll"
+					titleText={mode === 'container' ? 'Container Mode' : 'Full Height Mode'}
 				/>
 			{/snippet}
 
 			{#snippet descriptionContent()}
 				<div class="prose small">
-					<h5>Best For</h5>
-					<p>Dashboard widgets, modals, sidebars - anywhere grid needs a fixed height.</p>
-					<h5>Benefits</h5>
-					<p>Sticky headers stay visible while scrolling content.</p>
-					<p>Grid is self-contained, doesn't affect page layout.</p>
-					<h5>Note</h5>
-					<p>This is the default/recommended mode for most use cases.</p>
-				</div>
-			{/snippet}
-		</ShowcaseSection>
+					<h5>Container</h5>
+					<p>Grid caps itself with a pixel <code>max-height</code>. The shadow DOM's <code>.wg</code> uses <code>max-height: inherit</code>, so the host constraint propagates into the scroll container.</p>
 
-		<!-- Page Scroll -->
-		<ShowcaseSection
-			titleText="SM02 Page Scroll"
-			subtitleText="Full-height grid using browser's native page scrollbar"
-			col1Title="Live Demo"
-			col2Title="Code"
-			col3Title="When to Use">
-
-			{#snippet demoContent()}
-				<div class="grid-demo">
-					<web-grid
-						bind:this={pageGrid}
-					></web-grid>
-					<p class="small text-muted mt-2">Grid expands to full height. No internal scrollbar - use page scroll.</p>
-				</div>
-			{/snippet}
-
-			{#snippet controlsContent()}
-				<CodeBlock
-					codeContent={`<!-- No max-height = no internal scroll -->
-<web-grid>
-</web-grid>
-
-/* How it works:
-   Without max-height constraint,
-   .wg has nothing to inherit.
-
-   Grid expands to fit all content,
-   page scrollbar handles overflow.
-*/`}
-					languageType="html"
-					titleText="Page Scroll"
-				/>
-			{/snippet}
-
-			{#snippet descriptionContent()}
-				<div class="prose small">
-					<h5>Best For</h5>
-					<p>Full-page data tables where grid is the main content.</p>
-					<h5>Benefits</h5>
-					<p>Native page scroll feel - familiar UX.</p>
-					<p>Works with browser's scroll restoration.</p>
-					<p>Better for mobile - native momentum scrolling.</p>
-					<h5>Trade-off</h5>
-					<p>Headers scroll out of view (not sticky to viewport).</p>
+					<h5>Full Height</h5>
+					<p><code>height: 100%</code> against an unbounded parent resolves to <code>auto</code>, so the grid sizes to its content and the page layout grows to wrap it.</p>
+					<p><code>tableBorderOnly = true</code> moves the scroll container to <code>.wg__table-container</code> and leaves the outer <code>.wg</code> with <code>overflow: visible</code>. Side effect: wheel events are no longer captured by the grid, so page scroll works naturally over it.</p>
 				</div>
 			{/snippet}
 		</ShowcaseSection>
 
 		<!-- Hybrid Mode -->
 		<ShowcaseSection
-			titleText="SM03 Hybrid Mode"
+			titleText="SM02 Hybrid Mode"
 			subtitleText="Horizontal grid scrollbar with vertical page scrollbar for wide tables"
 			col1Title="Live Demo"
 			col2Title="Code"

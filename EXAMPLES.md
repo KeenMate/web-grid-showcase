@@ -42,6 +42,11 @@ Quick reference for all showcase examples with their codes.
 | CR02 | Resize Persistence | [column-resize](/features/column-resize) |
 | CO01 | Column Reordering | [column-reorder](/features/column-reorder) |
 | CO02 | Reorder Persistence | [column-reorder](/features/column-reorder) |
+| CV01 | Interactive Demo | [column-visibility](/features/column-visibility) |
+| CV02 | Context Menu | [column-visibility](/features/column-visibility) |
+| CV03 | Programmatic API | [column-visibility](/features/column-visibility) |
+| SM01 | Interactive Height Modes | [scroll-modes](/features/scroll-modes) |
+| SM02 | Hybrid Mode | [scroll-modes](/features/scroll-modes) |
 | FP01 | Freeze First N Columns | [freeze-panes](/features/freeze-panes) |
 | FP02 | Column-Level Frozen | [freeze-panes](/features/freeze-panes) |
 | RS01 | Basic Selection | [row-selection](/features/row-selection) |
@@ -66,6 +71,8 @@ Quick reference for all showcase examples with their codes.
 | FH | Fill Handle | `src/routes/features/fill-handle/+page.svelte` |
 | CR | Column Resize | `src/routes/features/column-resize/+page.svelte` |
 | CO | Column Reorder | `src/routes/features/column-reorder/+page.svelte` |
+| CV | Column Visibility | `src/routes/features/column-visibility/+page.svelte` |
+| SM | Scroll Modes | `src/routes/features/scroll-modes/+page.svelte` |
 | FP | Freeze Panes | `src/routes/features/freeze-panes/+page.svelte` |
 | RS | Row Selection | `src/routes/features/row-selection/+page.svelte` |
 | RL | Row Locking | `src/routes/features/row-locking/+page.svelte` |

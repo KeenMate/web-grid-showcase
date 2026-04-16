@@ -39,6 +39,7 @@ const config: PartialDocsConfig = {
 					{ label: 'Fill Handle', href: '/features/fill-handle' },
 					{ label: 'Column Resizing', href: '/features/column-resize' },
 					{ label: 'Column Reordering', href: '/features/column-reorder' },
+					{ label: 'Column Visibility', href: '/features/column-visibility' },
 					{ label: 'Freeze Panes', href: '/features/freeze-panes' },
 					{ label: 'Row Toolbar', href: '/features/toolbar' },
 					{ label: 'Context Menu', href: '/features/context-menu' },

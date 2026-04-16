@@ -12,10 +12,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Dirty Indicator** - `isDirtyIndicatorVisible` property in API Component Display Properties
 - **Dirty Indicator methods** - `isCellDirty()`, `isRowDirty()` in API Component Draft Management Methods
 - **Dirty Indicator CSS variables** - 4 new variables in Custom Styling CSS Variables Reference
+- **Column Visibility page** (`/features/column-visibility`) - New dedicated page for column show/hide
+  - CV01: Interactive demo with per-column toggle buttons, Show All / Hide All controls
+  - CV02: Context Menu setup using predefined `'hideColumn'` and `'columnVisibility'` items
+  - CV03: Programmatic API showing `column.isHidden` usage and the `grid.columns = [...grid.columns]` re-render pattern
+  - API Reference table for `isHidden`, `headerContextMenu`, and the predefined menu item strings
+- **Scroll Modes - Interactive Demo** (`/features/scroll-modes`) - SM01 section replaces the separate Container/Page static demos
+  - Live toggle between Container mode (`max-height`) and Full Height mode (`height: 100%` + `tableBorderOnly`)
+  - Pager, Height, and Rows inputs
+  - Explains why Full Height uses `tableBorderOnly = true` to let wheel events pass through to the page
+- **Navigation** - Added Column Visibility entry to sidebar under Features
 
 ### Changed
 
 - **CDN URLs** pinned to `@1.0.4` in Getting Started page
+- **Scroll Modes page** - Removed redundant SM01 Container Scroll and SM02 Page Scroll sections (now covered interactively by the new SM01). SM03 Hybrid Mode renumbered to SM02.
 
 ---
 
