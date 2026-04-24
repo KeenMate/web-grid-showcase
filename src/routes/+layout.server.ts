@@ -36,6 +36,8 @@ const config: PartialDocsConfig = {
 					{ label: 'Pagination', href: '/features/pagination' },
 					{ label: 'Grid Modes', href: '/features/grid-modes' },
 					{ label: 'Editing', href: '/features/editing' },
+					{ label: 'Custom Editors', href: '/features/custom-editors' },
+					{ label: 'Dirty Indicator', href: '/features/dirty-indicator' },
 					{ label: 'Fill Handle', href: '/features/fill-handle' },
 					{ label: 'Column Resizing', href: '/features/column-resize' },
 					{ label: 'Column Reordering', href: '/features/column-reorder' },
