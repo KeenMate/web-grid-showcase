@@ -178,18 +178,19 @@
 					field: 'color',
 					title: 'Color',
 					editor: 'custom',
-					formatCallback: (val: string) =>
-						`<span style="display:inline-flex;align-items:center;gap:.5rem;">
+					templateCallback: (row: any) => {
+						const val = String(row.color ?? '');
+						return `<span style="display:inline-flex;align-items:center;gap:.5rem;">
 							<span style="display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid #00000022;background:${escapeHtml(val)};"></span>
 							<code>${escapeHtml(val)}</code>
-						</span>`,
-					cellEditCallback: (ctx: any) => openColorPopover(ctx)
+						</span>`;
+					},
+					cellEditCallback: (ctx: any) => openColorPopover(ctx, colorGrid)
 				}
 			];
 			colorGrid.items = colorRows;
 			colorGrid.isEditable = true;
 			colorGrid.editTrigger = 'click';
-			colorGrid.isHtmlContent = true;
 		}
 	});
 
@@ -348,7 +349,7 @@
 
 	// ============ Inline color popover ===================================
 
-	function openColorPopover(context: any) {
+	function openColorPopover(context: any, gridEl: HTMLElement) {
 		const palette = ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#dc3545', '#fd7e14',
 			'#ffc107', '#198754', '#20c997', '#0dcaf0', '#212529', '#6c757d'];
 
@@ -365,17 +366,22 @@
 			</div>
 		`;
 
-		// Anchor near the cell that triggered editing
-		const cellEl = document.querySelector(`web-grid`)?.shadowRoot?.querySelector(
-			`[data-row-index="${context.rowIndex}"][data-field="${context.field}"]`
+		// Anchor below the cell that triggered editing.
+		// Cells expose data-row / data-field attributes on the <td>.
+		const root = (gridEl as any).shadowRoot as ShadowRoot | null;
+		const cellEl = root?.querySelector(
+			`td[data-row="${context.rowIndex}"][data-field="${context.field}"]`
 		) as HTMLElement | null;
 		const rect = cellEl?.getBoundingClientRect();
+
+		popover.style.position = 'fixed';
 		if (rect) {
-			popover.style.position = 'fixed';
+			// Clamp so the popover stays on-screen
+			const popoverWidth = 240; // approx; we'll correct after insertion if needed
+			const left = Math.min(rect.left, window.innerWidth - popoverWidth - 8);
 			popover.style.top = (rect.bottom + 4) + 'px';
-			popover.style.left = rect.left + 'px';
+			popover.style.left = Math.max(8, left) + 'px';
 		} else {
-			popover.style.position = 'fixed';
 			popover.style.top = '50%';
 			popover.style.left = '50%';
 			popover.style.transform = 'translate(-50%, -50%)';
@@ -598,20 +604,25 @@ grid.onrowchange = (detail) => {
   field: 'color',
   title: 'Color',
   editor: 'custom',
-  formatCallback: (val) =>
+  // templateCallback returns RAW HTML (not escaped).
+  // formatCallback would escape the string — use it
+  // only for plain text values.
+  templateCallback: (row) =>
     \`<span style="display:inline-flex;align-items:center;gap:.5rem;">
-       <span style="width:14px;height:14px;background:\${escapeHtml(val)};"></span>
-       <code>\${escapeHtml(val)}</code>
+       <span style="width:14px;height:14px;background:\${escapeHtml(row.color)};"></span>
+       <code>\${escapeHtml(row.color)}</code>
      </span>\`,
   cellEditCallback: (ctx) => {
     const popover = buildPopover(ctx.value, palette)
 
-    // anchor near the cell
-    const cell = document.querySelector('web-grid')
-      .shadowRoot.querySelector(
-        \`[data-row-index="\${ctx.rowIndex}"][data-field="\${ctx.field}"]\`
-      )
+    // anchor below the cell — use the grid element
+    // you already have via bind:this, not a global
+    // querySelector (there may be multiple grids).
+    const cell = gridEl.shadowRoot.querySelector(
+      \`td[data-row="\${ctx.rowIndex}"][data-field="\${ctx.field}"]\`
+    )
     const rect = cell.getBoundingClientRect()
+    popover.style.position = 'fixed'
     popover.style.top  = (rect.bottom + 4) + 'px'
     popover.style.left = rect.left + 'px'
 
@@ -619,11 +630,7 @@ grid.onrowchange = (detail) => {
     popover.onCancel = () => ctx.cancel()
     document.body.appendChild(popover)
   }
-}
-
-// remember to set isHtmlContent = true if your
-// formatCallback returns HTML
-grid.isHtmlContent = true`}
+}`}
 					languageType="javascript"
 					titleText="Popover-style custom editor"
 				/>
@@ -635,13 +642,13 @@ grid.isHtmlContent = true`}
 					<p>A custom editor is just "render whatever you want, then call commit/cancel." Modal dialogs, floating popovers, native pickers, full sidebars — all valid.</p>
 
 					<h5>Anchoring to the cell</h5>
-					<p>The grid lives in shadow DOM, but cells expose <code>data-row-index</code> and <code>data-field</code> — query them through <code>shadowRoot</code> to compute a position.</p>
+					<p>The grid lives in shadow DOM, but cells expose <code>data-row</code> and <code>data-field</code> on each <code>&lt;td&gt;</code>. Query <code>gridElement.shadowRoot</code> (not <code>document</code>) to get the cell and <code>getBoundingClientRect()</code> to position the popover.</p>
 
 					<h5>Cleanup matters</h5>
 					<p>Always remove the popover element <strong>and</strong> any global listeners (<code>keydown</code>, <code>mousedown</code>) on commit/cancel — otherwise they leak across edits.</p>
 
 					<h5>HTML cell content</h5>
-					<p>The color preview uses HTML in <code>formatCallback</code>, so the grid needs <code>isHtmlContent = true</code>. Always escape user input.</p>
+					<p>Use <code>templateCallback</code> when you need raw HTML in the cell — the string it returns is <strong>not</strong> escaped. <code>formatCallback</code> is for plain text and escapes its return value. Either way, always escape any user input you interpolate.</p>
 				</div>
 			{/snippet}
 		</ShowcaseSection>
