@@ -191,6 +191,16 @@
 			colorGrid.items = colorRows;
 			colorGrid.isEditable = true;
 			colorGrid.editTrigger = 'click';
+
+			// templateCallback is called with the original row, not the draft —
+			// so after commit we need to fold the draft into items to make the
+			// new color render. (formatCallback reads drafts automatically;
+			// templateCallback does not.)
+			colorGrid.onrowchange = (detail: any) => {
+				if (!detail.isValid) return;
+				colorRows[detail.rowIndex] = { ...detail.draftRow };
+				colorGrid.items = [...colorRows];
+			};
 		}
 	});
 
@@ -649,6 +659,9 @@ grid.onrowchange = (detail) => {
 
 					<h5>HTML cell content</h5>
 					<p>Use <code>templateCallback</code> when you need raw HTML in the cell — the string it returns is <strong>not</strong> escaped. <code>formatCallback</code> is for plain text and escapes its return value. Either way, always escape any user input you interpolate.</p>
+
+					<h5>templateCallback + drafts</h5>
+					<p><code>templateCallback</code> receives the <em>original</em> row, not the draft. After a custom-editor commits, the new value lives in the draft until you fold it back into <code>items</code>. If you want the cell to reflect the new value immediately, reassign <code>grid.items</code> in <code>onrowchange</code> (same pattern as CE02). <code>formatCallback</code> does not have this quirk — it reads drafts automatically.</p>
 				</div>
 			{/snippet}
 		</ShowcaseSection>

@@ -62,7 +62,8 @@ const config: PartialDocsConfig = {
 					{ label: 'Component API', href: '/api/component' },
 					{ label: 'Columns', href: '/api/columns' },
 					{ label: 'Editors', href: '/api/editors' },
-					{ label: 'Events', href: '/api/events' }
+					{ label: 'Events', href: '/api/events' },
+					{ label: 'Callbacks', href: '/api/callbacks' }
 				]
 			}
 		]

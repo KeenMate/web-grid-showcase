@@ -5,6 +5,42 @@ All notable changes to web-grid-showcase will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - v1.0.5 Showcase Update
+
+### Added
+
+- **Custom Editors page** (`/features/custom-editors`) — `editor: 'custom'` + `cellEditCallback` showcase
+  - CE01: Simple prompt editor — the minimum viable custom editor
+  - CE02: Product search dialog — modal lookup with keyboard nav, highlighted matches, and the `items = [...rows]` trick in `onrowchange` to refresh sibling cells that derive their display from the edited field
+  - CE03: Inline color picker popover — floating panel anchored to the cell via `gridElement.shadowRoot.querySelector('td[data-row=…][data-field=…]')`
+  - Reference table for `CustomEditorContext<T>` and a note on the legacy positional-callback trap
+- **Dirty Indicator page** (`/features/dirty-indicator`) — shipped in v1.0.4, previously uncovered
+  - DI01: Basic indicator with live `isDirtyIndicatorVisible` toggle
+  - DI02: Save / Discard workflow using `getDraftRowIndices`, `getRowDraft`, `discardRowDraft`, `discardAllDrafts`, with live "N rows / M cells dirty" stats
+  - DI03: Custom theming via `--wg-dirty-indicator-color`, `--wg-dirty-cell-bg`, `--wg-dirty-indicator-size`
+  - Full API reference table for the dirty / draft methods
+- **Callbacks API page** (`/api/callbacks`) — reference for every `*Callback` grouped by aspect, with `Purpose & when it fires` per row
+  - Eight tables: cell content rendering, editing & validation, tooltips, styling hooks, clipboard, row locking, dropdown option resolvers, and data / summary / pagination / fill
+  - Introduction contrasts callbacks (return value affects behavior) with events (`on*`, fire-and-forget) per the project naming convention
+- **Navigation** — added *Custom Editors* and *Dirty Indicator* entries under Features, and *Callbacks* under API Reference
+- **EXAMPLES.md** refresh — added every previously-missing section code (CE01-03, DI01-03, GM01-04, SU01-02, FI01-02, ED04, SO04, TB04-05, KN03, CS06) and prefix-table entries for CE, DI, GM, SU, FI
+
+### Changed
+
+- **`@keenmate/svelte-docs`** bumped from `^1.0.0-rc09` to `^1.0.0-rc11`
+- **npm overrides** added to `package.json` for clean `npm audit` — forces patched versions of `cookie` (`^1.0.2`), `uuid` (`^14.0.0`), and `picomatch` (`^4.0.0`). Reduces audit from 8 vulnerabilities to 0.
+
+### Fixed
+
+- **CE03 color picker**
+  - Use `templateCallback` (raw HTML) instead of `formatCallback` (which escapes the return value); the swatch preview was showing literal `<span>` markup in the cell
+  - Anchor the popover to the color grid's own `shadowRoot` instead of `document.querySelector('web-grid')` (which was hitting CE01's grid)
+  - Use the correct cell attribute `data-row` on `<td>` (not `data-row-index`, which lives on `<tr>`)
+  - Clamp the popover position so it stays on-screen near viewport edges
+  - Fold drafts back into `items` in `onrowchange` so the new color renders immediately — `templateCallback` receives the original row, not the draft
+
+---
+
 ## [Unreleased] - v1.0.4 Showcase Update
 
 ### Added
